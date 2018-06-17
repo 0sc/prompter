@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     if user.save
       session[:user_id] = user.id
       notice = "Welcome #{user.first_name}"
-      redirect_to groups_path
+      redirect_to communities_path
     else
       notice = 'Error occured while setting up your account!!'
       redirect_to root_path

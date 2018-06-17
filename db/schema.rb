@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_17_121104) do
+ActiveRecord::Schema.define(version: 2018_06_17_141537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "communities", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "fbid", null: false
+    t.string "name", null: false
+    t.index ["fbid"], name: "index_communities_on_fbid"
+  end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,11 +29,10 @@ ActiveRecord::Schema.define(version: 2018_06_17_121104) do
     t.string "first_name"
     t.string "last_name"
     t.string "email", null: false
-    t.bigint "fbid", null: false
+    t.integer "uid", null: false
     t.string "image"
     t.string "token", null: false
     t.integer "expires_at", null: false
-    t.index ["fbid"], name: "index_users_on_fbid"
   end
 
 end

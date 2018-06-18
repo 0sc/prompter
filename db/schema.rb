@@ -26,13 +26,13 @@ ActiveRecord::Schema.define(version: 2018_06_17_141537) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "first_name"
-    t.string "last_name"
+    t.string "name", null: false
     t.string "email", null: false
-    t.integer "uid", null: false
+    t.bigint "fbid", null: false
     t.string "image"
     t.string "token", null: false
     t.integer "expires_at", null: false
+    t.index ["fbid"], name: "index_users_on_fbid"
   end
 
 end

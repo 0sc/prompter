@@ -3,8 +3,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
     create_table :users do |t|
       t.timestamps
 
-      t.string :first_name
-      t.string :last_name
+      t.string :name, null: false
       t.string :email, null: false
       t.integer :fbid, null: false, limit: 8
       t.string :image

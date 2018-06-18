@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_17_141537) do
+ActiveRecord::Schema.define(version: 2018_06_18_142631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admin_profiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_admin_profiles_on_user_id"
+  end
 
   create_table "communities", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,6 +28,31 @@ ActiveRecord::Schema.define(version: 2018_06_17_141537) do
     t.string "fbid", null: false
     t.string "name", null: false
     t.index ["fbid"], name: "index_communities_on_fbid"
+  end
+
+  create_table "community_admin_profiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "admin_profile_id"
+    t.bigint "community_id"
+    t.index ["admin_profile_id"], name: "index_community_admin_profiles_on_admin_profile_id"
+    t.index ["community_id"], name: "index_community_admin_profiles_on_community_id"
+  end
+
+  create_table "community_member_profiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "member_profile_id"
+    t.bigint "community_id"
+    t.index ["community_id"], name: "index_community_member_profiles_on_community_id"
+    t.index ["member_profile_id"], name: "index_community_member_profiles_on_member_profile_id"
+  end
+
+  create_table "member_profiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_member_profiles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -35,4 +67,10 @@ ActiveRecord::Schema.define(version: 2018_06_17_141537) do
     t.index ["fbid"], name: "index_users_on_fbid"
   end
 
+  add_foreign_key "admin_profiles", "users"
+  add_foreign_key "community_admin_profiles", "admin_profiles"
+  add_foreign_key "community_admin_profiles", "communities"
+  add_foreign_key "community_member_profiles", "communities"
+  add_foreign_key "community_member_profiles", "member_profiles"
+  add_foreign_key "member_profiles", "users"
 end

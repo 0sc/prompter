@@ -1,8 +1,8 @@
 class AdminProfile < ApplicationRecord
   belongs_to :user
 
-  has_many :admin_profile_communities, dependent: :destroy
-  has_many :communities, through: :admin_profile_communities
+  has_many :community_admin_profiles, dependent: :destroy
+  has_many :communities, through: :community_admin_profiles
 
   alias admin_communities communities
 end

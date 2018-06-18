@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :admin_profile do
-    user nil
+    user
   end
 end

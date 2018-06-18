@@ -1,8 +1,8 @@
 class MemberProfile < ApplicationRecord
   belongs_to :user
 
-  has_many :member_profile_communities, dependent: :destroy
-  has_many :communities, through: :member_profile_communities
+  has_many :community_member_profiles, dependent: :destroy
+  has_many :communities, through: :community_member_profiles
 
   alias member_communities communities
 end

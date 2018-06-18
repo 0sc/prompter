@@ -13,6 +13,21 @@ RSpec.describe User, type: :model do
   it { should validate_uniqueness_of(:email) }
   it { should validate_uniqueness_of(:fbid) }
 
+  it { should have_one(:admin_profile) }
+  it { should have_one(:member_profile) }
+
+  describe 'delegates' do
+    subject { create(:user) }
+
+    it 'delegates #admin_communities to admin_profile' do
+      expect(subject.admin_communities).to eq subject.admin_profile.admin_communities
+    end
+
+    it 'delegates #member_communities to admin_profile' do
+      expect(subject.member_communities).to eq subject.member_profile.member_communities
+    end
+  end
+
   describe '#update_from_auth_hash' do
     it 'updates the user attributes with details from the auth hash' do
       target_attrs = %i[email name]

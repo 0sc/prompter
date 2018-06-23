@@ -5,4 +5,8 @@ class AdminProfile < ApplicationRecord
   has_many :communities, through: :community_admin_profiles
 
   alias admin_communities communities
+
+  def add_community(community)
+    communities << community unless communities.include? community
+  end
 end

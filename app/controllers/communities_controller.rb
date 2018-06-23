@@ -1,58 +1,54 @@
 class CommunitiesController < ApplicationController
-  before_action :set_community, only: [:show, :edit, :update, :destroy]
+  before_action :set_graph_agent, only: [:index, :edit]
+  # before_action :set_community, only: %i[edit]
 
-  # GET /communities
   def index
-    @communities = Community.all
+    @fb_communities = @fb_graph.admin_communities
+    @subd_communities =
+      Community.where(fbid: @fb_graph.admin_communities_fbids).pluck(:fbid)
   end
 
-  # GET /communities/1
-  def show
-  end
+  # def show; end
 
-  # GET /communities/new
-  def new
-    @community = Community.new
-  end
-
-  # GET /communities/1/edit
   def edit
+    @fb_community = @fb_graph.community_details(params[:id])
+    @community = Community.find_or_initialize_by(fbid: params[:id])
+    @community.name = @fb_community['name']
+    @community.save
+    current_user.admin_profile.add_community(@community)
+
+  rescue Koala::Facebook::ClientError
+    redirect_to communities_path, notice: 'Community not found'
   end
 
-  # POST /communities
-  def create
-    @community = Community.new(community_params)
-
-    if @community.save
-      redirect_to @community, notice: 'Community was successfully created.'
-    else
-      render :new
-    end
-  end
-
-  # PATCH/PUT /communities/1
-  def update
-    if @community.update(community_params)
-      redirect_to @community, notice: 'Community was successfully updated.'
-    else
-      render :edit
-    end
-  end
-
-  # DELETE /communities/1
-  def destroy
-    @community.destroy
-    redirect_to communities_url, notice: 'Community was successfully destroyed.'
-  end
+  # def update
+  #   if @community.update(community_params)
+  #     redirect_to @community, notice: 'Community was successfully updated.'
+  #   else
+  #     render :edit
+  #   end
+  # end
+  #
+  # def destroy
+  #   @community.destroy
+  #   redirect_to communities_url, notice: 'Community was successfully destroyed.'
+  # end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_community
-      @community = Community.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def community_params
-      params.require(:community).permit(:fbid, :name)
-    end
+  def set_graph_agent
+    @fb_graph = FbGraphService.new(current_user.fbid, current_user.token)
+  end
+
+  # def set_community
+  #   @community = Community.find_or_initialize_by(fbid: params[:id])
+  #
+  #   @community =
+  #     current_user.admin_profile.communities.find_or_initialize_by(fbid: params[:id])
+  #     binding.pry
+  # end
+
+  # def community_params
+  #   params.require(:community).permit(:fbid, :name)
+  # end
 end

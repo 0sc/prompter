@@ -5,6 +5,9 @@ require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rspec'
+
+require 'support/views/html_helpers'
 
 ActiveRecord::Migration.maintain_test_schema!
 
@@ -16,6 +19,7 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include FactoryBot::Syntax::Methods
+  config.include Views::HtmlHelpers, type: :view
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

@@ -1,21 +1,22 @@
 require 'rails_helper'
 
-RSpec.describe "communities/edit", type: :view do
+RSpec.describe 'communities/edit', type: :view do
+  let(:community) { create(:community) }
+
   before(:each) do
-    @community = assign(:community, Community.create!(
-      :fbid => "MyString",
-      :name => "MyString"
-    ))
+    assign(:community, community)
+    render
   end
 
-  it "renders the edit community form" do
-    render
+  it 'renders the edit community form' do
+    expect(page).to have_selector('form')
+  end
 
-    assert_select "form[action=?][method=?]", community_path(@community), "post" do
+  it 'displays link to view community details' do
+    expect(page).to have_link(text: 'Show', href: community_path(community))
+  end
 
-      assert_select "input[name=?]", "community[fbid]"
-
-      assert_select "input[name=?]", "community[name]"
-    end
+  it 'displays link to go back to communities path' do
+    expect(page).to have_link(text: 'Back', href: communities_path)
   end
 end

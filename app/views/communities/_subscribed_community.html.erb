@@ -1,0 +1,5 @@
+<tr>
+  <td><%= link_to community['name'], community_path(community['id']) %></td>
+  <td><%= link_to 'Edit', edit_community_path(community['id']) %></td>
+  <td><%= link_to 'Unsubscribe', community_path(community['id']), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>

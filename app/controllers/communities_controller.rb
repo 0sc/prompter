@@ -4,7 +4,7 @@ class CommunitiesController < ApplicationController
 
   def index
     @fb_communities = @fb_graph.admin_communities
-    @subd_communities =
+    @managed_communities =
       Community.where(fbid: @fb_graph.admin_communities_fbids).pluck(:fbid)
   end
 

@@ -1,14 +1,18 @@
 require 'rails_helper'
 
-RSpec.describe "communities/index", type: :view do
+RSpec.describe 'communities/index', type: :view do
+  let(:community_one) { create(:community) }
+  let(:community_two) { create(:community) }
+
   before(:each) do
-    assign(:communities, create_list(:community, 2))
-    assign(:current_user, create(:user))
+    assign(:fb_communities, [community_one, community_two])
+    assign(:managed_communities, [community_two])
   end
 
-  xit "renders a list of communities" do
+  it 'renders a list of communities' do
     render
-    assert_select "tr>td", :text => "Fbid".to_s, :count => 2
-    assert_select "tr>td", :text => "Name".to_s, :count => 2
+
+    expect(page).to have_css('h1', text: 'Communities')
+    expect(page.find('tbody').all('tr').count).to eq 2
   end
 end

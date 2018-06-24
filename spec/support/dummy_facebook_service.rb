@@ -1,4 +1,4 @@
-class DummyFbGraphService
+class DummyFacebookService
   attr_accessor :admin_communities,
                 :admin_communities_fbids
 

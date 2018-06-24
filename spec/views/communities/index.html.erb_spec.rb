@@ -6,7 +6,7 @@ RSpec.describe 'communities/index', type: :view do
 
   before(:each) do
     assign(:fb_communities, [community_one, community_two])
-    assign(:managed_communities, [community_two])
+    assign(:subscribed_communities, [community_two])
   end
 
   it 'renders a list of communities' do

@@ -1,12 +1,12 @@
 require 'rails_helper'
-require 'support/dummy_fb_graph_service'
+require 'support/dummy_facebook_service'
 
 RSpec.describe CommunitiesController, type: :controller do
   let(:user) { create(:user) }
   let(:valid_session) { { user_id: user.id } }
 
   before(:each) do
-    stub_const('FbGraphService', DummyFbGraphService)
+    stub_const('FacebookService', DummyFacebookService)
   end
 
   describe 'GET #index' do

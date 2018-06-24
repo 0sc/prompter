@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "communities/show", type: :view do
+RSpec.describe 'communities/show', type: :view do
   let(:community) { create(:community) }
 
   before(:each) do

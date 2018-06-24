@@ -1,17 +1,20 @@
 class CommunitiesController < ApplicationController
-  before_action :set_graph_agent, only: [:index, :edit]
+  before_action :set_graph_agent, only: %i[index edit]
   # before_action :set_community, only: %i[edit]
 
   def index
-    @fb_communities = @fb_graph.admin_communities
-    @managed_communities =
-      Community.where(fbid: @fb_graph.admin_communities_fbids).pluck(:fbid)
+    @fb_communities = @fb.admin_communities
+    @subscribed_communities = current_user.admin_communities.pluck(:fbid)
+
+    # TODO: what of case of user no longer admin of a group?
+    # should we update this here to remove groups
+    # the user no longer have admin access to 
   end
 
   # def show; end
 
   def edit
-    @fb_community = @fb_graph.community_details(params[:id])
+    @fb_community = @fb.community_details(params[:id])
     @community = Community.find_or_initialize_by(fbid: params[:id])
     @community.name = @fb_community['name']
     @community.save
@@ -37,7 +40,7 @@ class CommunitiesController < ApplicationController
   private
 
   def set_graph_agent
-    @fb_graph = FbGraphService.new(current_user.fbid, current_user.token)
+    @fb = FacebookService.new(current_user.fbid, current_user.token)
   end
 
   # def set_community

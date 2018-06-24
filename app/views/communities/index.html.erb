@@ -12,7 +12,7 @@
 
   <tbody>
     <% @fb_communities.each do |community| %>
-      <% if @managed_communities.include?(community['id']) %>
+      <% if @subscribed_communities.include?(community['id']) %>
         <%= render 'subscribed_community', community: community %>
       <% else %>
         <%= render 'unsubscribed_community', community: community %>

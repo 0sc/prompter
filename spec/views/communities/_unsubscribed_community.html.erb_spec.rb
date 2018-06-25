@@ -11,7 +11,7 @@ RSpec.describe 'communities/_unsubscribed_community', type: :view do
   it 'displays link to subscribe the community' do
     expect(page).to have_link(
       text: 'Subscribe',
-      href: edit_community_path(community['id'])
+      href: communities_path(fbid: community['id'])
     )
   end
 

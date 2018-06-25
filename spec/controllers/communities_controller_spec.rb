@@ -57,11 +57,44 @@ RSpec.describe CommunitiesController, type: :controller do
   end
 
   describe 'GET #edit' do
+    context 'when community does not exist' do
+      it 'redirects to the communities path' do
+        get :edit, params: { id: 404 }, session: valid_session
+
+        expect(response).to redirect_to communities_path
+        expect(flash[:notice]).to eq 'Community not found'
+      end
+    end
+
+    describe 'when community does exist' do
+      let(:community) { create(:community) }
+
+      context 'user is subscribed as admin' do
+        before { user.admin_profile.add_community(community) }
+
+        it 'returns a success response' do
+          get :edit, params: { id: community.id }, session: valid_session
+          expect(response).to be_successful
+        end
+      end
+
+      context 'user is not subscribed as admin' do
+        it 'redirects to the communities path' do
+          get :edit, params: { id: community.id }, session: valid_session
+          expect(response).to redirect_to communities_path
+          expect(flash[:notice]).to eq 'Community not found'
+        end
+      end
+    end
+  end
+
+  describe 'GET #create' do
+    let(:fbid) { fb_community['id'] }
+
     describe "community doesn't exist" do
       it 'creates the community' do
-        expect do
-          get :edit, params: { id: fb_community['id'] }, session: valid_session
-        end.to change { Community.count }.from(0).to(1)
+        expect { post :create, params: { fbid: fbid }, session: valid_session }
+          .to change { Community.count }.from(0).to(1)
 
         community = Community.first
         expect(community.fbid).to eq fb_community['id']
@@ -69,21 +102,19 @@ RSpec.describe CommunitiesController, type: :controller do
       end
 
       it 'adds the user as community admin' do
-        get :edit, params: { id: fb_community['id'] }, session: valid_session
+        post :create, params: { fbid: fbid }, session: valid_session
         expect(Community.first.admin_profiles).to eq [user.admin_profile]
       end
     end
 
     describe 'community does exist' do
-      subject! do
-        create(:community, fb_community.merge(name: 'community-one'))
-      end
+      subject! { create(:community, fb_community.merge(name: 'community-one')) }
 
       it 'updates the community attributes' do
         expect(subject.name).to eq 'community-one'
 
         expect do
-          get :edit, params: { id: subject.fbid }, session: valid_session
+          post :create, params: { fbid: subject.fbid }, session: valid_session
         end.not_to(change { Community.count })
 
         expect(subject.reload.name).to eq 'Asgard'
@@ -93,7 +124,7 @@ RSpec.describe CommunitiesController, type: :controller do
         it 'adds the user as community admin' do
           expect(subject.admin_profiles).to be_empty
 
-          get :edit, params: { id: subject.fbid }, session: valid_session
+          post :create, params: { fbid: subject.fbid }, session: valid_session
           expect(subject.reload.admin_profiles).to eq [user.admin_profile]
         end
       end
@@ -103,7 +134,7 @@ RSpec.describe CommunitiesController, type: :controller do
           user.admin_profile.add_community(subject)
 
           expect do
-            get :edit, params: { id: subject.fbid }, session: valid_session
+            post :create, params: { fbid: subject.fbid }, session: valid_session
           end.not_to(change { subject.admin_profiles })
 
           expect(subject.reload.admin_profiles).to eq [user.admin_profile]
@@ -113,15 +144,15 @@ RSpec.describe CommunitiesController, type: :controller do
 
     context 'error occurs' do
       it 'redirects to communities path' do
-        get :edit, params: { id: 404 }, session: valid_session
+        post :create, params: { fbid: 404 }, session: valid_session
         expect(response).to redirect_to communities_path
       end
     end
 
     context 'no error occurs' do
       it 'returns a success response' do
-        get :edit, params: { id: fb_community['id'] }, session: valid_session
-        expect(response).to be_successful
+        post :create, params: { fbid: fbid }, session: valid_session
+        expect(response).to redirect_to edit_community_path(Community.last)
       end
     end
   end

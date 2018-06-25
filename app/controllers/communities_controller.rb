@@ -1,6 +1,6 @@
 class CommunitiesController < ApplicationController
-  before_action :set_graph_agent, only: %i[index edit]
-  before_action :set_community, only: %i[show update destroy]
+  before_action :set_graph_agent, only: %i[index create]
+  before_action :set_community, only: %i[show edit update destroy]
 
   def index
     @fb_communities = @fb.admin_communities
@@ -15,12 +15,15 @@ class CommunitiesController < ApplicationController
 
   def show; end
 
-  def edit
-    @fb_community = @fb.community_details(params[:id])
-    @community = Community.find_or_initialize_by(fbid: params[:id])
-    @community.name = @fb_community['name']
-    @community.save
-    current_user.admin_profile.add_community(@community)
+  def edit; end
+
+  def create
+    fb_community = @fb.community_details(params[:fbid])
+    community = Community.find_or_initialize_by(fbid: params[:fbid])
+    community.name = fb_community['name']
+    community.save
+    current_user.admin_profile.add_community(community)
+    redirect_to edit_community_path(community)
 
   rescue Koala::Facebook::ClientError
     redirect_to communities_path, notice: 'Community not found'

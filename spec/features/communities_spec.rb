@@ -42,14 +42,14 @@ RSpec.describe 'Communities', type: :feature do
       within(communities[1]) do
         expect(page).to have_content(subbed.name)
         expect(page).to(
-          have_link(text: 'Subscribe', href: edit_community_path(unsubbed.fbid))
+          have_link(text: 'Subscribe', href: communities_path(fbid: unsubbed.fbid))
         )
       end
 
       within(communities[2]) do
         expect(page).to have_content(neww.name)
         expect(page).to(
-          have_link(text: 'Subscribe', href: edit_community_path(neww.fbid))
+          have_link(text: 'Subscribe', href: communities_path(fbid: neww.fbid))
         )
       end
     end
@@ -79,7 +79,7 @@ RSpec.describe 'Communities', type: :feature do
     end
 
     community = Community.first
-    expect(current_path).to eq edit_community_path(community.fbid)
+    expect(current_path).to eq edit_community_path(community.id)
     expect(page.find('h1'))
       .to have_content("Editing Community: #{community.name}")
 
@@ -117,7 +117,7 @@ RSpec.describe 'Communities', type: :feature do
 
       within('tr') do
         expect(page).to(
-          have_link(text: 'Subscribe', href: edit_community_path(community.fbid))
+          have_link(text: 'Subscribe', href: communities_path(fbid: community.fbid))
         )
       end
     end

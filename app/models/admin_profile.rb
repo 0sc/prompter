@@ -9,4 +9,8 @@ class AdminProfile < ApplicationRecord
   def add_community(community)
     communities << community unless communities.include? community
   end
+
+  def remove_community(community)
+    community_admin_profiles.where(community: community).map(&:destroy)
+  end
 end

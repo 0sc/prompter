@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AdminProfile, type: :model do
+  subject { create(:admin_profile) }
+  let(:community) { create(:community) }
+
   it { should belong_to(:user) }
   it { should have_many(:community_admin_profiles) }
   it { should have_many(:communities).through(:community_admin_profiles) }
@@ -12,8 +15,6 @@ RSpec.describe AdminProfile, type: :model do
   end
 
   describe '#add_community' do
-    subject { create(:admin_profile) }
-    let(:community) { create(:community) }
 
     context 'profile already has community' do
       it "doesn't double add the community" do
@@ -32,6 +33,15 @@ RSpec.describe AdminProfile, type: :model do
 
         expect(subject.communities).to include(community)
       end
+    end
+  end
+
+  describe '#remove_community' do
+    before { subject.communities << community }
+
+    it 'removes the community from the admin_profile' do
+      expect { subject.remove_community(community) }
+        .to change { subject.communities.count }.from(1).to(0)
     end
   end
 end

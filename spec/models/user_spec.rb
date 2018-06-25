@@ -30,7 +30,7 @@ RSpec.describe User, type: :model do
 
   describe '#update_from_auth_hash' do
     it 'updates the user attributes with details from the auth hash' do
-      target_attrs = %i[email name]
+      target_attrs = %i[email name image]
       target_attrs.each { |attr| subject[attr] = 'something-random' }
       subject.token = '122333353fsdfafd'
       subject.expires_at = 1_234_567

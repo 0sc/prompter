@@ -32,3 +32,5 @@ SAMPLE_AUTH_HASH = {
     }
   }
 }.freeze
+
+OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(SAMPLE_AUTH_HASH)

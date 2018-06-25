@@ -14,6 +14,7 @@ class User < ApplicationRecord
   def update_from_auth_hash(auth_hash)
     self.email = auth_hash[:info][:email]
     self.name = auth_hash[:info][:name]
+    self.image = auth_hash[:info][:image]
 
     self.token = auth_hash[:credentials][:token]
     self.expires_at = auth_hash[:credentials][:expires_at]

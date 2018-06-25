@@ -6,13 +6,13 @@ RSpec.describe CommunitiesController, type: :controller do
   let(:valid_session) { { user_id: user.id } }
 
   before(:each) do
-    stub_const('FacebookService', DummyFacebookService)
+    stub_const('FacebookService', DummyFacebookService.new)
   end
 
   describe 'GET #index' do
     it 'returns a success response' do
       get :index, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

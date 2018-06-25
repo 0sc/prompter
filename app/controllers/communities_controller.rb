@@ -1,6 +1,6 @@
 class CommunitiesController < ApplicationController
   before_action :set_graph_agent, only: %i[index edit]
-  before_action :set_community, only: %i[show update]
+  before_action :set_community, only: %i[show update destroy]
 
   def index
     @fb_communities = @fb.admin_communities
@@ -33,11 +33,14 @@ class CommunitiesController < ApplicationController
     #   render :edit
     # end
   end
-  #
-  # def destroy
-  #   @community.destroy
-  #   redirect_to communities_url, notice: 'Community was successfully destroyed.'
-  # end
+
+  def destroy
+    current_user.admin_profile.remove_community(@community)
+    @community.destroy if @community.admin_profiles.empty?
+
+    msg = "Your '#{@community.name}' community subscription has been removed"
+    redirect_to communities_url, notice: msg
+  end
 
   private
 

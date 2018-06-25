@@ -125,4 +125,58 @@ RSpec.describe CommunitiesController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    context 'when community does not exist' do
+      it 'redirects to communities path' do
+        delete :destroy, params: { id: 404 }, session: valid_session
+        expect(response).to redirect_to communities_path
+        expect(flash[:notice]).to eq 'Community not found'
+      end
+    end
+
+    context 'when community exists' do
+      let(:community) { create(:community) }
+      before(:each) do
+        user.admin_profile.add_community(community)
+        expect(user.admin_communities).to include community
+      end
+
+      it 'removes the community from user admin profile' do
+        expect do
+          delete :destroy, params: { id: community.id }, session: valid_session
+        end.to change { user.admin_profile.communities.count }.from(1).to(0)
+
+        expect(user.reload.admin_communities).to be_empty
+        msg = "Your '#{community.name}' community subscription has been removed"
+        expect(flash[:notice]).to eq msg
+      end
+
+      context 'when community has no associated admin profile' do
+        it 'removes the community' do
+          expect do
+            delete :destroy, params: { id: community.id }, session: valid_session
+          end.to change { Community.count }.from(1).to(0)
+        end
+      end
+
+      context 'when community still has associated admin profile' do
+        let(:user_two) { create(:user) }
+
+        before do
+          user_two.admin_profile.add_community(community)
+          expect(community.admin_profiles)
+            .to match_array([user.admin_profile ,user_two.admin_profile])
+        end
+
+        it 'does not remove the community' do
+          expect do
+            delete :destroy, params: { id: community.id }, session: valid_session
+          end.not_to(change { Community.count })
+
+          expect(community.reload.admin_profiles).to eq [user_two.admin_profile]
+        end
+      end
+    end
+  end
 end

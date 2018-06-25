@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
     name 'John Doe'
-    email 'john.doe@email.com'
+    sequence(:email) { |n| "john.doe-#{n}@email.com" }
     sequence(:fbid, 123_456_789)
     image 'http://graph.facebook.com/1234567/picture?type=square'
     token 'tooookeeeennnnnn'

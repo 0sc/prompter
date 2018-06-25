@@ -3,10 +3,18 @@ require 'support/dummy_facebook_service'
 
 RSpec.describe CommunitiesController, type: :controller do
   let(:user) { create(:user) }
+  let(:dummy_service) { DummyFacebookService.new }
   let(:valid_session) { { user_id: user.id } }
+  let(:fb_community) do
+    attributes_for(:community,
+                   name: 'Asgard',
+                   id: 'my-fbid',
+                   fbid: 'my-fbid').stringify_keys
+  end
 
   before(:each) do
-    stub_const('FacebookService', DummyFacebookService.new)
+    stub_const('FacebookService', dummy_service)
+    dummy_service.admin_communities = [fb_community]
   end
 
   describe 'GET #index' do
@@ -16,25 +24,64 @@ RSpec.describe CommunitiesController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    context 'when community does not exist' do
+      it 'redirects to the communities path' do
+        get :show, params: { id: 404 }, session: valid_session
+
+        expect(response).to redirect_to communities_path
+        expect(flash[:notice]).to eq 'Community not found'
+      end
+    end
+
+    describe 'when community does exist' do
+      let(:community) { create(:community) }
+
+      context 'user is subscribed as admin' do
+        before { user.admin_profile.add_community(community) }
+
+        it 'returns a success response' do
+          get :show, params: { id: community.id }, session: valid_session
+          expect(response).to be_successful
+        end
+      end
+
+      context 'user is not subscribed as admin' do
+        it 'redirects to the communities path' do
+          get :show, params: { id: community.id }, session: valid_session
+          expect(response).to redirect_to communities_path
+          expect(flash[:notice]).to eq 'Community not found'
+        end
+      end
+    end
+  end
+
   describe 'GET #edit' do
     describe "community doesn't exist" do
       it 'creates the community' do
         expect do
-          get :edit, params: { id: 2018 }, session: valid_session
+          get :edit, params: { id: fb_community['id'] }, session: valid_session
         end.to change { Community.count }.from(0).to(1)
-        expect(Community.first.fbid).to eq "2018"
+
+        community = Community.first
+        expect(community.fbid).to eq fb_community['id']
+        expect(community.name).to eq fb_community['name']
       end
 
       it 'adds the user as community admin' do
-        get :edit, params: { id: 2018 }, session: valid_session
+        get :edit, params: { id: fb_community['id'] }, session: valid_session
         expect(Community.first.admin_profiles).to eq [user.admin_profile]
       end
     end
 
     describe 'community does exist' do
-      subject! { create(:community, name: 'community-one') }
+      subject! do
+        create(:community, fb_community.merge(name: 'community-one'))
+      end
 
       it 'updates the community attributes' do
+        expect(subject.name).to eq 'community-one'
+
         expect do
           get :edit, params: { id: subject.fbid }, session: valid_session
         end.not_to(change { Community.count })
@@ -56,9 +103,7 @@ RSpec.describe CommunitiesController, type: :controller do
           user.admin_profile.add_community(subject)
 
           expect do
-            get :edit,
-                params: { id: subject.fbid },
-                session: valid_session
+            get :edit, params: { id: subject.fbid }, session: valid_session
           end.not_to(change { subject.admin_profiles })
 
           expect(subject.reload.admin_profiles).to eq [user.admin_profile]
@@ -75,8 +120,8 @@ RSpec.describe CommunitiesController, type: :controller do
 
     context 'no error occurs' do
       it 'returns a success response' do
-        get :edit, params: { id: 2018 }, session: valid_session
-        expect(response).to be_success
+        get :edit, params: { id: fb_community['id'] }, session: valid_session
+        expect(response).to be_successful
       end
     end
   end

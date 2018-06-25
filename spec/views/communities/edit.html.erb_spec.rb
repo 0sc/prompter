@@ -8,6 +8,10 @@ RSpec.describe 'communities/edit', type: :view do
     render
   end
 
+  it 'renders the heading' do
+    expect(page).to have_content("Editing Community: #{community.name}")
+  end
+
   it 'renders the edit community form' do
     expect(page).to have_selector('form')
   end

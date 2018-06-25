@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'communities/index', type: :view do
-  let(:community_one) { create(:community) }
-  let(:community_two) { create(:community) }
+  let(:community_one) { { 'id' => 1, 'name' => 'name one' } }
+  let(:community_two) { { 'id' => 2, 'name' => 'name two' } }
 
   before(:each) do
     assign(:fb_communities, [community_one, community_two])
-    assign(:subscribed_communities, [community_two])
+    assign(:subscribed_communities_mapping, [{ 'fbid' => 1 }])
   end
 
   it 'renders a list of communities' do

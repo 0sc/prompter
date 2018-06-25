@@ -1,13 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'communities/_subscribed_community', type: :view do
-  let(:community) { create(:community).attributes }
+  let(:db_id) { 1234 }
+  let(:community) do
+    attributes_for(:community).merge('id' => 'fbid').stringify_keys
+  end
   before(:each) { render_partial }
 
   it 'displays the name of the community with link view details' do
     expect(page).to have_link(
-      text: community[:name],
-      href: community_path(community['id'])
+      text: community['name'],
+      href: community_path(db_id)
     )
   end
 
@@ -28,7 +31,7 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
   def render_partial(opts = {})
     render(
       partial: 'communities/subscribed_community',
-      locals: { community: community }.merge(opts)
+      locals: { community: community, id: db_id }.merge(opts)
     )
   end
 end

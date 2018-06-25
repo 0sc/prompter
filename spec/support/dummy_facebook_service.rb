@@ -1,6 +1,9 @@
 class DummyFacebookService
   attr_accessor :admin_communities,
                 :admin_communities_fbids
+  def initialize
+    @admin_communities = []
+  end
 
   def new(fbid, token)
     @fbid = fbid
@@ -9,7 +12,9 @@ class DummyFacebookService
   end
 
   def community_details(id)
-    raise Koala::Facebook::ClientError.new(400, {}.to_json) if id == '404'
-    { 'name' => 'Asgard' }
+    community = admin_communities.find { |c| c['id'] == id }
+    return community if community
+
+    raise Koala::Facebook::ClientError.new(400, {}.to_json)
   end
 end

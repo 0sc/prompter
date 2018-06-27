@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.4.2'
 
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'facebook-messenger'
 gem 'koala'
 gem 'omniauth-facebook'
 gem 'pg', '>= 0.18', '< 2.0'

@@ -4,7 +4,7 @@ shared_examples 'messenger_profile' do
   describe 'psid validation' do
     context 'psid is not present' do
       before { subject.psid = nil }
-      xit { should validate_uniqueness_of(:psid) }
+      xit { should_not validate_uniqueness_of(:psid) }
     end
 
     context 'psid is present' do

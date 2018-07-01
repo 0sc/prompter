@@ -30,7 +30,7 @@ RSpec.describe UsersController, type: :controller do
     routes { FakeRouter::Route.routes }
 
     describe 'successful create' do
-      context 'user already exists' do
+      context 'user already exists with facebook profile' do
         let!(:user) { create(:user, fbid: SAMPLE_AUTH_HASH[:uid], email: 'sc') }
 
         it 'does not duplicate user record' do
@@ -40,12 +40,62 @@ RSpec.describe UsersController, type: :controller do
         it 'updates the user attributes' do
           post :create
           user.reload
-          expect(user.email).to eq SAMPLE_AUTH_HASH[:info][:email]
-          expect(user.name).to eq SAMPLE_AUTH_HASH[:info][:name]
-          expect(user.image).to eq SAMPLE_AUTH_HASH[:info][:image]
-          expect(user.token).to eq SAMPLE_AUTH_HASH[:credentials][:token]
-          expect(user.expires_at)
-            .to eq SAMPLE_AUTH_HASH[:credentials][:expires_at]
+          %i[email name image].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:info][attr]
+          end
+          %i[token expires_at].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:credentials][attr]
+          end
+        end
+      end
+
+      context 'user already exists with messenger profile' do
+        let(:fbid) { SAMPLE_AUTH_HASH[:uid] }
+        let!(:user) { create(:user, fbid: fbid, psid: 1_235_678) }
+
+        it 'does not duplicate user record' do
+          expect { post :create, params: {}, session: { user_id: user.id } }
+            .not_to(change { User.count })
+        end
+
+        it 'updates the user attributes' do
+          post :create, params: {}, session: { user_id: user.id }
+          user.reload
+          %i[email name image].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:info][attr]
+          end
+          %i[token expires_at].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:credentials][attr]
+          end
+        end
+      end
+
+      context 'user already exists with different messenger and fb profiles' do
+        let(:fbid) { SAMPLE_AUTH_HASH[:uid] }
+        let!(:fb_acc) { create(:user, image: nil, fbid: fbid, psid: nil) }
+        let!(:msg_acc) { create(:user) }
+
+        it 'deletes the messenger profile' do
+          expect { post :create, params: {}, session: { user_id: msg_acc.id } }
+            .to change { User.count }.from(2).to(1)
+        end
+
+        it 'consolidates the fb profile with the messenger profile info' do
+          post :create, params: {}, session: { user_id: msg_acc.id }
+          fb_acc.reload
+          expect(fb_acc.psid).to eq msg_acc.psid
+          expect(fb_acc.image).to eq msg_acc.image
+        end
+
+        it 'updates the fb profile attributes' do
+          post :create, params: {}, session: { user_id: msg_acc.id }
+          fb_acc.reload
+          %i[email name image].each do |attr|
+            expect(fb_acc[attr]).to eq SAMPLE_AUTH_HASH[:info][attr]
+          end
+          %i[token expires_at].each do |attr|
+            expect(fb_acc[attr]).to eq SAMPLE_AUTH_HASH[:credentials][attr]
+          end
         end
       end
 
@@ -54,12 +104,12 @@ RSpec.describe UsersController, type: :controller do
           expect { post :create }.to change { User.count }.from(0).to(1)
           user = User.first
 
-          expect(user.email).to eq SAMPLE_AUTH_HASH[:info][:email]
-          expect(user.name).to eq SAMPLE_AUTH_HASH[:info][:name]
-          expect(user.image).to eq SAMPLE_AUTH_HASH[:info][:image]
-          expect(user.token).to eq SAMPLE_AUTH_HASH[:credentials][:token]
-          expect(user.expires_at)
-            .to eq SAMPLE_AUTH_HASH[:credentials][:expires_at]
+          %i[email name image].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:info][attr]
+          end
+          %i[token expires_at].each do |attr|
+            expect(user[attr]).to eq SAMPLE_AUTH_HASH[:credentials][attr]
+          end
         end
       end
 

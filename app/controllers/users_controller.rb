@@ -2,18 +2,17 @@ class UsersController < ApplicationController
   skip_before_action :authenticate_user
   before_action :ensure_valid_user, only: :account_link
   before_action :set_session_variables, only: :account_link
+  before_action :duplicate_account_check, only: :create
   after_action :clear_session, if: -> { account_linking? }, only: :create
 
   def new; end
 
   def create
-    # TODO: logic to combine accounts probably copy messenger account over
-    user = current_user || User.find_or_initialize_by(fbid: auth_hash[:uid])
-    user.update_from_auth_hash(auth_hash)
+    current_user.update_from_auth_hash(auth_hash)
 
-    if user.save
-      session[:user_id] = user.id
-      redirect_to success_redirect_uri, notice: "Welcome #{user.name}"
+    if current_user.save
+      session[:user_id] = current_user.id
+      redirect_to success_redirect_uri, notice: "Welcome #{current_user.name}"
     else
       handle_oauth_failure
     end
@@ -44,6 +43,16 @@ class UsersController < ApplicationController
     session[:alt] = params['account_linking_token']
     session[:rdr] = params['redirect_uri']
     session[:user_id] = current_user.id
+  end
+
+  def duplicate_account_check
+    potential_account = User.find_or_initialize_by(fbid: auth_hash[:uid])
+
+    if current_user.present? && current_user != potential_account
+      User.combine_accounts!(potential_account, current_user)
+    end
+
+    @current_user = potential_account
   end
 
   def success_redirect_uri

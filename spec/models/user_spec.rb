@@ -1,6 +1,6 @@
 require 'rails_helper'
 require 'support/omniauth'
-require 'models/concerns/messenger_profile_spec'
+require 'models/concerns/messenger_profile'
 
 RSpec.describe User, type: :model do
   subject { build(:user) }

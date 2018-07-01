@@ -7,7 +7,9 @@ module FakeRouter
   end
 
   Route.routes.draw do
+    root 'users#new'
     resources :users, only: :create
+    get '/auth/:provider/failed', to: 'users#failed'
     resources :communities
   end
 end
@@ -89,7 +91,7 @@ RSpec.describe UsersController, type: :controller do
       describe 'redirect' do
         context 'account linking' do
           it 'redirects to the session rdr afterwards' do
-            uri = 'https://fb.com/bot/way?code=green'
+            uri = 'https://fb.com/bot/way?code=red'
             post :create, params: {}, session: { rdr: uri }
             expect(response).to redirect_to uri
             expect(flash[:notice]).to eq notice
@@ -100,7 +102,7 @@ RSpec.describe UsersController, type: :controller do
           it 'redirects to the root path with notice' do
             post :create
 
-            expect(response).to redirect_to '/'
+            expect(response).to redirect_to root_path
             expect(flash[:notice]).to eq notice
           end
         end
@@ -150,6 +152,31 @@ RSpec.describe UsersController, type: :controller do
       it 'redirects to fb auth route' do
         get :account_link, params: { psid: subject.psid }
         expect(response).to redirect_to '/auth/facebook'
+      end
+    end
+  end
+
+  describe 'GET #failed' do
+    routes { FakeRouter::Route.routes }
+
+    let(:notice) { 'Error occured setting up your account!' }
+    before { request.env['omniauth.auth'] = { info: {}, credentials: {} } }
+
+    context 'account linking' do
+      it 'redirects to the session rdr afterwards' do
+        uri = 'https://fb.com/bot/way?code=red'
+        get :failed, params: { provider: 'facebook' }, session: { rdr: uri }
+        expect(response).to redirect_to uri
+        expect(flash[:notice]).to eq notice
+      end
+    end
+
+    context 'not account linking' do
+      it 'redirects to the root path with notice' do
+        get :failed, params: { provider: 'facebook' }
+
+        expect(response).to redirect_to root_path
+        expect(flash[:notice]).to eq notice
       end
     end
   end

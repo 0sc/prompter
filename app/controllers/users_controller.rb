@@ -15,13 +15,16 @@ class UsersController < ApplicationController
       session[:user_id] = user.id
       redirect_to success_redirect_uri, notice: "Welcome #{user.name}"
     else
-      msg = 'Error occured setting up your account!'
-      redirect_to failed_redirect_uri, notice: msg
+      handle_oauth_failure
     end
   end
 
   def account_link
     redirect_to '/auth/facebook'
+  end
+
+  def failed
+    handle_oauth_failure
   end
 
   protected
@@ -49,6 +52,11 @@ class UsersController < ApplicationController
     else
       communities_path
     end
+  end
+
+  def handle_oauth_failure
+    msg = 'Error occured setting up your account!'
+    redirect_to failed_redirect_uri, notice: msg
   end
 
   def failed_redirect_uri

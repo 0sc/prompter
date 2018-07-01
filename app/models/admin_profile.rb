@@ -13,4 +13,9 @@ class AdminProfile < ApplicationRecord
   def remove_community(community)
     community_admin_profiles.where(community: community).map(&:destroy)
   end
+
+  def transfer_communities_to(profile)
+    return false unless profile.persisted?
+    community_admin_profiles.update_all(admin_profile_id: profile.id)
+  end
 end

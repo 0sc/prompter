@@ -9,4 +9,9 @@ class MemberProfile < ApplicationRecord
   def subscriptions?
     communities.present?
   end
+
+  def transfer_communities_to(profile)
+    return false unless profile.persisted?
+    community_member_profiles.update_all(member_profile_id: profile.id)
+  end
 end

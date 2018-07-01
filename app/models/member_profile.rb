@@ -11,7 +11,7 @@ class MemberProfile < ApplicationRecord
   end
 
   def transfer_communities_to(profile)
-    return false unless profile.persisted?
+    raise "Not found profile: #{profile}" unless profile.persisted?
     community_member_profiles.update_all(member_profile_id: profile.id)
   end
 end

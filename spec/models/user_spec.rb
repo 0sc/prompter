@@ -112,4 +112,65 @@ RSpec.describe User, type: :model do
       expect(subject.account_linked?).to be true
     end
   end
+
+  describe '.combine_accounts!' do
+    let!(:acc_one) { create(:user) }
+    let!(:acc_two) { create(:user) }
+
+    it 'returns if an error occurred' do
+      allow(acc_two.admin_profile)
+        .to receive(:transfer_communities_to).and_raise('Boom!')
+      expect { User.combine_accounts!(acc_one, acc_two) }.to raise_error 'Boom!'
+      expect(acc_one.persisted?).to be true
+      expect(acc_two.persisted?).to be true
+    end
+
+    it 'copies over missing attributes' do
+      acc_one.update!(psid: nil)
+      expect { User.combine_accounts!(acc_one, acc_two) }
+        .to change { acc_one.reload.psid }.from(nil).to(acc_two.psid)
+    end
+
+    it 'transfers account two communites to account one' do
+      admin_community_two = create(
+        :community_admin_profile,
+        admin_profile: acc_two.admin_profile
+      ).community
+
+      member_community_two = create(
+        :community_member_profile,
+        member_profile: acc_two.member_profile
+      ).community
+
+      admin_community_one = create(
+        :community_admin_profile,
+        admin_profile: acc_one.admin_profile
+      ).community
+
+      member_community_one = create(
+        :community_member_profile,
+        member_profile: acc_one.member_profile
+      ).community
+
+      expect(acc_one.admin_communities).to match_array([admin_community_one])
+      expect(acc_one.member_communities).to match_array([member_community_one])
+
+      expect(acc_two.admin_communities).to match_array([admin_community_two])
+      expect(acc_two.member_communities).to match_array([member_community_two])
+
+      User.combine_accounts!(acc_one, acc_two)
+      acc_one.reload
+
+      expect(acc_one.admin_communities)
+        .to match_array([admin_community_one, admin_community_two])
+      expect(acc_one.member_communities)
+        .to match_array([member_community_one, member_community_two])
+    end
+
+    it 'destroys the second account' do
+      expect { User.combine_accounts!(acc_one, acc_two) }
+        .to change { User.count }.from(2).to(1)
+      expect(User.all).to eq [acc_one]
+    end
+  end
 end

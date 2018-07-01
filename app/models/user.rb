@@ -31,4 +31,23 @@ class User < ApplicationRecord
   def token_expired?
     Time.zone.now > Time.zone.at(expires_at)
   end
+
+  def self.combine_accounts!(acc_one, acc_two)
+    User.transaction do
+      # copy over attributes
+      acc_two.attributes.except(:id).each { |key, val| acc_one[key] ||= val }
+
+      # copy over associations
+      ## copy over admin_communities
+      acc_two.admin_profile.transfer_communities_to(acc_one.admin_profile)
+      ## copy over member_communities
+      acc_two.member_profile.transfer_communities_to(acc_one.member_profile)
+
+      # destroy acc_two first! Important to avoid failed validations for one
+      acc_two.destroy!
+
+      # save acc_one
+      acc_one.save!
+    end
+  end
 end

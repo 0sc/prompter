@@ -55,15 +55,12 @@ RSpec.describe MemberProfile, type: :model do
     end
 
     context 'target_profile does not exist' do
-      it 'returns false' do
-        expect(profile_one.transfer_communities_to(profile_two)).to be false
-      end
-
-      it 'does not transfers communities to target profile' do
+      it 'raise an error and does not transfer communities' do
         expect(profile_two.communities).to eq []
         expect(profile_one.communities).to eq Community.all
 
-        expect(profile_one.transfer_communities_to(profile_two)).to be false
+        expect { profile_one.transfer_communities_to(profile_two) }
+          .to raise_error("Not found profile: #{profile_two}")
 
         expect(profile_one.reload.communities).to eq Community.all
         expect(profile_two.communities).to eq []

@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.string :name, null: false
       t.string :email, null: false
       t.integer :fbid, null: false, limit: 8
+      t.integer :psid, limit: 8
       t.string :image
       t.string :token, null: false
       t.integer :expires_at, null: false

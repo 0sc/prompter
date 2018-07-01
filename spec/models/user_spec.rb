@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'support/omniauth'
+require 'models/concerns/messenger_profile_spec'
 
 RSpec.describe User, type: :model do
   subject { build(:user) }
@@ -15,6 +16,8 @@ RSpec.describe User, type: :model do
 
   it { should have_one(:admin_profile) }
   it { should have_one(:member_profile) }
+
+  it_should_behave_like 'messenger_profile'
 
   describe 'delegates' do
     subject { create(:user) }

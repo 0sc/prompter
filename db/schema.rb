@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2018_06_18_142631) do
     t.string "name", null: false
     t.string "email", null: false
     t.bigint "fbid", null: false
+    t.bigint "psid"
     t.string "image"
     t.string "token", null: false
     t.integer "expires_at", null: false

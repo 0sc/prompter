@@ -33,4 +33,15 @@ SAMPLE_AUTH_HASH = {
   }
 }.freeze
 
+SAMPLE_MESSENGER_PROFILE = {
+  'first_name' => 'Joe',
+  'last_name' => 'Bloggs',
+  'profile_pic' =>
+  'https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=987654321',
+  'locale' => 'en_US',
+  'timezone' => 1,
+  'gender' => 'male',
+  'id' => '987654321'
+}.freeze
+
 OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(SAMPLE_AUTH_HASH)

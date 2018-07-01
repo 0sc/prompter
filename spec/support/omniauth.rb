@@ -11,7 +11,7 @@ SAMPLE_AUTH_HASH = {
   },
   credentials: {
     token: 'ABCDEF...',
-    expires_at: 1321747205,
+    expires_at: 1_321_747_205,
     expires: true # this will always be true
   },
   extra: {

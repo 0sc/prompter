@@ -10,4 +10,20 @@ RSpec.describe MemberProfile, type: :model do
       expect(subject.member_communities).to eq subject.communities
     end
   end
+
+  describe '#subscriptions?' do
+    context 'communities present' do
+      it 'returns true' do
+        subject.communities << create(:community)
+        expect(subject.subscriptions?).to be true
+      end
+    end
+
+    context 'no communities present' do
+      it 'returns false' do
+        subject.community_member_profiles.map(&:destroy)
+        expect(subject.subscriptions?).to be false
+      end
+    end
+  end
 end

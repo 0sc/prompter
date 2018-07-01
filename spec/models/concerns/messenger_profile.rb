@@ -1,3 +1,5 @@
+require 'support/omniauth'
+
 shared_examples 'messenger_profile' do
   subject { build(described_class.model_name.singular.to_sym) }
 

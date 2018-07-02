@@ -15,7 +15,6 @@ RSpec.describe AdminProfile, type: :model do
   end
 
   describe '#add_community' do
-
     context 'profile already has community' do
       it "doesn't double add the community" do
         subject.communities << community

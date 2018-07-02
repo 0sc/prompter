@@ -23,6 +23,7 @@ class CommunitiesController < ApplicationController
     community.name = fb_community['name']
     community.save
     current_user.admin_profile.add_community(community)
+    current_user.member_profile.add_community(community)
     redirect_to edit_community_path(community)
 
   rescue Koala::Facebook::ClientError
@@ -39,6 +40,7 @@ class CommunitiesController < ApplicationController
 
   def destroy
     current_user.admin_profile.remove_community(@community)
+    current_user.member_profile.remove_community(@community)
     @community.destroy if @community.admin_profiles.empty?
 
     msg = "Your '#{@community.name}' community subscription has been removed"

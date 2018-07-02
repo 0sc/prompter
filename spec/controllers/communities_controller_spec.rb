@@ -105,6 +105,11 @@ RSpec.describe CommunitiesController, type: :controller do
         post :create, params: { fbid: fbid }, session: valid_session
         expect(Community.first.admin_profiles).to eq [user.admin_profile]
       end
+
+      it 'adds the user as community member' do
+        post :create, params: { fbid: fbid }, session: valid_session
+        expect(Community.first.member_profiles).to eq [user.member_profile]
+      end
     end
 
     describe 'community does exist' do
@@ -140,6 +145,25 @@ RSpec.describe CommunitiesController, type: :controller do
           expect(subject.reload.admin_profiles).to eq [user.admin_profile]
         end
       end
+
+      context 'user is not community member' do
+        it 'adds the user as community member' do
+          post :create, params: { fbid: fbid }, session: valid_session
+          expect(Community.first.member_profiles).to eq [user.member_profile]
+        end
+      end
+
+      context 'user is community member' do
+        it "doesn't double add the user as community admin" do
+          user.member_profile.add_community(subject)
+
+          expect do
+            post :create, params: { fbid: fbid }, session: valid_session
+          end.not_to(change { subject.member_profiles })
+
+          expect(subject.reload.member_profiles).to eq [user.member_profile]
+        end
+      end
     end
 
     context 'error occurs' do
@@ -170,7 +194,9 @@ RSpec.describe CommunitiesController, type: :controller do
       let(:community) { create(:community) }
       before(:each) do
         user.admin_profile.add_community(community)
+        user.member_profile.add_community(community)
         expect(user.admin_communities).to include community
+        expect(user.member_communities).to include community
       end
 
       it 'removes the community from user admin profile' do
@@ -179,6 +205,16 @@ RSpec.describe CommunitiesController, type: :controller do
         end.to change { user.admin_profile.communities.count }.from(1).to(0)
 
         expect(user.reload.admin_communities).to be_empty
+        msg = "Your '#{community.name}' community subscription has been removed"
+        expect(flash[:notice]).to eq msg
+      end
+
+      it 'removes the community from user member profile' do
+        expect do
+          delete :destroy, params: { id: community.id }, session: valid_session
+        end.to change { user.member_profile.communities.count }.from(1).to(0)
+
+        expect(user.reload.member_communities).to be_empty
         msg = "Your '#{community.name}' community subscription has been removed"
         expect(flash[:notice]).to eq msg
       end

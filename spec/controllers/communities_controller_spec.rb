@@ -5,16 +5,18 @@ RSpec.describe CommunitiesController, type: :controller do
   let(:user) { create(:user) }
   let(:dummy_service) { DummyFacebookService.new }
   let(:valid_session) { { user_id: user.id } }
-  let(:fb_community) do
+  let(:graph_info) do
     attributes_for(:community,
                    name: 'Asgard',
+                   icon: 'my-icon.png',
+                   cover: { source: 'my-cover-image.jpg' },
                    id: 'my-fbid',
                    fbid: 'my-fbid').stringify_keys
   end
 
   before(:each) do
     stub_const('FacebookService', dummy_service)
-    dummy_service.admin_communities = [fb_community]
+    dummy_service.admin_communities = [graph_info]
   end
 
   describe 'GET #index' do
@@ -89,7 +91,7 @@ RSpec.describe CommunitiesController, type: :controller do
   end
 
   describe 'GET #create' do
-    let(:fbid) { fb_community['id'] }
+    let(:fbid) { graph_info['id'] }
 
     describe "community doesn't exist" do
       it 'creates the community' do
@@ -97,8 +99,10 @@ RSpec.describe CommunitiesController, type: :controller do
           .to change { Community.count }.from(0).to(1)
 
         community = Community.first
-        expect(community.fbid).to eq fb_community['id']
-        expect(community.name).to eq fb_community['name']
+        expect(community.fbid).to eq graph_info['id']
+        expect(community.name).to eq graph_info['name']
+        expect(community.icon).to eq graph_info['icon']
+        expect(community.cover).to eq graph_info.dig('cover','source')
       end
 
       it 'adds the user as community admin' do
@@ -113,7 +117,7 @@ RSpec.describe CommunitiesController, type: :controller do
     end
 
     describe 'community does exist' do
-      subject! { create(:community, fb_community.merge(name: 'community-one')) }
+      subject! { create(:community, graph_info.merge(name: 'community-one')) }
 
       it 'updates the community attributes' do
         expect(subject.name).to eq 'community-one'
@@ -123,6 +127,8 @@ RSpec.describe CommunitiesController, type: :controller do
         end.not_to(change { Community.count })
 
         expect(subject.reload.name).to eq 'Asgard'
+        expect(subject.icon).to eq graph_info['icon']
+        expect(subject.cover).to eq graph_info.dig('cover','source')
       end
 
       context 'user is not community admin' do
@@ -233,7 +239,7 @@ RSpec.describe CommunitiesController, type: :controller do
         before do
           user_two.admin_profile.add_community(community)
           expect(community.admin_profiles)
-            .to match_array([user.admin_profile ,user_two.admin_profile])
+            .to match_array([user.admin_profile, user_two.admin_profile])
         end
 
         it 'does not remove the community' do

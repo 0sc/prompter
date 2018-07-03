@@ -18,10 +18,9 @@ class CommunitiesController < ApplicationController
   def edit; end
 
   def create
-    fb_community = @fb.community_details(params[:fbid])
+    graph_info = @fb.community_details(params[:fbid])
     community = Community.find_or_initialize_by(fbid: params[:fbid])
-    community.name = fb_community['name']
-    community.save
+    community.update_from_fb_graph!(graph_info)
     current_user.admin_profile.add_community(community)
     current_user.member_profile.add_community(community)
     redirect_to edit_community_path(community)

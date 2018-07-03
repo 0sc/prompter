@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 2018_06_18_142631) do
     t.datetime "updated_at", null: false
     t.string "fbid", null: false
     t.string "name", null: false
+    t.string "cover"
+    t.string "icon"
     t.index ["fbid"], name: "index_communities_on_fbid"
   end
 

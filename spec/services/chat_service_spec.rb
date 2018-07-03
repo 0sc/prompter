@@ -4,6 +4,7 @@ require 'support/omniauth'
 RSpec.describe ChatService, type: :service do
   let(:message) { double }
   let(:psid) { SAMPLE_MESSENGER_PROFILE['id'] }
+  subject { ChatService.new(message) }
 
   before(:each) do
     allow(message).to receive(:sender).and_return('id' => psid)
@@ -14,12 +15,11 @@ RSpec.describe ChatService, type: :service do
   describe '.new' do
     context 'user with psid does not exist' do
       it 'creates a new user' do
-        expect { ChatService.new(message) }
-          .to change { User.count }.from(0).to(1)
+        expect { subject }.to change { User.count }.from(0).to(1)
       end
 
       it 'updates the user details' do
-        user = ChatService.new(message).user
+        user = subject.user
         expect(user.persisted?).to be true
 
         first_name = SAMPLE_MESSENGER_PROFILE['first_name']
@@ -40,11 +40,11 @@ RSpec.describe ChatService, type: :service do
       let!(:user) { create(:user, psid: psid) }
 
       it 'does not a create another user' do
-        expect { ChatService.new(message) }.not_to(change { User.count })
+        expect { subject }.not_to(change { User.count })
       end
 
       it 'does not update the user detail' do
-        user = ChatService.new(message).user
+        user = subject.user
         expect(user.persisted?).to be true
 
         first_name = SAMPLE_MESSENGER_PROFILE['first_name']
@@ -63,18 +63,39 @@ RSpec.describe ChatService, type: :service do
   end
 
   describe '#sender_id' do
-    subject { ChatService.new(message) }
-
     it 'returns the message sender id' do
       expect(subject.sender_id).to eq message.sender['id']
     end
   end
 
   describe '#username' do
-    subject { ChatService.new(message) }
-
     it 'returns the first name of the user' do
       expect(subject.username).to eq subject.user.first_name
+    end
+  end
+
+  describe '#default_cta_options' do
+    context 'user is subscribed' do
+      before(:each) do
+        subject.user.member_profile.add_community(create(:community))
+      end
+
+      it 'includes the manage subscription option' do
+        expect(subject.default_cta_options).to match_array(
+          [Chat::QuickReply::FIND_COMMUNITY,
+           Chat::QuickReply::SUBSCRIBE_COMMUNITY,
+           Chat::QuickReply::MANAGE_COMMUNITY]
+        )
+      end
+    end
+
+    context 'user is not subscribed' do
+      it 'does not include the manage subscription option' do
+        expect(subject.default_cta_options).to match_array(
+          [Chat::QuickReply::FIND_COMMUNITY,
+           Chat::QuickReply::SUBSCRIBE_COMMUNITY]
+        )
+      end
     end
   end
 end

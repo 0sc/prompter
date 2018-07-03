@@ -16,4 +16,11 @@ class ChatService
   def username
     user.first_name
   end
+
+  def default_cta_options
+    options = [Chat::QuickReply::FIND_COMMUNITY,
+               Chat::QuickReply::SUBSCRIBE_COMMUNITY]
+    options << Chat::QuickReply::MANAGE_COMMUNITY if user.subscriptions?
+    options
+  end
 end

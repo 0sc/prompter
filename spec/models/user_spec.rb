@@ -36,6 +36,11 @@ RSpec.describe User, type: :model do
       expect(subject.subscriptions?)
         .to eq subject.member_profile.subscriptions?
     end
+
+    it 'delegates #subscription_count to member_profile' do
+      expect(subject.subscription_count)
+        .to eq subject.member_profile.subscription_count
+    end
   end
 
   describe '#update_from_auth_hash' do

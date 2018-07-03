@@ -10,6 +10,10 @@ class MemberProfile < ApplicationRecord
     communities.present?
   end
 
+  def subscription_count
+    communities.count
+  end
+
   def add_community(community)
     communities << community unless communities.include? community
   end

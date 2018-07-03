@@ -30,6 +30,16 @@ RSpec.describe MemberProfile, type: :model do
     end
   end
 
+  describe '#subscription_count' do
+    it 'returns number of communities a user is subscribed to' do
+      create_list(:community, 2).each do |community|
+        subject.add_community(community)
+      end
+
+      expect(subject.subscription_count).to be 2
+    end
+  end
+
   describe '#add_community' do
     context 'profile already has community' do
       it "doesn't double add the community" do

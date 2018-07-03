@@ -1,33 +1,30 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  chat:
+    responses:
+      common:
+        no_subscription:
+          msg: |
+            Hey %{username}, you are not subscribed to any community feed yet.
+            Click below to find your communities or subscribe any community you manage.
+          find: find community
+          subscribe: subscribe community
+        link_account:
+          msg: |
+            To get started you'll need need to link you FB account.
+            Click below to link your account.
+        renew_token:
+          msg: |
+            Your access token has expired.
+            Click below to refresh it.
+        account_linked:
+          msg: |
+            Awesome your account was linked successful.
+            Now, let's continue.
+        subscribed:
+          msg: |
+            So you've got %{num} communities subscribed.
+            Click below to manage these communities, find your communities or subscribe any community you manage.
+        quick_reply:
+          find_community: Find a community
+          manage_community: Manage communities
+          subscribe_community: Subscribe communities

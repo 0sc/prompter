@@ -14,7 +14,7 @@ class Chat::DefaultService < ChatService
   end
 
   def cta_options
-    default_cta_options
+    @cta_options ||= default_cta_options
   end
 
   private

@@ -50,4 +50,20 @@ RSpec.describe Chat::DefaultService, type: :service do
       end
     end
   end
+
+  describe '#cta_options' do
+    context '@cta_options variable is set' do
+      it 'returns the content of the variables' do
+        subject.instance_variable_set(:@cta_options, ['yam'])
+        expect(subject.cta_options).to eq ['yam']
+      end
+    end
+
+    context '@cta_options variable is not set' do
+      it 'returns the default_cta_options' do
+        expect(subject.cta_options)
+          .to eq ChatService.new(message).default_cta_options
+      end
+    end
+  end
 end

@@ -22,7 +22,25 @@ module Chat::QuickReply
     return Responder.send_link_account_cta(self) unless user.account_linked?
     return Responder.send_renew_token_cta(self) if user.token_expired?
 
-    # user token to find all users communities that are subscribed and present to them to choose from
+    service = FacebookService.new(user.fbid, user.token)
+    communities = service.communities
+    ids = communities.map { |community| community['id'] }
+    member_communities_id = user.member_communities.map(&:id)
+
+    # TODO: limit number of communities fetched?
+    subscribable_communities =
+      Community.where(fbid: ids).where.not(id: member_communities_id)
+
+    if subscribable_communities.empty?
+      # no available communities to subscribe
+      @cta_options = [SUBSCRIBE_COMMUNITIES]
+      @cta_options << MANAGE_COMMUNITIES if user.subscriptions?
+      Responder.send_no_community_to_subscribe_cta(self)
+    else
+      payload =
+        subscribable_communities.map { |c| list_template_payload_for(c) }
+      Responder.send_communities_to_subscribe_cta(self, payload)
+    end
   end
 
   def handle_subscribe_communities
@@ -36,6 +54,16 @@ module Chat::QuickReply
     return Responder.send_no_subscription_cta unless user.subscribed?
 
     # lists users subscribed community with option
+  end
+
+  def list_template_payload_for(community)
+    postback = Chat::PostbackService
+               .build_subscribe_to_community_postback(community.id)
+    {
+      title: community.name,
+      image: community.cover,
+      postback: postback
+    }
   end
 
   def quick_reply_payload

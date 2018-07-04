@@ -37,4 +37,10 @@ class Responder
     payload = renew_token_cta(service.sender_id)
     respond(service.sender_id, payload)
   end
+
+  def self.send_no_community_to_subscribe_cta(service)
+  end
+
+  def self.send_communities_to_subscribe_cta(service, list_items)
+  end
 end

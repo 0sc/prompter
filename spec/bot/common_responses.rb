@@ -27,6 +27,16 @@ shared_examples 'common responses' do
     end
   end
 
+  describe '.no_subscription_cta' do
+    it 'returns the payload for no subscription response' do
+      host = 'https://some-host.come'
+      stub_const('CommonResponses::HOST_URL', host)
+      msg = I18n.t("#{base}.no_community.msg", username: 'Sam', link: host)
+      payload = expected_payload(msg)
+      expect(subject.no_community_to_subscribe_cta('Sam', opts)).to eq payload
+    end
+  end
+
   shared_examples 'link account cta' do |mtd|
     it 'returns the payload for the link account cta' do
       msg = I18n.t("#{base}.#{mtd}.msg")
@@ -53,6 +63,42 @@ shared_examples 'common responses' do
 
   describe '.renew_token_cta' do
     it_behaves_like 'link account cta', :renew_token
+  end
+
+  describe '.communities_to_subscribe_cta' do
+    it 'returns the list template payload to subscribe the given communities' do
+      item = {
+        title: 'my-community-name',
+        image: 'some-item-image.jpg',
+        postback: 'heres-what-you-get-back'
+      }
+      payload = {
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'list',
+              top_element_style: 'compact',
+              elements: [
+                {
+                  title: item[:title],
+                  subtitle: 'See all our colors',
+                  image_url: item[:image],
+                  buttons: [
+                    {
+                      title: I18n.t("#{base}.subscribe_community.cta"),
+                      type: 'postback',
+                      payload: item[:postback]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+      expect(subject.communities_to_subscribe_cta([item])).to eq payload
+    end
   end
 
   def expected_payload(msg)

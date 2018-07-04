@@ -39,8 +39,13 @@ class Responder
   end
 
   def self.send_no_community_to_subscribe_cta(service)
+    payload =
+      no_community_to_subscribe_cta(service.username, service.cta_options)
+    respond(service.sender_id, payload)
   end
 
   def self.send_communities_to_subscribe_cta(service, list_items)
+    payload = communities_to_subscribe_cta(list_items)
+    respond(service.sender_id, payload)
   end
 end

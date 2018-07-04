@@ -21,6 +21,12 @@ module CommonResponses
     default_cta(msg, opts)
   end
 
+  def no_community_to_subscribe_cta(username, opts)
+    msg =
+      I18n.t("#{TRANS_BASE}.no_community.msg", username: username, link: HOST_URL)
+    default_cta(msg, opts)
+  end
+
   def link_account_cta(sender_id)
     msg = I18n.t("#{TRANS_BASE}.link_account.msg")
     payload = link_account_btn(msg, sender_id)
@@ -32,6 +38,16 @@ module CommonResponses
     msg = I18n.t("#{TRANS_BASE}.renew_token.msg")
     payload = link_account_btn(msg, sender_id)
 
+    { message: { attachment: { type: 'template', payload: payload } } }
+  end
+
+  def communities_to_subscribe_cta(items)
+    elements = items.map { |item| list_template_item_attr(item) }
+    payload = {
+      template_type: 'list',
+      top_element_style: 'compact',
+      elements: elements
+    }
     { message: { attachment: { type: 'template', payload: payload } } }
   end
 
@@ -51,6 +67,21 @@ module CommonResponses
         image_url: QUICK_REPLY_IMAGES[opt]
       }
     end
+  end
+
+  def list_template_item_attr(item)
+    {
+      title: item[:title],
+      subtitle: 'See all our colors',
+      image_url: item[:image],
+      buttons: [
+        {
+          title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
+          type: 'postback',
+          payload: item[:postback]
+        }
+      ]
+    }
   end
 
   def link_account_btn(msg, sender_id)

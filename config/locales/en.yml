@@ -24,6 +24,13 @@ en:
           msg: |
             So you've got %{num} communities subscribed.
             Click below to manage these communities, find your communities or subscribe any community you manage.
+        no_community:
+          msg: |
+            Ahh %{username}, looks like there are no other of your communities subscribable to consider.
+            How about you reach out to you group admins, have then set up subscriptions at this link: %{link}
+            Better still if you can use the buttons below to subscribed groups you admin.
+        subscribe_community:
+          cta: subscribe
         quick_reply:
           find_communities: Find a community
           manage_communities: Manage communities

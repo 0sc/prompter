@@ -26,6 +26,21 @@ RSpec.describe Responder do
     end
   end
 
+  describe '.send_no_community_to_subscribe_cta' do
+    before(:each) { allow(service).to receive(:username).and_return('Jerry') }
+
+    it 'delivers the no_subscription_cta payload' do
+      host = 'https://some-host.come'
+      stub_const('CommonResponses::HOST_URL', host)
+      msg = I18n.t("#{base}.no_community.msg", username: 'Jerry', link: host)
+      payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_no_community_to_subscribe_cta(service)
+    end
+  end
+
   describe '.send_has_subscription_cta' do
     it 'delivers the has subscribed_cta payload' do
       msg = I18n.t("#{base}.subscribed.msg", num: 456)
@@ -99,6 +114,47 @@ RSpec.describe Responder do
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
 
       Responder.send_renew_token_cta(service)
+    end
+  end
+
+  describe '.send_communities_to_subscribe_cta' do
+    it 'delivers the link_account_cta payload' do
+      item = {
+        title: 'my-community-name',
+        image: 'some-item-image.jpg',
+        postback: 'heres-what-you-get-back'
+      }
+
+      payload = expected_payload(
+        789,
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'list',
+              top_element_style: 'compact',
+              elements: [
+                {
+                  title: item[:title],
+                  subtitle: 'See all our colors',
+                  image_url: item[:image],
+                  buttons: [
+                    {
+                      title: I18n.t("#{base}.subscribe_community.cta"),
+                      type: 'postback',
+                      payload: item[:postback]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_communities_to_subscribe_cta(service, [item])
     end
   end
 

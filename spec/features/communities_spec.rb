@@ -58,7 +58,7 @@ RSpec.describe 'Communities', type: :feature do
   scenario 'user can subscribe a new community' do
     community = build(:community)
     dummy_service.admin_communities = [
-      community.attributes.merge('id' => community.fbid)
+      community.attributes.merge('id' => community.fbid, 'cover' => {})
     ]
 
     visit communities_path

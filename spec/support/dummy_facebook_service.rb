@@ -1,8 +1,11 @@
 class DummyFacebookService
   attr_accessor :admin_communities,
-                :admin_communities_fbids
+                :admin_communities_fbids,
+                :communities
+
   def initialize
     @admin_communities = []
+    @communities = []
   end
 
   def new(fbid, token)

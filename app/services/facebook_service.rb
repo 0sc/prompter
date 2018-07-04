@@ -7,15 +7,15 @@ class FacebookService
   end
 
   def community_details(community_id)
-    graph.get_object(community_id)
+    graph.get_object("#{community_id}?fields=cover,name,icon")
   end
 
   def communities
     return @communities if @communities
 
-    @communities = all_results(
-      graph.get_connections(fbid, 'groups', fields: %w[administrator name])
-    )
+    fields = %w[administrator name cover]
+    @communities =
+      all_results(graph.get_connections(fbid, 'groups', fields: fields))
   end
 
   def admin_communities

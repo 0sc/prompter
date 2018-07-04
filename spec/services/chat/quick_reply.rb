@@ -81,14 +81,14 @@ shared_examples 'quick_reply' do
   def find_community_payload
     quick_reply_payload.tap do |payload|
       payload['message']['quick_reply']['payload'] =
-        Chat::QuickReply::FIND_COMMUNITY
+        Chat::QuickReply::FIND_COMMUNITIES
     end
   end
 
-  def subscribe_community_payload
+  def subscribe_communities_payload
     quick_reply_payload.tap do |payload|
       payload['message']['quick_reply']['payload'] =
-        Chat::QuickReply::SUBSCRIBE_COMMUNITY
+        Chat::QuickReply::SUBSCRIBE_COMMUNITIES
     end
   end
 

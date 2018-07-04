@@ -25,6 +25,6 @@ en:
             So you've got %{num} communities subscribed.
             Click below to manage these communities, find your communities or subscribe any community you manage.
         quick_reply:
-          find_community: Find a community
-          manage_community: Manage communities
-          subscribe_community: Subscribe communities
+          find_communities: Find a community
+          manage_communities: Manage communities
+          subscribe_communities: Subscribe communities

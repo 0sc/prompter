@@ -82,9 +82,9 @@ RSpec.describe ChatService, type: :service do
 
       it 'includes the manage subscription option' do
         expect(subject.default_cta_options).to match_array(
-          [Chat::QuickReply::FIND_COMMUNITY,
-           Chat::QuickReply::SUBSCRIBE_COMMUNITY,
-           Chat::QuickReply::MANAGE_COMMUNITY]
+          [Chat::QuickReply::FIND_COMMUNITIES,
+           Chat::QuickReply::SUBSCRIBE_COMMUNITIES,
+           Chat::QuickReply::MANAGE_COMMUNITIES]
         )
       end
     end
@@ -92,8 +92,8 @@ RSpec.describe ChatService, type: :service do
     context 'user is not subscribed' do
       it 'does not include the manage subscription option' do
         expect(subject.default_cta_options).to match_array(
-          [Chat::QuickReply::FIND_COMMUNITY,
-           Chat::QuickReply::SUBSCRIBE_COMMUNITY]
+          [Chat::QuickReply::FIND_COMMUNITIES,
+           Chat::QuickReply::SUBSCRIBE_COMMUNITIES]
         )
       end
     end

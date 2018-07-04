@@ -2,8 +2,8 @@ module CommonResponses
   TRANS_BASE = 'chat.responses.common'.freeze
   HOST_URL = ENV.fetch('HOST_URL', 'https://193d4a2a.ngrok.io')
   QUICK_REPLY_IMAGES = {
-    ::Chat::QuickReply::FIND_COMMUNITY => 'https://agoge.nz/Images/search-03.png',
-    ::Chat::QuickReply::SUBSCRIBE_COMMUNITY => 'https://png.icons8.com/ios/1600/add.png'
+    ::Chat::QuickReply::FIND_COMMUNITIES => 'https://agoge.nz/Images/search-03.png',
+    ::Chat::QuickReply::SUBSCRIBE_COMMUNITIES => 'https://png.icons8.com/ios/1600/add.png'
   }.freeze
 
   def no_subscription_cta(username, opts)

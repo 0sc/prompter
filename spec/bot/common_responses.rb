@@ -1,6 +1,6 @@
 shared_examples 'common responses' do
   subject { described_class }
-  let(:opts) { [Chat::QuickReply::FIND_COMMUNITY] }
+  let(:opts) { [Chat::QuickReply::FIND_COMMUNITIES] }
   let(:base) { CommonResponses::TRANS_BASE }
 
   describe '.no_subscription_cta' do

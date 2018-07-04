@@ -140,6 +140,16 @@ shared_examples 'quick_reply' do
           subject.handle_quick_reply
         end
       end
+
+      context 'user account is in good shape' do
+        before(:each) { user.update(expires_at: Time.now.in(10.years).tv_sec) }
+
+        it 'responds with the send_subscribe_communities_cta' do
+          expect(Responder)
+            .to receive(:send_subscribe_communities_cta).with(subject)
+          subject.handle_quick_reply
+        end
+      end
     end
 
     describe 'everything else' do

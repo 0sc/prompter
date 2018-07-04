@@ -31,6 +31,9 @@ en:
             Better still if you can use the buttons below to subscribed groups you admin.
         subscribe_community:
           cta: subscribe
+        subscribe_communities:
+          msg: Click the button below to get started adding the communities you manage
+          cta: Get started
         quick_reply:
           find_communities: Find a community
           manage_communities: Manage communities

@@ -2,6 +2,9 @@ shared_examples 'common responses' do
   subject { described_class }
   let(:opts) { [Chat::QuickReply::FIND_COMMUNITIES] }
   let(:base) { CommonResponses::TRANS_BASE }
+  let(:host) { 'https://some-host.com' }
+
+  before { stub_const('CommonResponses::HOST_URL', host) }
 
   describe '.no_subscription_cta' do
     it 'returns the payload for no subscription response' do
@@ -29,31 +32,36 @@ shared_examples 'common responses' do
 
   describe '.no_subscription_cta' do
     it 'returns the payload for no subscription response' do
-      host = 'https://some-host.come'
-      stub_const('CommonResponses::HOST_URL', host)
       msg = I18n.t("#{base}.no_community.msg", username: 'Sam', link: host)
       payload = expected_payload(msg)
       expect(subject.no_community_to_subscribe_cta('Sam', opts)).to eq payload
     end
   end
 
-  shared_examples 'link account cta' do |mtd|
-    it 'returns the payload for the link account cta' do
+  shared_examples 'button template' do |mtd|
+    it 'returns the button template' do
       msg = I18n.t("#{base}.#{mtd}.msg")
-      stub_const('CommonResponses::HOST_URL', 'https://some-host.come')
-      url = 'https://some-host.come/users/12345/account_link'
+
       payload = {
         template_type: 'button',
         text: msg,
-        buttons: [
-          { type: 'account_link', url: url }
-        ]
+        buttons: btns
       }
       expected = {
         message: { attachment: { type: 'template', payload: payload } }
       }
 
-      expect(subject.send("#{mtd}_cta", 12_345)).to eq expected
+      expect(result).to eq expected
+    end
+  end
+
+  shared_examples 'link account cta' do |mtd|
+    include_examples 'button template', mtd do
+      let(:btns) do
+        url = "#{host}/users/12345/account_link"
+        [{ type: 'account_link', url: url }]
+      end
+      let(:result) { subject.send("#{mtd}_cta", 12_345) }
     end
   end
 
@@ -63,6 +71,24 @@ shared_examples 'common responses' do
 
   describe '.renew_token_cta' do
     it_behaves_like 'link account cta', :renew_token
+  end
+
+  describe '.subscribe_communities_cta' do
+    it_behaves_like 'button template', :subscribe_communities do
+      let(:btns) do
+        [
+          {
+            title: I18n.t("#{base}.subscribe_communities.cta"),
+            type: 'web_url',
+            url: "#{host}/communities",
+            webview_height_ratio: 'tall',
+            messenger_extensions: 'true',
+            fallback_url: "#{host}/communities"
+          }
+        ]
+      end
+      let(:result) { subject.subscribe_communities_cta }
+    end
   end
 
   describe '.communities_to_subscribe_cta' do

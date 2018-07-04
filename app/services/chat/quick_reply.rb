@@ -48,6 +48,7 @@ module Chat::QuickReply
     return Responder.send_renew_token_cta(self) if user.token_expired?
 
     # opens a webview for them to use the webapp
+    Responder.send_subscribe_communities_cta(self)
   end
 
   def handle_manage_communities

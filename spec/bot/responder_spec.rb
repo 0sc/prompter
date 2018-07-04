@@ -6,8 +6,13 @@ RSpec.describe Responder do
   let(:service) { double }
   let(:base) { CommonResponses::TRANS_BASE }
   let(:bot) { Facebook::Messenger::Bot }
+  let(:host) { 'https://some-host.com' }
 
-  before { allow(Responder).to receive(:access_token).and_return(123) }
+  before do
+    allow(Responder).to receive(:access_token).and_return(123)
+    stub_const('CommonResponses::HOST_URL', host)
+  end
+
   before(:each) do
     allow(service).to receive(:sender_id).and_return(789)
     allow(service).to receive(:cta_options).and_return(['manage-community'])
@@ -30,8 +35,6 @@ RSpec.describe Responder do
     before(:each) { allow(service).to receive(:username).and_return('Jerry') }
 
     it 'delivers the no_subscription_cta payload' do
-      host = 'https://some-host.come'
-      stub_const('CommonResponses::HOST_URL', host)
       msg = I18n.t("#{base}.no_community.msg", username: 'Jerry', link: host)
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
@@ -114,6 +117,35 @@ RSpec.describe Responder do
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
 
       Responder.send_renew_token_cta(service)
+    end
+  end
+
+  describe '.send_subscribe_communities_cta' do
+    it 'delivers the link_account_cta payload' do
+      payload = expected_payload(
+        789,
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: I18n.t("#{base}.subscribe_communities.msg"),
+              buttons: [{
+                title: I18n.t("#{base}.subscribe_communities.cta"),
+                type: 'web_url',
+                url: "#{host}/communities",
+                webview_height_ratio: 'tall',
+                messenger_extensions: 'true',
+                fallback_url: "#{host}/communities"
+              }]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_subscribe_communities_cta(service)
     end
   end
 

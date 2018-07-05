@@ -17,7 +17,7 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
   it 'displays link to edit community details' do
     expect(page).to have_link(
       text: 'Edit',
-      href: edit_community_path(community['id'])
+      href: edit_community_path(db_id)
     )
   end
 

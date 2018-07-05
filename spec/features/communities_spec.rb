@@ -34,7 +34,7 @@ RSpec.describe 'Communities', type: :feature do
         expect(page)
           .to have_link(text: subbed.name, href: community_path(subbed.id))
         expect(page)
-          .to have_link(text: 'Edit', href: edit_community_path(subbed.fbid))
+          .to have_link(text: 'Edit', href: edit_community_path(subbed.id))
         expect(page)
           .to have_link(text: 'Unsubscribe', href: community_path(subbed.id))
       end

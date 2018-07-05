@@ -28,8 +28,9 @@ module Chat::QuickReply
     member_communities_id = user.member_communities.map(&:id)
 
     # TODO: limit number of communities fetched?
-    subscribable_communities =
-      Community.where(fbid: ids).where.not(id: member_communities_id)
+    subscribable_communities = Community.subscribable
+                                        .where(fbid: ids)
+                                        .where.not(id: member_communities_id)
 
     if subscribable_communities.empty?
       # no available communities to subscribe

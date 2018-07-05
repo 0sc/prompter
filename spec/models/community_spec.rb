@@ -35,4 +35,27 @@ RSpec.describe Community, type: :model do
       expect(subject['cover']).to eq graph.dig('cover', 'source')
     end
   end
+
+  describe '.subscribable' do
+    it 'returns only communities that have community_type set' do
+      community = create(:community)
+      create(:community, community_type: nil)
+
+      expect(Community.count).to be 2
+      expect(Community.subscribable).to eq [community]
+    end
+  end
+
+  describe '#subscribable?' do
+    let(:community) { create(:community) }
+
+    it 'returns true if community has community_type set' do
+      expect(community.subscribable?).to be true
+    end
+
+    it 'returns false if community does not have community type set' do
+      community.update!(community_type: nil)
+      expect(community.subscribable?).to be false
+    end
+  end
 end

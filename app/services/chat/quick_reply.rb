@@ -36,10 +36,21 @@ module Chat::QuickReply
       @cta_options = [SUBSCRIBE_COMMUNITIES]
       @cta_options << MANAGE_COMMUNITIES if user.subscriptions?
       Responder.send_no_community_to_subscribe_cta(self)
-    else
-      payload =
-        subscribable_communities.map { |c| list_template_payload_for(c) }
-      Responder.send_communities_to_subscribe_cta(self, payload)
+      return
+    end
+
+    strategise_response(subscribable_communities)
+  end
+
+  def strategise_response(communities)
+    communities.each_slice(4) do |grp|
+      if grp.size == 1
+        payload = list_template_payload_for(grp.first)
+        Responder.send_single_community_to_subscribe_cta(self, payload)
+      else
+        payload = grp.map { |c| list_template_payload_for(c) }
+        Responder.send_communities_to_subscribe_cta(self, payload)
+      end
     end
   end
 

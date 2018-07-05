@@ -57,6 +57,20 @@ module CommonResponses
     { message: { attachment: { type: 'template', payload: payload } } }
   end
 
+  def single_community_to_subscribe_cta(item)
+    payload = {
+      template_type: 'button',
+      text: item[:title],
+      buttons: [{
+        title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
+        type: 'postback',
+        payload: item[:postback]
+      }]
+    }
+
+    { message: { attachment: { type: 'template', payload: payload } } }
+  end
+
   def subscribe_communities_cta
     payload = {
       template_type: 'button',

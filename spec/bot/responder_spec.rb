@@ -156,6 +156,37 @@ RSpec.describe Responder do
     end
   end
 
+  describe '.send_single_community_to_subscribe_cta' do
+    it 'delivers the link_account_cta payload' do
+      item = {
+        title: 'community-name',
+        postback: 'some-postback-1',
+        image: 'some-image'
+      }
+      payload = expected_payload(
+        789,
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: item[:title],
+              buttons: [{
+                title: I18n.t("#{base}.subscribe_community.cta"),
+                type: 'postback',
+                payload: item[:postback]
+              }]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_single_community_to_subscribe_cta(service, item)
+    end
+  end
+
   describe '.send_communities_to_subscribe_cta' do
     it 'delivers the link_account_cta payload' do
       item = {

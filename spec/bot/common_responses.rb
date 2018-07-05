@@ -158,6 +158,32 @@ shared_examples 'common responses' do
     end
   end
 
+  describe 'single_community_to_subscribe_cta' do
+    it 'returns the manage community webview button template' do
+      item = {
+        title: 'community-name',
+        postback: 'some-postback-1',
+        image: 'some-image'
+      }
+
+      payload = {
+        template_type: 'button',
+        text: item[:title],
+        buttons: [{
+          title: I18n.t("#{base}.subscribe_community.cta"),
+          type: 'postback',
+          payload: item[:postback]
+        }]
+      }
+      expected = {
+        message: { attachment: { type: 'template', payload: payload } }
+      }
+
+      expect(subject.single_community_to_subscribe_cta(item))
+        .to eq expected
+    end
+  end
+
   def expected_payload(msg)
     {
       message: {

@@ -100,18 +100,81 @@ shared_examples 'quick_reply' do
         end
 
         context 'there are communities to subscribe' do
-          it 'responds with the send_select_community_to_subscribe_cta' do
-            postback = Chat::PostbackService
-                       .build_subscribe_to_community_postback(not_subbed.id)
-            payload = {
-              title: not_subbed.name,
-              image: not_subbed.cover,
-              postback: postback
-            }
+          let(:svc) { Chat::PostbackService }
 
-            expect(Responder).to receive(:send_communities_to_subscribe_cta)
-              .with(subject, [payload])
-            subject.handle_quick_reply
+          describe 'response' do
+            context 'one subscribable community' do
+              it 'responds with a button template' do
+                postback = svc.build_subscribe_to_community_postback(
+                  not_subbed.id
+                )
+                payload = {
+                  title: not_subbed.name,
+                  image: not_subbed.cover,
+                  postback: postback
+                }
+
+                mtd = :send_single_community_to_subscribe_cta
+                expect(Responder).to receive(mtd).with(subject, payload)
+                subject.handle_quick_reply
+              end
+            end
+
+            context 'less than 5 subscribable communities' do
+              let(:communities) { create_list(:community, 4) }
+
+              before(:each) do
+                dummy_service.communities = communities.map do |community|
+                  graph_representation_of(community)
+                end
+              end
+
+              it 'responds with list template' do
+                payload = communities.map do |c|
+                  postback = svc.build_subscribe_to_community_postback(c.id)
+                  {
+                    title: c.name,
+                    image: c.cover,
+                    postback: postback
+                  }
+                end
+
+                mtd = :send_communities_to_subscribe_cta
+                expect(Responder).to receive(mtd).with(subject, payload)
+                subject.handle_quick_reply
+              end
+            end
+
+            context 'more than 4 subscribable communities' do
+              let(:communities) { create_list(:community, 9) }
+
+              before(:each) do
+                dummy_service.communities = communities.map do |community|
+                  graph_representation_of(community)
+                end
+              end
+
+              it 'responds multiple times if more than 4' do
+                payload = communities.map do |c|
+                  postback = svc.build_subscribe_to_community_postback(c.id)
+                  {
+                    title: c.name,
+                    image: c.cover,
+                    postback: postback
+                  }
+                end
+
+                mtd = :send_communities_to_subscribe_cta
+                payload.first(8).each_slice(4) do |p|
+                  expect(Responder).to receive(mtd).once.ordered.with subject, p
+                end
+
+                mtd = :send_single_community_to_subscribe_cta
+                expect(Responder)
+                  .to receive(mtd).once.ordered.with(subject, payload.last)
+                subject.handle_quick_reply
+              end
+            end
           end
         end
       end

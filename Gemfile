@@ -31,5 +31,5 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'shoulda-matchers', '~> 3.1'
+  gem 'shoulda-matchers', github: 'thoughtbot/shoulda-matchers' # '~> 3.1'
 end

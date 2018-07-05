@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_18_142631) do
+ActiveRecord::Schema.define(version: 2018_07_05_212727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 2018_06_18_142631) do
     t.string "name", null: false
     t.string "cover"
     t.string "icon"
+    t.bigint "community_type_id"
+    t.index ["community_type_id"], name: "index_communities_on_community_type_id"
     t.index ["fbid"], name: "index_communities_on_fbid"
   end
 
@@ -48,6 +50,12 @@ ActiveRecord::Schema.define(version: 2018_06_18_142631) do
     t.bigint "community_id"
     t.index ["community_id"], name: "index_community_member_profiles_on_community_id"
     t.index ["member_profile_id"], name: "index_community_member_profiles_on_member_profile_id"
+  end
+
+  create_table "community_types", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name", null: false
   end
 
   create_table "member_profiles", force: :cascade do |t|
@@ -71,6 +79,7 @@ ActiveRecord::Schema.define(version: 2018_06_18_142631) do
   end
 
   add_foreign_key "admin_profiles", "users"
+  add_foreign_key "communities", "community_types"
   add_foreign_key "community_admin_profiles", "admin_profiles"
   add_foreign_key "community_admin_profiles", "communities"
   add_foreign_key "community_member_profiles", "communities"

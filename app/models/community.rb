@@ -2,6 +2,7 @@ class Community < ApplicationRecord
   validates :name, presence: true
   validates :fbid, presence: true, uniqueness: true
 
+  belongs_to :community_type, optional: true
   has_many :community_admin_profiles, dependent: :destroy
   has_many :community_member_profiles, dependent: :destroy
   has_many :admin_profiles, through: :community_admin_profiles

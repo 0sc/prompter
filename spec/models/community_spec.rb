@@ -8,6 +8,7 @@ RSpec.describe Community, type: :model do
 
   it { should validate_uniqueness_of(:fbid) }
 
+  it { should belong_to(:community_type).optional }
   it { should have_many(:community_admin_profiles).dependent(:destroy) }
   it { should have_many(:community_member_profiles).dependent(:destroy) }
   it { should have_many(:admin_profiles).through(:community_admin_profiles) }

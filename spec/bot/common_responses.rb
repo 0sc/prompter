@@ -38,6 +38,14 @@ shared_examples 'common responses' do
     end
   end
 
+  describe '.community_not_found_cta' do
+    it 'returns the payload for no subscription response' do
+      msg = I18n.t("#{base}.community_not_found.msg")
+      payload = expected_payload(msg)
+      expect(subject.community_not_found_cta(opts)).to eq payload
+    end
+  end
+
   shared_examples 'button template' do |mtd|
     it 'returns the button template' do
       msg = I18n.t("#{base}.#{mtd}.msg")

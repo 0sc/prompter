@@ -28,6 +28,11 @@ class Responder
     respond(service.sender_id, payload)
   end
 
+  def self.send_community_not_found_cta(service)
+    payload = community_not_found_cta(service.cta_options)
+    respond(service.sender_id, payload)
+  end
+
   def self.send_link_account_cta(service)
     payload = link_account_cta(service.sender_id)
     respond(service.sender_id, payload)

@@ -34,7 +34,17 @@ en:
         subscribe_communities:
           msg: Click the button below to get started adding the communities you manage
           cta: Get started
+        community_not_found:
+          msg: |
+            Hmm ... this is worrisome; I couldn't find the community 🤔
+            You know what, lemme figure out what's amiss and in the meantime continue as usual.
+        subscribed_to_community:
+          msg: |
+            Awesome! I've added %{name} to your feeds. You'll now receive notifications for posts you care about.
+            Use this button to further fine turn the type of posts you can help with.
         quick_reply:
           find_communities: Find a community
           manage_communities: Manage communities
           subscribe_communities: Subscribe communities
+        btns:
+          manage: Fine tune

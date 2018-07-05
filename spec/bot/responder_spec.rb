@@ -66,9 +66,18 @@ RSpec.describe Responder do
     end
   end
 
-  describe '.send_link_account_cta' do
-    before { stub_const('CommonResponses::HOST_URL', 'http://abc.com') }
+  describe '.send_community_not_found_cta' do
+    it 'delivers the account_linked_cta payload' do
+      msg = I18n.t("#{base}.community_not_found.msg")
+      payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_community_not_found_cta(service)
+    end
+  end
+
+  describe '.send_link_account_cta' do
     it 'delivers the link_account_cta payload' do
       payload = expected_payload(
         789,
@@ -80,7 +89,7 @@ RSpec.describe Responder do
               text: I18n.t("#{base}.link_account.msg"),
               buttons: [{
                 type: 'account_link',
-                url: 'http://abc.com/users/789/account_link'
+                url: "#{host}/users/789/account_link"
               }]
             }
           }
@@ -94,8 +103,6 @@ RSpec.describe Responder do
   end
 
   describe '.send_renew_token_cta' do
-    before { stub_const('CommonResponses::HOST_URL', 'http://abc.com') }
-
     it 'delivers the link_account_cta payload' do
       payload = expected_payload(
         789,
@@ -107,7 +114,7 @@ RSpec.describe Responder do
               text: I18n.t("#{base}.renew_token.msg"),
               buttons: [{
                 type: 'account_link',
-                url: 'http://abc.com/users/789/account_link'
+                url: "#{host}/users/789/account_link"
               }]
             }
           }

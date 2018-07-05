@@ -22,8 +22,14 @@ module CommonResponses
   end
 
   def no_community_to_subscribe_cta(username, opts)
-    msg =
-      I18n.t("#{TRANS_BASE}.no_community.msg", username: username, link: HOST_URL)
+    msg = I18n.t("#{TRANS_BASE}.no_community.msg",
+                 username: username,
+                 link: HOST_URL)
+    default_cta(msg, opts)
+  end
+
+  def community_not_found_cta(opts)
+    msg = I18n.t("#{TRANS_BASE}.community_not_found.msg")
     default_cta(msg, opts)
   end
 

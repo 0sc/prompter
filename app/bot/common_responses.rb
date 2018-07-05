@@ -67,6 +67,16 @@ module CommonResponses
     { message: { attachment: { type: 'template', payload: payload } } }
   end
 
+  def subscribed_to_community_cta(id, name)
+    payload = {
+      template_type: 'button',
+      text: I18n.t("#{TRANS_BASE}.subscribed_to_community.msg", name: name),
+      buttons: [manage_subscription_webview_btn(id)]
+    }
+
+    { message: { attachment: { type: 'template', payload: payload } } }
+  end
+
 #====
 
   def default_cta(msg, opts)
@@ -119,6 +129,17 @@ module CommonResponses
       webview_height_ratio: 'tall',
       messenger_extensions: 'true',
       fallback_url: "#{HOST_URL}/communities"
+    }
+  end
+
+  def manage_subscription_webview_btn(community_id)
+    {
+      title: I18n.t("#{TRANS_BASE}.btns.manage"),
+      type: 'web_url',
+      url: "#{HOST_URL}/#{community_id}",
+      webview_height_ratio: 'compact',
+      messenger_extensions: 'true',
+      fallback_url: "#{HOST_URL}/#{community_id}"
     }
   end
 end

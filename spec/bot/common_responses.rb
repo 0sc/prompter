@@ -135,6 +135,29 @@ shared_examples 'common responses' do
     end
   end
 
+  describe 'subscribed_to_community_cta' do
+    it 'returns the manage community webview button template' do
+      payload = {
+        template_type: 'button',
+        text: I18n.t("#{base}.subscribed_to_community.msg", name: 'comm-name'),
+        buttons: [{
+          title: I18n.t("#{base}.btns.manage"),
+          type: 'web_url',
+          url: "#{host}/69",
+          webview_height_ratio: 'compact',
+          messenger_extensions: 'true',
+          fallback_url: "#{host}/69"
+        }]
+      }
+      expected = {
+        message: { attachment: { type: 'template', payload: payload } }
+      }
+
+      expect(subject.subscribed_to_community_cta(69, 'comm-name'))
+        .to eq expected
+    end
+  end
+
   def expected_payload(msg)
     {
       message: {

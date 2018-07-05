@@ -197,6 +197,37 @@ RSpec.describe Responder do
     end
   end
 
+  describe '.send_subscribed_to_community_cta' do
+    it 'delivers the subscribed to community cta payload' do
+      community = create(:community)
+      name = community.name
+      payload = expected_payload(
+        789,
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: I18n.t("#{base}.subscribed_to_community.msg", name: name),
+              buttons: [{
+                title: I18n.t("#{base}.btns.manage"),
+                type: 'web_url',
+                url: "#{host}/#{community.id}",
+                webview_height_ratio: 'compact',
+                messenger_extensions: 'true',
+                fallback_url: "#{host}/#{community.id}"
+              }]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_subscribed_to_community_cta(service, community)
+    end
+  end
+
   def build_quick_reply_cta(msg)
     {
       message: {

@@ -29,6 +29,39 @@ RSpec.describe 'communities/form', type: :view do
     end
   end
 
+  describe 'community_type field' do
+    it 'displays drop down to select community type' do
+      render_partial(community: community)
+      expect(page).to have_css("select[name='community[community_type_id]']")
+    end
+
+    context 'existing subscribers' do
+      before(:each) { create(:community_member_profile, community: community) }
+
+      it 'displays warning' do
+        render_partial(community: community)
+
+        expect(page).to have_content(
+          'Warning! changing this will reset all existing subscriptions'
+        )
+      end
+    end
+
+    context 'there are no existing subscribers' do
+      before(:each) do
+        CommunityMemberProfile.where(community: community).map(&:destroy)
+      end
+
+      it 'does not display any warning' do
+        render_partial(community: community)
+
+        expect(page).not_to have_content(
+          'Warning! changing this will reset all existing subscriptions'
+        )
+      end
+    end
+  end
+
   def render_partial(opts = {})
     render(
       partial: 'communities/form',

@@ -58,4 +58,20 @@ RSpec.describe Community, type: :model do
       expect(community.subscribable?).to be false
     end
   end
+
+  describe '#subscribers?' do
+    let(:community) { create(:community) }
+
+    it 'returns true if community has member_profiles' do
+      create(:community_member_profile, community: community)
+      expect(community.subscribers?).to be true
+    end
+
+    it 'returns false if community does not have member_profiles' do
+      CommunityMemberProfile.where(community: community).map(&:destroy)
+
+      community.update!(community_type: nil)
+      expect(community.subscribers?).to be false
+    end
+  end
 end

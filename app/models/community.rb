@@ -20,4 +20,8 @@ class Community < ApplicationRecord
   def subscribable?
     community_type.present?
   end
+
+  def subscribers?
+    member_profiles.present?
+  end
 end

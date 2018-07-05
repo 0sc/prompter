@@ -13,7 +13,7 @@ class FacebookService
   def communities
     return @communities if @communities
 
-    fields = %w[administrator name cover]
+    fields = %w[administrator name icon]
     @communities =
       all_results(graph.get_connections(fbid, 'groups', fields: fields))
   end

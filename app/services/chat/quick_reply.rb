@@ -52,7 +52,7 @@ module Chat::QuickReply
   end
 
   def handle_manage_communities
-    return Responder.send_no_subscription_cta unless user.subscribed?
+    return Responder.send_no_subscription_cta unless user.subscriptions?
 
     # lists users subscribed community with option
   end

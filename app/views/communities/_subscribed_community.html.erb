@@ -1,4 +1,5 @@
 <tr>
+  <td><%= image_tag community['icon'], height: '32', width: '32' %></td>
   <td><%= link_to community['name'], community_path(id) %></td>
   <td><%= link_to 'Edit', edit_community_path(community['id']) %></td>
   <td><%= link_to 'Unsubscribe', community_path(id), method: :delete, data: { confirm: 'Are you sure?' } %></td>

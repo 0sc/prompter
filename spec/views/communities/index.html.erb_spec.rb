@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'communities/index', type: :view do
-  let(:community_one) { { 'id' => 1, 'name' => 'name one' } }
-  let(:community_two) { { 'id' => 2, 'name' => 'name two' } }
+  let(:community_one) do
+    { 'id' => 1, 'name' => 'name one', 'icon' => 'https://icon-image-url.png' }
+  end
+  let(:community_two) do
+    { 'id' => 2, 'name' => 'name two', 'icon' => 'https://icon-image-url.png' }
+  end
 
   before(:each) do
     assign(:fb_communities, [community_one, community_two])

@@ -86,11 +86,13 @@ RSpec.describe Community, type: :model do
     end
   end
 
-  describe 'community type method .delegates' do
-    it 'delegates to the associated community_type' do
-      %i[feed_categories].each do |mtd|
-        expect(subject.send(mtd)).to eq subject.community_type.send(mtd)
-      end
+  describe '#feed_categories' do
+    it 'returns an empty array if community type is not set' do
+    end
+
+    it 'return the community type feed_categories' do
+      expect(subject.feed_categories)
+        .to eq subject.community_type.feed_categories
     end
   end
 end

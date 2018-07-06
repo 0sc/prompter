@@ -10,13 +10,16 @@ class Community < ApplicationRecord
 
   scope :subscribable, -> { where.not(community_type: nil) }
 
-  delegate :feed_categories, to: :community_type
-
   def update_from_fb_graph!(graph_info)
     self.name = graph_info['name']
     self.cover = graph_info.dig('cover', 'source')
     self.icon = graph_info['icon']
     save!
+  end
+
+  def feed_categories
+    return [] unless subscribable?
+    community_type.feed_categories
   end
 
   def subscribable?

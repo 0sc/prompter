@@ -24,4 +24,8 @@ class Community < ApplicationRecord
   def subscribers?
     member_profiles.present?
   end
+
+  def community_type_name
+    community_type&.name
+  end
 end

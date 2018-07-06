@@ -74,4 +74,15 @@ RSpec.describe Community, type: :model do
       expect(community.subscribers?).to be false
     end
   end
+
+  describe '#community_type_name' do
+    it 'returns the name of the community type' do
+      community_one = create(:community, community_type: nil)
+      community_two = create(:community)
+
+      expect(community_one.community_type_name).to be nil
+      expect(community_two.community_type_name)
+        .to eq community_two.community_type.name
+    end
+  end
 end

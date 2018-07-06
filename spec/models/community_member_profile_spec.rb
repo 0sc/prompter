@@ -17,4 +17,94 @@ RSpec.describe CommunityMemberProfile, type: :model do
   it { should validate_presence_of(:community_id) }
   it { should validate_presence_of(:member_profile_id) }
   it { should validate_uniqueness_of(:community_id).scoped_to(:member_profile_id) }
+
+  describe 'after_create callback' do
+    it 'subscribes the profile to all the communities feed_categories' do
+      community = create(:community, :with_feed_categories, amount: 3)
+      subject = build(:community_member_profile, community: community)
+
+      expect(subject.feed_categories).to be_empty
+
+      expect { subject.save }
+        .to change { CommunityMemberProfileFeedCategory.count }.from(0).to(3)
+
+      expect(subject.feed_categories).to eq community.feed_categories
+    end
+  end
+
+  describe '#feed_category?' do
+    it 'delegates feed_category? to community' do
+      expect(subject.feed_category?('a'))
+      .to eq subject.community.feed_category?('a')
+    end
+  end
+
+  describe '#subscribe_to_all_feed_categories' do
+    it 'subscribes the user to all the communities feed_categories' do
+      community = subject.community
+      create_feed_categories_for_community(community)
+
+      expect(subject.reload.feed_categories).to be_empty
+      subject.subscribe_to_all_feed_categories
+      expect(subject.reload.feed_categories)
+        .to eq community.reload.feed_categories
+    end
+  end
+
+  describe '#subscribed_feed_category?' do
+    it 'returns true if there are any feed_categories' do
+      create_feed_categories_for_community(subject.community)
+      subject.update(feed_categories: subject.community.feed_categories)
+
+      expect(subject.subscribed_feed_category?).to be true
+    end
+
+    it 'returns false if there are no feed_categories' do
+      CommunityMemberProfileFeedCategory
+        .where(community_member_profile: subject).map(&:destroy)
+
+      expect(subject.subscribed_feed_category?).to be false
+    end
+  end
+
+  describe '#subscribe_to_feed_category' do
+    let(:feed_category) do
+      create_feed_categories_for_community(subject.community).feed_category
+    end
+
+    it 'subscribes member_profile to the feed_category' do
+      expect(subject.feed_categories).to be_empty
+      subject.subscribe_to_feed_category(feed_category)
+      expect(subject.feed_categories).to eq [feed_category]
+    end
+
+    it 'does not duplicate subscription if already exists' do
+      subject.subscribe_to_feed_category(feed_category)
+      expect(subject.feed_categories).to eq [feed_category]
+
+      expect { subject.subscribe_to_feed_category(feed_category) }
+        .not_to(change { subject.feed_categories.reload })
+
+      expect(subject.reload.feed_categories).to eq [feed_category]
+    end
+  end
+
+  describe '#unsubscribe_from_feed_category' do
+    let(:feed_category) do
+      create_feed_categories_for_community(subject.community).feed_category
+    end
+
+    it 'unsubscribes from the given feed_category' do
+      subject.subscribe_to_feed_category(feed_category)
+      expect(subject.feed_categories).to eq [feed_category]
+      subject.unsubscribe_from_feed_category(feed_category)
+      expect(subject.reload.feed_categories).to eq []
+    end
+  end
+
+  def create_feed_categories_for_community(community)
+    create(:community_type_feed_category,
+           community_type: community.community_type)
+      .tap { community.reload }
+  end
 end

@@ -42,4 +42,18 @@ RSpec.describe CommunityType, type: :model do
         .to change { subject.feed_categories.count }.from(1).to(0)
     end
   end
+
+  describe '#feed_category?' do
+    let(:feed_category_one) { create(:feed_category) }
+    let(:feed_category_two) { create(:feed_category) }
+    before { subject.feed_categories << feed_category_one }
+
+    it 'returns true if the feed_category exists for the community type' do
+      expect(subject.feed_category?(feed_category_one)).to be true
+    end
+
+    it 'returns false if the feed_category does not exist for the com type' do
+      expect(subject.feed_category?(feed_category_two)).to be false
+    end
+  end
 end

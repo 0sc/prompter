@@ -13,4 +13,8 @@ class CommunityType < ApplicationRecord
     community_type_feed_categories.where(feed_category: feed_category)
                                   .map(&:destroy)
   end
+
+  def feed_category?(feed_category)
+    community_type_feed_categories.exists?(feed_category: feed_category)
+  end
 end

@@ -86,8 +86,22 @@ RSpec.describe Community, type: :model do
     end
   end
 
+  describe '#feed_category?' do
+    it 'returns an empty array if community type is not set' do
+      subject.update!(community_type: nil)
+      expect(subject.feed_category?('a')).to be false
+    end
+
+    it 'return the community type feed_categories' do
+      expect(subject.feed_categories)
+        .to eq subject.community_type.feed_categories
+    end
+  end
+
   describe '#feed_categories' do
     it 'returns an empty array if community type is not set' do
+      subject.update!(community_type: nil)
+      expect(subject.feed_categories).to eq []
     end
 
     it 'return the community type feed_categories' do

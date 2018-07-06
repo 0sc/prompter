@@ -17,6 +17,11 @@ class Community < ApplicationRecord
     save!
   end
 
+  def feed_category?(feed_category)
+    return false unless subscribable?
+    community_type.feed_category? feed_category
+  end
+
   def feed_categories
     return [] unless subscribable?
     community_type.feed_categories

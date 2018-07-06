@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_06_110917) do
+ActiveRecord::Schema.define(version: 2018_07_06_160115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2018_07_06_110917) do
   create_table "admin_profiles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
 
@@ -37,17 +37,26 @@ ActiveRecord::Schema.define(version: 2018_07_06_110917) do
   create_table "community_admin_profiles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "admin_profile_id"
-    t.bigint "community_id"
+    t.bigint "admin_profile_id", null: false
+    t.bigint "community_id", null: false
     t.index ["admin_profile_id"], name: "index_community_admin_profiles_on_admin_profile_id"
     t.index ["community_id"], name: "index_community_admin_profiles_on_community_id"
+  end
+
+  create_table "community_member_profile_feed_categories", force: :cascade do |t|
+    t.bigint "community_member_profile_id", null: false
+    t.bigint "feed_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["community_member_profile_id"], name: "idx_comm_member_profile_feed_cat_on_comm_member_profile_id"
+    t.index ["feed_category_id"], name: "idx_comm_member_profile_feed_cat_on_feed_category_id"
   end
 
   create_table "community_member_profiles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "member_profile_id"
-    t.bigint "community_id"
+    t.bigint "member_profile_id", null: false
+    t.bigint "community_id", null: false
     t.index ["community_id"], name: "index_community_member_profiles_on_community_id"
     t.index ["member_profile_id"], name: "index_community_member_profiles_on_member_profile_id"
   end
@@ -55,8 +64,8 @@ ActiveRecord::Schema.define(version: 2018_07_06_110917) do
   create_table "community_type_feed_categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "community_type_id"
-    t.bigint "feed_category_id"
+    t.bigint "community_type_id", null: false
+    t.bigint "feed_category_id", null: false
     t.index ["community_type_id"], name: "index_community_type_feed_categories_on_community_type_id"
     t.index ["feed_category_id"], name: "index_community_type_feed_categories_on_feed_category_id"
   end
@@ -76,7 +85,7 @@ ActiveRecord::Schema.define(version: 2018_07_06_110917) do
   create_table "member_profiles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_member_profiles_on_user_id"
   end
 
@@ -97,6 +106,8 @@ ActiveRecord::Schema.define(version: 2018_07_06_110917) do
   add_foreign_key "communities", "community_types"
   add_foreign_key "community_admin_profiles", "admin_profiles"
   add_foreign_key "community_admin_profiles", "communities"
+  add_foreign_key "community_member_profile_feed_categories", "community_member_profiles"
+  add_foreign_key "community_member_profile_feed_categories", "feed_categories"
   add_foreign_key "community_member_profiles", "communities"
   add_foreign_key "community_member_profiles", "member_profiles"
   add_foreign_key "community_type_feed_categories", "community_types"

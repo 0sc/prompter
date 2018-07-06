@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_05_212727) do
+ActiveRecord::Schema.define(version: 2018_07_06_110917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,22 @@ ActiveRecord::Schema.define(version: 2018_07_05_212727) do
     t.index ["member_profile_id"], name: "index_community_member_profiles_on_member_profile_id"
   end
 
+  create_table "community_type_feed_categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "community_type_id"
+    t.bigint "feed_category_id"
+    t.index ["community_type_id"], name: "index_community_type_feed_categories_on_community_type_id"
+    t.index ["feed_category_id"], name: "index_community_type_feed_categories_on_feed_category_id"
+  end
+
   create_table "community_types", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name", null: false
+  end
+
+  create_table "feed_categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name", null: false
@@ -84,5 +99,7 @@ ActiveRecord::Schema.define(version: 2018_07_05_212727) do
   add_foreign_key "community_admin_profiles", "communities"
   add_foreign_key "community_member_profiles", "communities"
   add_foreign_key "community_member_profiles", "member_profiles"
+  add_foreign_key "community_type_feed_categories", "community_types"
+  add_foreign_key "community_type_feed_categories", "feed_categories"
   add_foreign_key "member_profiles", "users"
 end

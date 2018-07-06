@@ -15,7 +15,9 @@
     <%= form.label :community_type_id %>
     <%= form.collection_select :community_type_id, CommunityType.all, :id, :name %>
     <% if community.subscribers? %>
-      <small>Warning! changing this will reset all existing subscriptions</small>
+      <p>
+        <small>Warning! changing this will reset all existing subscriptions</small>
+      </p>
     <% end %>
   </div>
 

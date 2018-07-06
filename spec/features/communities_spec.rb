@@ -144,6 +144,35 @@ RSpec.describe 'Communities', type: :feature do
     expect(page.find('#notice')).to have_content('Community not found')
   end
 
+  scenario 'user can edit a subscribed community' do
+    community = create(:community, community_type: nil)
+    user.admin_communities << community
+    community_type = create(:community_type)
+
+    dummy_service.admin_communities = [
+      community.attributes.merge('id' => community.fbid, 'cover' => {})
+    ]
+
+    visit communities_path
+
+    within('tbody') do
+      expect(page.all('tr').count).to eq 1
+      within('tr') { click_on('Edit') }
+    end
+
+    expect(current_path).to eq edit_community_path(community)
+    expect(page.find('h1'))
+      .to have_content("Editing Community: #{community.name}")
+
+    select community_type.name, from: 'community[community_type_id]'
+    click_on 'Update Community'
+
+    expect(community.reload.community_type).to eq community_type
+    expect(current_path).to eq community_path(community)
+    expect(page).to have_content 'Community was successfully updated.'
+    expect(page).to have_content community_type.name
+  end
+
   def sign_in
     visit root_path
     click_on('Sign in')

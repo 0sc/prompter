@@ -187,6 +187,77 @@ RSpec.describe CommunitiesController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    context 'when community does not exist' do
+      it 'redirects to the communities path' do
+        patch :update, params: { id: 404 }, session: valid_session
+
+        expect(response).to redirect_to communities_path
+        expect(flash[:notice]).to eq 'Community not found'
+      end
+    end
+
+    context 'when community does exist but user is not admin' do
+      let(:community) { create(:community, community_type: nil) }
+
+      it 'redirects to the communities path' do
+        patch :update, params: { id: community.id }, session: valid_session
+
+        expect(response).to redirect_to communities_path
+        expect(flash[:notice]).to eq 'Community not found'
+      end
+    end
+
+    context 'when community does exists and user is admin' do
+      let(:community) { create(:community, community_type: nil) }
+      let(:community_type) { create(:community_type) }
+
+      before { user.admin_profile.add_community(community) }
+      describe 'valid params' do
+        it 'updates the community attributes' do
+          expect(community.community_type).to be nil
+
+          patch :update,
+          params: {
+            id: community.id,
+            community: { community_type_id: community_type.id }
+          },
+          session: valid_session
+
+          expect(community.reload.community_type).to eq community_type
+        end
+      end
+
+      xdescribe 'invalid params' do
+        it 'does not update the community attributes' do
+          expect(community.community_type).to be nil
+
+          patch :update,
+          params: {
+            id: community.id,
+            community: { community_type_id: 404 }
+          },
+          session: valid_session
+
+          expect(community.reload.community_type).to be nil
+        end
+
+        it 'renders the edit template' do
+          expect(community.community_type).to be nil
+
+          patch :update,
+          params: {
+            id: community.id,
+            community: { community_type_id: 404 }
+          },
+          session: valid_session
+
+          expect(response).to render :edit
+        end
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'when community does not exist' do
       it 'redirects to communities path' do

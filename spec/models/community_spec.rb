@@ -85,4 +85,12 @@ RSpec.describe Community, type: :model do
         .to eq community_two.community_type.name
     end
   end
+
+  describe 'community type method .delegates' do
+    it 'delegates to the associated community_type' do
+      %i[feed_categories].each do |mtd|
+        expect(subject.send(mtd)).to eq subject.community_type.send(mtd)
+      end
+    end
+  end
 end

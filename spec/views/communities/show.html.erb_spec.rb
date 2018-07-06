@@ -16,6 +16,10 @@ RSpec.describe 'communities/show', type: :view do
     expect(page).to have_content(community.name)
   end
 
+  it 'displays the community type name' do
+    expect(page).to have_content(community.community_type_name)
+  end
+
   it 'displays link to edit the community details' do
     expect(page).to have_link(text: 'Edit', href: edit_community_path(community))
   end

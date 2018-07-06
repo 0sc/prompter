@@ -30,11 +30,17 @@ class CommunitiesController < ApplicationController
   end
 
   def update
-    redirect_to @community, notice: 'Community was successfully updated.'
-    # if @community.update(community_params)
-    # else
-    #   render :edit
-    # end
+    if @community.update(community_params)
+      # TODO: 
+      # if community type change update all subscribed users to all
+      # send a message to them all.
+      # inform other admins of the change: field_changed
+      redirect_to @community, notice: 'Community was successfully updated.'
+    else
+      render :edit
+    end
+
+
   end
 
   def destroy
@@ -68,7 +74,7 @@ class CommunitiesController < ApplicationController
   #     binding.pry
   # end
 
-  # def community_params
-  #   params.require(:community).permit(:fbid, :name)
-  # end
+  def community_params
+    params.require(:community).permit(:community_type_id)
+  end
 end

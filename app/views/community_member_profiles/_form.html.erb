@@ -1,0 +1,24 @@
+<%= form_with(model: profile, local: true) do |form| %>
+  <% if profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(profile.errors.count, "error") %> prohibited this profile from being saved:</h2>
+
+      <ul>
+      <% profile.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.collection_check_boxes :feed_category_ids, profile.community.feed_categories, :id, :name do |b| %>
+    <%= b.label(class:"label-checkbox") { b.check_box + b.text } %>
+    <% end %>
+  </div>
+
+  <small><b>Note:</b> Deselecting all categories will automatically unsubcribe you from this community</small>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

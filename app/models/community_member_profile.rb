@@ -22,8 +22,8 @@ class CommunityMemberProfile < ApplicationRecord
       feed_category: feed_category
     )
 
-    # TODO: consider changing this to user update or save
-    # will raise error if validation fails
+    # TODO: consider changing this to use update or save
+    # currently this will raise error if validation fails
     feed_categories << feed_category
   end
 

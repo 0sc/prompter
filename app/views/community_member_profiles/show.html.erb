@@ -1,0 +1,12 @@
+<h1>Subscription Profile for: <%= @community.name %></h1>
+
+You are subscribed to:
+<ul>
+  <% @community_member_profile.feed_categories.find_each do |feed_category| %>
+    <li>
+      <%= feed_category.name %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to 'Edit', edit_community_member_profile_path(@community_member_profile) %>

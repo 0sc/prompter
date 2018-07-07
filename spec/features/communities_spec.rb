@@ -6,9 +6,11 @@ RSpec.describe 'Communities', type: :feature do
   let!(:user) { create(:user, fbid: SAMPLE_AUTH_HASH[:uid]) }
   let(:dummy_service) { DummyFacebookService.new }
 
-  before do
-    stub_const('FacebookService', dummy_service)
-    sign_in
+  before { stub_const('FacebookService', dummy_service) }
+
+  it 'redirects to root path if user is not signed in' do
+    visit communities_path
+    expect(current_path).to eq root_path
   end
 
   scenario 'user can view all their admin communities and their status' do
@@ -22,6 +24,8 @@ RSpec.describe 'Communities', type: :feature do
       unsubbed.attributes.merge('id' => unsubbed.fbid),
       neww.attributes.merge('id' => neww.fbid)
     ]
+
+    sign_in
 
     visit communities_path
     expect(page.find('h1')).to have_content('Communities')
@@ -61,6 +65,7 @@ RSpec.describe 'Communities', type: :feature do
       community.attributes.merge('id' => community.fbid, 'cover' => {})
     ]
 
+    sign_in
     visit communities_path
 
     within('tbody') do
@@ -96,6 +101,7 @@ RSpec.describe 'Communities', type: :feature do
       community.attributes.merge('id' => community.fbid)
     ]
 
+    sign_in
     visit communities_path
 
     within('tbody') do
@@ -129,6 +135,7 @@ RSpec.describe 'Communities', type: :feature do
       community.attributes.merge('id' => community.fbid)
     ]
 
+    sign_in
     visit communities_path
 
     within('tbody') do
@@ -153,6 +160,7 @@ RSpec.describe 'Communities', type: :feature do
       community.attributes.merge('id' => community.fbid, 'cover' => {})
     ]
 
+    sign_in
     visit communities_path
 
     within('tbody') do

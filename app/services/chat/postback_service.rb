@@ -27,7 +27,7 @@ class Chat::PostbackService < ChatService
     community = Community.find_by(id: community_id)
     return Responder.send_community_not_found_cta(self) if community.nil?
 
-    user.member_profile.add_community(community)
-    Responder.send_subscribed_to_community_cta(self, community)
+    profile = user.member_profile.add_community(community)
+    Responder.send_subscribed_to_community_cta(self, profile)
   end
 end

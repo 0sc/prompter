@@ -38,7 +38,7 @@ RSpec.describe Chat::PostbackService, type: :service do
           allow(message).to receive(:messaging).and_return postback_payload(id)
 
           expect(Responder).to receive(:send_subscribed_to_community_cta)
-            .with(subject, community)
+            .with(subject, instance_of(CommunityMemberProfile))
         end
 
         it 'sends the subscribed_to_community_cta' do

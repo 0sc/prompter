@@ -6,7 +6,7 @@ class CommunityType < ApplicationRecord
   has_many :feed_categories, through: :community_type_feed_categories
 
   def add_feed_category(fd_category)
-    feed_categories << fd_category unless feed_categories.include? fd_category
+    community_type_feed_categories.find_or_create_by(feed_category: fd_category)
   end
 
   def remove_feed_category(feed_category)

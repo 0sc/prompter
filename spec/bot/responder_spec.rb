@@ -230,8 +230,9 @@ RSpec.describe Responder do
 
   describe '.send_subscribed_to_community_cta' do
     it 'delivers the subscribed to community cta payload' do
-      community = create(:community)
-      name = community.name
+      profile = create(:community_member_profile)
+      name = profile.community_name
+      url = "#{host}/community_member_profiles/#{profile.id}/edit"
       payload = expected_payload(
         789,
         message: {
@@ -243,10 +244,10 @@ RSpec.describe Responder do
               buttons: [{
                 title: I18n.t("#{base}.btns.manage"),
                 type: 'web_url',
-                url: "#{host}/#{community.id}",
+                url: url,
                 webview_height_ratio: 'compact',
                 messenger_extensions: 'true',
-                fallback_url: "#{host}/#{community.id}"
+                fallback_url: url
               }]
             }
           }
@@ -255,7 +256,7 @@ RSpec.describe Responder do
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
 
-      Responder.send_subscribed_to_community_cta(service, community)
+      Responder.send_subscribed_to_community_cta(service, profile)
     end
   end
 

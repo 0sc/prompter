@@ -143,10 +143,10 @@ shared_examples 'common responses' do
         buttons: [{
           title: I18n.t("#{base}.btns.manage"),
           type: 'web_url',
-          url: "#{host}/69",
+          url: "#{host}/community_member_profiles/69/edit",
           webview_height_ratio: 'compact',
           messenger_extensions: 'true',
-          fallback_url: "#{host}/69"
+          fallback_url: "#{host}/community_member_profiles/69/edit"
         }]
       }
       expected = {

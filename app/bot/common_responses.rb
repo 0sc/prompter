@@ -146,14 +146,14 @@ module CommonResponses
     }
   end
 
-  def manage_subscription_webview_btn(community_id)
+  def manage_subscription_webview_btn(profile_id)
     {
       title: I18n.t("#{TRANS_BASE}.btns.manage"),
       type: 'web_url',
-      url: "#{HOST_URL}/#{community_id}",
+      url: "#{HOST_URL}/community_member_profiles/#{profile_id}/edit",
       webview_height_ratio: 'compact',
       messenger_extensions: 'true',
-      fallback_url: "#{HOST_URL}/#{community_id}"
+      fallback_url: "#{HOST_URL}/community_member_profiles/#{profile_id}/edit"
     }
   end
 end

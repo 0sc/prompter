@@ -11,6 +11,7 @@ class CommunityMemberProfile < ApplicationRecord
   # after_save :destroy, unless: :subscribed_feed_category?
 
   delegate :feed_category?, to: :community
+  delegate :name, to: :community, prefix: true
 
   def subscribe_to_all_feed_categories
     self.feed_categories = community.feed_categories
@@ -18,13 +19,12 @@ class CommunityMemberProfile < ApplicationRecord
   end
 
   def subscribe_to_feed_category(feed_category)
-    return true if community_member_profile_feed_categories.exists?(
-      feed_category: feed_category
-    )
+    community_member_profile_feed_categories
+      .find_or_create_by(feed_category: feed_category)
 
     # TODO: consider changing this to use update or save
     # currently this will raise error if validation fails
-    feed_categories << feed_category
+    # feed_categories << feed_category
   end
 
   def unsubscribe_from_feed_category(feed_category)

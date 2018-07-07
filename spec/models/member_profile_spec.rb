@@ -42,12 +42,17 @@ RSpec.describe MemberProfile, type: :model do
 
   describe '#add_community' do
     context 'profile already has community' do
-      it "doesn't double add the community" do
-        subject.communities << community
+      before { subject.communities << community }
 
+      it "doesn't double add the community" do
         expect { subject.add_community(community) }
           .not_to(change { subject.communities.count })
         expect(subject.communities).to include(community)
+      end
+
+      it 'returns the community member profile' do
+        profile = subject.community_member_profiles.last
+        expect(subject.add_community(community)).to eq profile
       end
     end
 
@@ -57,6 +62,11 @@ RSpec.describe MemberProfile, type: :model do
           .to(change { subject.communities.count }.from(0).to(1))
 
         expect(subject.communities).to include(community)
+      end
+
+      it 'returns the community member profile' do
+        expect(subject.add_community(community))
+          .to eq CommunityMemberProfile.last
       end
     end
   end

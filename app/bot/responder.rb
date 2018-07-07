@@ -64,8 +64,8 @@ class Responder
     respond(service.sender_id, payload)
   end
 
-  def self.send_subscribed_to_community_cta(service, community)
-    payload = subscribed_to_community_cta(community.id, community.name)
+  def self.send_subscribed_to_community_cta(service, profile)
+    payload = subscribed_to_community_cta(profile.id, profile.community_name)
     respond(service.sender_id, payload)
   end
 end

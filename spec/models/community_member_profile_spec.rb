@@ -35,7 +35,13 @@ RSpec.describe CommunityMemberProfile, type: :model do
   describe '#feed_category?' do
     it 'delegates feed_category? to community' do
       expect(subject.feed_category?('a'))
-      .to eq subject.community.feed_category?('a')
+        .to eq subject.community.feed_category?('a')
+    end
+  end
+
+  describe '#community_name' do
+    it 'delegates community_name as name to community' do
+      expect(subject.community_name).to eq subject.community.name
     end
   end
 
@@ -75,12 +81,12 @@ RSpec.describe CommunityMemberProfile, type: :model do
     it 'subscribes member_profile to the feed_category' do
       expect(subject.feed_categories).to be_empty
       subject.subscribe_to_feed_category(feed_category)
-      expect(subject.feed_categories).to eq [feed_category]
+      expect(subject.reload.feed_categories).to eq [feed_category]
     end
 
     it 'does not duplicate subscription if already exists' do
       subject.subscribe_to_feed_category(feed_category)
-      expect(subject.feed_categories).to eq [feed_category]
+      expect(subject.reload.feed_categories).to eq [feed_category]
 
       expect { subject.subscribe_to_feed_category(feed_category) }
         .not_to(change { subject.feed_categories.reload })
@@ -96,7 +102,7 @@ RSpec.describe CommunityMemberProfile, type: :model do
 
     it 'unsubscribes from the given feed_category' do
       subject.subscribe_to_feed_category(feed_category)
-      expect(subject.feed_categories).to eq [feed_category]
+      expect(subject.reload.feed_categories).to eq [feed_category]
       subject.unsubscribe_from_feed_category(feed_category)
       expect(subject.reload.feed_categories).to eq []
     end

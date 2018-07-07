@@ -7,7 +7,7 @@ class AdminProfile < ApplicationRecord
   alias admin_communities communities
 
   def add_community(community)
-    communities << community unless communities.include? community
+    community_admin_profiles.find_or_create_by(community: community)
   end
 
   def remove_community(community)

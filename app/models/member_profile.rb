@@ -15,7 +15,7 @@ class MemberProfile < ApplicationRecord
   end
 
   def add_community(community)
-    communities << community unless communities.include? community
+    community_member_profiles.find_or_create_by(community: community)
   end
 
   def remove_community(community)

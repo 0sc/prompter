@@ -93,6 +93,15 @@ RSpec.describe CommunityMemberProfile, type: :model do
 
       expect(subject.reload.feed_categories).to eq [feed_category]
     end
+
+    it 'does not subscribe if feed_category is not in community type' do
+      feed_category = create(:feed_category)
+      record = subject.subscribe_to_feed_category(feed_category)
+      expect(record.persisted?).to be false
+      expect(record.valid?).to be false
+      expect(record.errors.keys).to eq [:feed_category]
+      expect(subject.reload.feed_categories).to be_empty
+    end
   end
 
   describe '#unsubscribe_from_feed_category' do

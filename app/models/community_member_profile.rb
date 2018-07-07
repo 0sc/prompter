@@ -21,10 +21,6 @@ class CommunityMemberProfile < ApplicationRecord
   def subscribe_to_feed_category(feed_category)
     community_member_profile_feed_categories
       .find_or_create_by(feed_category: feed_category)
-
-    # TODO: consider changing this to use update or save
-    # currently this will raise error if validation fails
-    # feed_categories << feed_category
   end
 
   def unsubscribe_from_feed_category(feed_category)

@@ -81,10 +81,11 @@ module CommonResponses
     { message: { attachment: { type: 'template', payload: payload } } }
   end
 
-  def subscribed_to_community_cta(id, name)
+  def subscribed_to_community_cta(id, name, categories)
     payload = {
       template_type: 'button',
-      text: I18n.t("#{TRANS_BASE}.subscribed_to_community.msg", name: name),
+      text: I18n.t("#{TRANS_BASE}.subscribed_to_community.msg",
+                   name: name, categories: categories),
       buttons: [manage_subscription_webview_btn(id)]
     }
 

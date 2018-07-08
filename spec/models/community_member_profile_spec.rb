@@ -117,6 +117,45 @@ RSpec.describe CommunityMemberProfile, type: :model do
     end
   end
 
+  describe '#feed_category_summary' do
+    context 'less than three feed categories' do
+      let(:comm_with_1) { create(:community, :with_feed_categories, amount: 1) }
+      let(:comm_with_2) { create(:community, :with_feed_categories, amount: 2) }
+      let(:comm_with_3) { create(:community, :with_feed_categories, amount: 3) }
+
+      it 'return the names of the categories' do
+        [
+          create(:community_member_profile, community: comm_with_1),
+          create(:community_member_profile, community: comm_with_2),
+          create(:community_member_profile, community: comm_with_3)
+        ].each_with_index do |profile, i|
+          expect(profile.subscribed_feed_category_summary).to eq(
+            send("comm_with_#{i + 1}").feed_categories.map(&:name).to_sentence
+          )
+        end
+      end
+    end
+
+    context 'more than three feed categories' do
+      let(:comm_2) { create(:community, :with_feed_categories, amount: 4) }
+      let(:comm_1) { create(:community, :with_feed_categories, amount: 7) }
+
+      it 'returns the name of the first three and the number renaming' do
+        [
+          create(:community_member_profile, community: comm_1),
+          create(:community_member_profile, community: comm_2)
+        ].each_with_index do |profile, i|
+          categories = send("comm_#{i + 1}").feed_categories
+          msg = (
+            categories.first(3).map(&:name) + ["#{categories.size - 3} others"]
+          ).to_sentence
+
+          expect(profile.subscribed_feed_category_summary).to eq msg
+        end
+      end
+    end
+  end
+
   def create_feed_categories_for_community(community)
     create(:community_type_feed_category,
            community_type: community.community_type)

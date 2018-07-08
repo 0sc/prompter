@@ -32,4 +32,11 @@ class CommunityMemberProfile < ApplicationRecord
   def subscribed_feed_category?
     !feed_categories.empty?
   end
+
+  def subscribed_feed_category_summary
+    first_three = feed_categories.first(3).map(&:name)
+    others = feed_categories.count - 3
+    first_three << "#{others} others" if others.positive?
+    first_three.to_sentence
+  end
 end

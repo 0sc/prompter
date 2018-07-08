@@ -139,7 +139,11 @@ shared_examples 'common responses' do
     it 'returns the manage community webview button template' do
       payload = {
         template_type: 'button',
-        text: I18n.t("#{base}.subscribed_to_community.msg", name: 'comm-name'),
+        text: I18n.t(
+          "#{base}.subscribed_to_community.msg",
+          name: 'comm-name',
+          categories: 'Ruby'
+        ),
         buttons: [{
           title: I18n.t("#{base}.btns.manage"),
           type: 'web_url',
@@ -153,7 +157,7 @@ shared_examples 'common responses' do
         message: { attachment: { type: 'template', payload: payload } }
       }
 
-      expect(subject.subscribed_to_community_cta(69, 'comm-name'))
+      expect(subject.subscribed_to_community_cta(69, 'comm-name', 'Ruby'))
         .to eq expected
     end
   end

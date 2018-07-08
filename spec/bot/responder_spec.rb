@@ -240,7 +240,11 @@ RSpec.describe Responder do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: I18n.t("#{base}.subscribed_to_community.msg", name: name),
+              text: I18n.t(
+                "#{base}.subscribed_to_community.msg",
+                name: name,
+                categories: profile.subscribed_feed_category_summary
+              ),
               buttons: [{
                 title: I18n.t("#{base}.btns.manage"),
                 type: 'web_url',

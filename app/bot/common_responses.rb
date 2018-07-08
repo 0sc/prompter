@@ -127,13 +127,17 @@ module CommonResponses
       default_action: {
         type: 'web_url',
         url: HOST_URL + item[:url],
-        webview_height_ratio: 'tall'
+        webview_height_ratio: 'tall',
+        messenger_extensions: 'true',
+        fallback_url: HOST_URL + item[:url]
       },
       buttons: [
         {
           type: 'web_url',
           url: HOST_URL + item[:url],
           webview_height_ratio: 'tall',
+          messenger_extensions: 'true',
+          fallback_url: HOST_URL + item[:url],
           title: I18n.t("#{TRANS_BASE}.manage_community.cta")
         }
       ]

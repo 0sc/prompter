@@ -16,6 +16,8 @@ class CommunityMemberProfilesController < ApplicationController
       @community_member_profile.destroy
       redirect_to curtain_community_member_profiles_path
       # TODO: send chat msg to let user now they are unsubcribed
+      # TODO: consider closing with redirect
+      # https://developers.facebook.com/docs/messenger-platform/webview#close
     elsif @community_member_profile.update(community_member_profile_params)
       redirect_to @community_member_profile, notice: 'Updated successfully!'
     else
@@ -32,6 +34,8 @@ class CommunityMemberProfilesController < ApplicationController
                                 .find_by(id: params[:id])
 
     msg = 'Community profile not found'
+    # TODO: should this redirect to curtain?
+    # to reduce chance of duplicate account
     redirect_to root_path, notice: msg unless @community_member_profile
   end
 

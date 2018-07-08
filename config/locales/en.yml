@@ -42,8 +42,8 @@ en:
             You know what, lemme figure out what's amiss and in the meantime continue as usual.
         subscribed_to_community:
           msg: |
-            Awesome! I've added %{name} to your feeds. You'll now receive notifications for posts related to %{categories}.
-            Use this button to further fine turn the type of posts you can help with.
+            Awesome! I've added %{name} to your feeds. You'll now receive notifications for posts related to: %{categories}.
+            Use this button to further fine tune the type of posts you can help with.
         quick_reply:
           find_communities: Find a community
           manage_communities: Manage communities

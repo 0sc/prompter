@@ -1,9 +1,19 @@
+=begin
+{
+  "attachment_id": "1767475553328236" <= find
+  "attachment_id": "1767476273328164" <= manage
+  "attachment_id": "1767476809994777" <= subscribe
+}
+=end
+
+
 module CommonResponses
   TRANS_BASE = 'chat.responses.common'.freeze
-  HOST_URL = ENV.fetch('HOST_URL', 'https://193d4a2a.ngrok.io')
+  HOST_URL = ENV.fetch('HOST_URL')
   QUICK_REPLY_IMAGES = {
-    ::Chat::QuickReply::FIND_COMMUNITIES => 'https://agoge.nz/Images/search-03.png',
-    ::Chat::QuickReply::SUBSCRIBE_COMMUNITIES => 'https://png.icons8.com/ios/1600/add.png'
+    ::Chat::QuickReply::FIND_COMMUNITIES => HOST_URL + '/img/find/png',
+    ::Chat::QuickReply::SUBSCRIBE_COMMUNITIES => HOST_URL + '/img/Subscribe/png',
+    ::Chat::QuickReply::MANAGE_COMMUNITIES => HOST_URL + '/img/manage/png'
   }.freeze
 
   def no_subscription_cta(username, opts)

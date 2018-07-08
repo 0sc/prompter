@@ -24,7 +24,7 @@ class CommunitiesController < ApplicationController
     current_user.admin_profile.add_community(community)
     current_user.member_profile.add_community(community)
     redirect_to edit_community_path(community)
-
+# TODO: if user's psid is set inform them of addition
   rescue Koala::Facebook::ClientError
     redirect_to communities_path, notice: 'Community not found'
   end

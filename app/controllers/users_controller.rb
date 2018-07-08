@@ -5,7 +5,9 @@ class UsersController < ApplicationController
   before_action :duplicate_account_check, only: :create
   after_action :clear_session, if: -> { account_linking? }, only: :create
 
-  def new; end
+  def new
+    redirect_to communities_path if current_user
+  end
 
   def create
     current_user.update_from_auth_hash(auth_hash)
@@ -24,6 +26,19 @@ class UsersController < ApplicationController
 
   def failed
     handle_oauth_failure
+  end
+
+  # TODO: This is not secure
+  # revisit asap
+  def login
+    user = User.find_by(psid: params[:id])
+    session[:user_id] = user.id if user.present?
+    redirect_to(session[:target_page] || root_path)
+  end
+
+  def logout
+    session.clear
+    redirect_to root_path
   end
 
   protected

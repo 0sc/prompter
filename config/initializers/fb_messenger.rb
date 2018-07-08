@@ -8,7 +8,7 @@ class CredentialProvider < Facebook::Messenger::Configuration::Providers::Base
   end
 
   def access_token_for(_page_recipient)
-    creds_source.facebook_page_access_token
+    creds_source.page_access_token
   end
 
   private

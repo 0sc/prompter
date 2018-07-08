@@ -20,6 +20,11 @@ RSpec.describe UsersController, type: :controller do
       get :new
       expect(response).to be_successful
     end
+
+    it 'redirects to community path if user is logged in' do
+      get :new, params: {}, session: { user_id: create(:user).id }
+      expect(response).to redirect_to communities_path
+    end
   end
 
   describe 'POST #create' do
@@ -228,6 +233,46 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to redirect_to root_path
         expect(flash[:notice]).to eq notice
       end
+    end
+  end
+
+  describe 'GET #login' do
+    let(:user) { create(:user) }
+
+    context 'session' do
+      it 'sets the user_id session key if user with psid exists' do
+        get :login, params: { id: user.psid }
+        expect(session[:user_id]).to eq user.id
+      end
+
+      it 'does not set the user_id session key if user does not exist' do
+        get :login, params: { id: 404 }
+        expect(session[:user_id]).to be nil
+      end
+    end
+
+    context 'redirect' do
+      it 'redirects to the session target_page if present' do
+        get :login, params: { id: user.psid }, session: { target_page: 'random' }
+        expect(response).to redirect_to 'random'
+      end
+
+      it 'redirects to the root path is session target page is not present' do
+        get :login, params: { id: user.psid }
+        expect(response).to redirect_to root_path
+      end
+    end
+  end
+
+  describe 'GET #logout' do
+    it 'clears all session variables' do
+      get :logout, params: {}, session: { user_id: 100, target_page: 'here' }
+      expect(session.keys).to be_empty
+    end
+
+    it 'redirects to the root path' do
+      get :logout
+      expect(response).to redirect_to root_path
     end
   end
 end

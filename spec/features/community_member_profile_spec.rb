@@ -53,7 +53,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
       community.feed_categories.first(2).each { |fd| uncheck fd.name }
 
-      click_on 'Update Community member profile'
+      click_on 'Update'
     end
 
     expect(current_path).to eq community_member_profile_path(profile)
@@ -82,7 +82,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
       end
 
       expect do
-        click_on 'Update Community member profile'
+        click_on 'Update'
       end.to change { CommunityMemberProfile.count }.from(1).to(0)
     end
 

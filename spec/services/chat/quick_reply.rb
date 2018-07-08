@@ -110,6 +110,7 @@ shared_examples 'quick_reply' do
                 )
                 payload = {
                   title: not_subbed.name,
+                  subtitle: "#{not_subbed.feed_categories.count} categories",
                   image: not_subbed.cover,
                   postback: postback
                 }
@@ -134,6 +135,7 @@ shared_examples 'quick_reply' do
                   postback = svc.build_subscribe_to_community_postback(c.id)
                   {
                     title: c.name,
+                    subtitle: "#{c.feed_categories.count} categories",
                     image: c.cover,
                     postback: postback
                   }
@@ -160,6 +162,7 @@ shared_examples 'quick_reply' do
                   {
                     title: c.name,
                     image: c.cover,
+                    subtitle: "#{c.feed_categories.count} categories",
                     postback: postback
                   }
                 end
@@ -215,6 +218,66 @@ shared_examples 'quick_reply' do
       end
     end
 
+    describe 'manage-communities payload' do
+      before(:each) do
+        allow(message)
+          .to receive(:messaging).and_return(manage_communities_payload)
+      end
+
+      context 'user has no subscriptions' do
+        before(:each) do
+          user.member_profile.community_member_profiles.map(&:destroy)
+        end
+
+        it 'responds with the no subscription cta' do
+          expect(Responder).to receive(:send_no_subscription_cta).with(subject)
+          subject.handle_quick_reply
+        end
+      end
+
+      context 'user has subscriptions' do
+        let(:profile) do
+          create(:community_member_profile, member_profile: user.member_profile)
+        end
+
+        it 'responds with the communities_to_manage_cta' do
+          payload = {
+            title: profile.community_name,
+            image: profile.community.cover,
+            subtitle: profile.subscribed_feed_category_summary,
+            url: "/community_member_profiles/#{profile.id}/edit"
+          }
+
+          expect(Responder).to receive(:send_communities_to_manage_cta)
+            .with(subject, [payload])
+          subject.handle
+        end
+
+        describe 'response' do
+          it 'sends it in batches of 10' do
+            profiles = create_list(:community_member_profile,
+                                   21,
+                                   member_profile: user.member_profile)
+            payload = profiles.map do |profile|
+              {
+                title: profile.community_name,
+                image: profile.community.cover,
+                subtitle: profile.subscribed_feed_category_summary,
+                url: "/community_member_profiles/#{profile.id}/edit"
+              }
+            end
+
+            payload.each_slice(10) do |p|
+              expect(Responder).to receive(:send_communities_to_manage_cta)
+                .once.ordered.with(subject, p)
+            end
+
+            subject.handle_quick_reply
+          end
+        end
+      end
+    end
+
     describe 'everything else' do
       it 'defaults to handle msg reply' do
         expect(subject).to receive(:handle_msg_reply)
@@ -234,6 +297,13 @@ shared_examples 'quick_reply' do
     quick_reply_payload.tap do |payload|
       payload['message']['quick_reply']['payload'] =
         Chat::QuickReply::SUBSCRIBE_COMMUNITIES
+    end
+  end
+
+  def manage_communities_payload
+    quick_reply_payload.tap do |payload|
+      payload['message']['quick_reply']['payload'] =
+        Chat::QuickReply::MANAGE_COMMUNITIES
     end
   end
 

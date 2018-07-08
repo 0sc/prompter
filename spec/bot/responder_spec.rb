@@ -103,7 +103,7 @@ RSpec.describe Responder do
   end
 
   describe '.send_renew_token_cta' do
-    it 'delivers the link_account_cta payload' do
+    it 'delivers the renew_token_cta payload' do
       payload = expected_payload(
         789,
         message: {
@@ -128,7 +128,7 @@ RSpec.describe Responder do
   end
 
   describe '.send_subscribe_communities_cta' do
-    it 'delivers the link_account_cta payload' do
+    it 'delivers the subscribe_communities_cta payload' do
       payload = expected_payload(
         789,
         message: {
@@ -157,7 +157,7 @@ RSpec.describe Responder do
   end
 
   describe '.send_single_community_to_subscribe_cta' do
-    it 'delivers the link_account_cta payload' do
+    it 'delivers the single_community_to_subscribe_cta payload' do
       item = {
         title: 'community-name',
         postback: 'some-postback-1',
@@ -188,9 +188,10 @@ RSpec.describe Responder do
   end
 
   describe '.send_communities_to_subscribe_cta' do
-    it 'delivers the link_account_cta payload' do
+    it 'delivers the communities_to_subscribe_cta payload' do
       item = {
         title: 'my-community-name',
+        subtitle: '10 categories',
         image: 'some-item-image.jpg',
         postback: 'heres-what-you-get-back'
       }
@@ -206,7 +207,7 @@ RSpec.describe Responder do
               elements: [
                 {
                   title: item[:title],
-                  subtitle: 'See all our colors',
+                  subtitle: item[:subtitle],
                   image_url: item[:image],
                   buttons: [
                     {
@@ -261,6 +262,53 @@ RSpec.describe Responder do
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
 
       Responder.send_subscribed_to_community_cta(service, profile)
+    end
+  end
+
+  describe '.send_communities_to_manage_cta' do
+    it 'delivers the communities_to_manage_cta payload' do
+      item = {
+        title: 'my-community-name',
+        image: 'some-item-image.jpg',
+        subtitle: 'Ruby, Golang and Elixer',
+        url: '/community_member_profiles/100/edit'
+      }
+
+      payload = expected_payload(
+        789,
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'generic',
+              elements: [
+                {
+                  title: item[:title],
+                  subtitle: item[:subtitle],
+                  image_url: item[:image],
+                  default_action: {
+                    type: 'web_url',
+                    url: host + item[:url],
+                    webview_height_ratio: 'tall'
+                  },
+                  buttons: [
+                    {
+                      type: 'web_url',
+                      url: host + item[:url],
+                      webview_height_ratio: 'tall',
+                      title: 'manage'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_communities_to_manage_cta(service, [item])
     end
   end
 

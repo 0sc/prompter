@@ -47,6 +47,15 @@ module CommonResponses
     { message: { attachment: { type: 'template', payload: payload } } }
   end
 
+  def communities_to_manage_cta(items)
+    elements = items.map { |item| generic_template_item_attr(item) }
+    payload = {
+      template_type: 'generic',
+      elements: elements
+    }
+    { message: { attachment: { type: 'template', payload: payload } } }
+  end
+
   def communities_to_subscribe_cta(items)
     elements = items.map { |item| list_template_item_attr(item) }
     payload = {
@@ -110,18 +119,37 @@ module CommonResponses
     end
   end
 
+  def generic_template_item_attr(item)
+    {
+      title: item[:title],
+      subtitle: item[:subtitle],
+      image_url: item[:image],
+      default_action: {
+        type: 'web_url',
+        url: HOST_URL + item[:url],
+        webview_height_ratio: 'tall'
+      },
+      buttons: [
+        {
+          type: 'web_url',
+          url: HOST_URL + item[:url],
+          webview_height_ratio: 'tall',
+          title: I18n.t("#{TRANS_BASE}.manage_community.cta")
+        }
+      ]
+    }
+  end
+
   def list_template_item_attr(item)
     {
       title: item[:title],
-      subtitle: 'See all our colors',
+      subtitle: item[:subtitle],
       image_url: item[:image],
-      buttons: [
-        {
-          title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
-          type: 'postback',
-          payload: item[:postback]
-        }
-      ]
+      buttons: [{
+        title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
+        type: 'postback',
+        payload: item[:postback]
+      }]
     }
   end
 

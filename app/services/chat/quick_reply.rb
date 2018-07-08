@@ -40,10 +40,10 @@ module Chat::QuickReply
       return
     end
 
-    strategise_response(subscribable_communities)
+    strategise_list_template_response(subscribable_communities)
   end
 
-  def strategise_response(communities)
+  def strategise_list_template_response(communities)
     communities.each_slice(4) do |grp|
       if grp.size == 1
         payload = list_template_payload_for(grp.first)
@@ -64,9 +64,13 @@ module Chat::QuickReply
   end
 
   def handle_manage_communities
-    return Responder.send_no_subscription_cta unless user.subscriptions?
+    return Responder.send_no_subscription_cta(self) unless user.subscriptions?
 
     # lists users subscribed community with option
+    user.member_profile.community_member_profiles.each_slice(10) do |grp|
+      payload = grp.map {|c| generic_template_payload_for(c) }
+      Responder.send_communities_to_manage_cta(self, payload)
+    end
   end
 
   def list_template_payload_for(community)
@@ -74,8 +78,18 @@ module Chat::QuickReply
                .build_subscribe_to_community_postback(community.id)
     {
       title: community.name,
+      subtitle: "#{community.feed_categories.count} categories",
       image: community.cover,
       postback: postback
+    }
+  end
+
+  def generic_template_payload_for(profile)
+    {
+      title: profile.community_name,
+      image: profile.community.cover,
+      subtitle: profile.subscribed_feed_category_summary,
+      url: "/community_member_profiles/#{profile.id}/edit"
     }
   end
 

@@ -103,6 +103,7 @@ shared_examples 'common responses' do
     it 'returns the list template payload to subscribe the given communities' do
       item = {
         title: 'my-community-name',
+        subtitle: '10 categories',
         image: 'some-item-image.jpg',
         postback: 'heres-what-you-get-back'
       }
@@ -116,7 +117,7 @@ shared_examples 'common responses' do
               elements: [
                 {
                   title: item[:title],
-                  subtitle: 'See all our colors',
+                  subtitle: item[:subtitle],
                   image_url: item[:image],
                   buttons: [
                     {
@@ -185,6 +186,49 @@ shared_examples 'common responses' do
 
       expect(subject.single_community_to_subscribe_cta(item))
         .to eq expected
+    end
+  end
+
+  describe '.communities_to_manage_cta' do
+    it 'returns the generic template payload to manage the given communities' do
+      item = {
+        title: 'my-community-name',
+        image: 'some-item-image.jpg',
+        subtitle: 'Ruby, Golang and Elixer',
+        url: '/community_member_profiles/100/edit'
+      }
+
+      payload = {
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'generic',
+              elements: [
+                {
+                  title: item[:title],
+                  subtitle: item[:subtitle],
+                  image_url: item[:image],
+                  default_action: {
+                    type: 'web_url',
+                    url: host + item[:url],
+                    webview_height_ratio: 'tall'
+                  },
+                  buttons: [
+                    {
+                      type: 'web_url',
+                      url: host + item[:url],
+                      webview_height_ratio: 'tall',
+                      title: 'manage'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+      expect(subject.communities_to_manage_cta([item])).to eq payload
     end
   end
 

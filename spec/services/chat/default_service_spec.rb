@@ -34,7 +34,7 @@ RSpec.describe Chat::DefaultService, type: :service do
 
     context 'message is chat' do
       describe 'user has no subscriptions' do
-        it 'sends the no subscribe cta' do
+        it 'sends the no subscription cta' do
           expect(Responder).to receive(:send_no_subscription_cta).with(subject)
           subject.handle
         end

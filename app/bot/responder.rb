@@ -72,4 +72,9 @@ class Responder
     )
     respond(service.sender_id, payload)
   end
+
+  def self.send_communities_to_manage_cta(service, items)
+    payload = communities_to_manage_cta(items)
+    respond(service.sender_id, payload)
+  end
 end

@@ -15,4 +15,9 @@ Rails.application.routes.draw do
   end
 
   mount Facebook::Messenger::Server, at: 'bot'
+
+  unless Rails.env == 'production'
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq'
+  end
 end

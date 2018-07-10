@@ -20,4 +20,18 @@ class DummyFacebookService
 
     raise Koala::Facebook::ClientError.new(400, {}.to_json)
   end
+
+  def community_feeds(_id, opts={})
+    feeds = []
+    2.times { feeds << feed.merge(opts) }
+    feeds
+  end
+
+  def feed
+    {
+      'link' => 'https://link.to/the/feed',
+      'msg' => 'This is the actual content of the feed 🎉',
+      'id' => 'feed_id'
+    }
+  end
 end

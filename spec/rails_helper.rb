@@ -6,6 +6,8 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'capybara/rspec'
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
 
 require 'support/views/html_helpers'
 
@@ -24,6 +26,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    Sidekiq::Worker.clear_all
   end
 
   config.around(:each) do |example|

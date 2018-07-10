@@ -18,7 +18,7 @@ class MessengerNotificationService
     community = Community.find_by(id: community_id)
     return unless community.present?
 
-    each_community_member_profile(community) do |profile|
+    community.community_member_profiles.each do |profile|
       Notifier.send_community_type_changed_notice(
         psid: profile.member_profile.user.psid,
         pid: profile.id,
@@ -86,11 +86,5 @@ class MessengerNotificationService
       psid: user.psid,
       num_admin_comms: user.admin_communities.count
     )
-  end
-
-  def self.each_community_member_profile(community, &blk)
-    raise 'I need a block' unless block_given?
-
-    community.community_member_profiles.each(&blk)
   end
 end

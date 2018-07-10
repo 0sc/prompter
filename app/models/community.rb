@@ -38,4 +38,7 @@ class Community < ApplicationRecord
   def community_type_name
     community_type&.name
   end
+
+  def referral_link
+  end
 end

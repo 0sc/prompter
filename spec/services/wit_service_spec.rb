@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/wit'
 
 RSpec.describe WitService, type: :service do
   let(:client) { double }

@@ -1,6 +1,12 @@
 class Notifier
   include Facebook::Messenger
 
+  def self.send_community_feed_notice(psid:, name:, category:, feed:, link:)
+    # New post in category category: feed_msg
+    # Click here to respond to this
+    # Is this post appropriate for the javascript category?
+  end
+
   def self.send_community_added_notice(psid:, name:, ref_link:)
     # Congrats you've successfully added xyz to the sure fire engagemnt diviner ;)
     # Now sitback and watch the magic happen

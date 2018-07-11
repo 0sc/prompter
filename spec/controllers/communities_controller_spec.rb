@@ -102,7 +102,7 @@ RSpec.describe CommunitiesController, type: :controller do
         expect(community.fbid).to eq graph_info['id']
         expect(community.name).to eq graph_info['name']
         expect(community.icon).to eq graph_info['icon']
-        expect(community.cover).to eq graph_info.dig('cover','source')
+        expect(community.cover).to eq graph_info.dig('cover', 'source')
       end
 
       it 'adds the user as community admin' do
@@ -113,6 +113,34 @@ RSpec.describe CommunitiesController, type: :controller do
       it 'adds the user as community member' do
         post :create, params: { fbid: fbid }, session: valid_session
         expect(Community.first.member_profiles).to eq [user.member_profile]
+      end
+
+      describe 'notification' do
+        let(:worker) { MessengerNotificationWorker }
+
+        context 'user has psid' do
+          before { user.update!(psid: 1267) }
+
+          it 'schedules a messenger notification job for the user' do
+            expect do
+              post :create, params: { fbid: fbid }, session: valid_session
+            end.to change { worker.jobs.size }.from(0).to(1)
+
+            expect(worker.jobs.first['args']).to match_array(
+              ['send_community_added', user.id, Community.first.id]
+            )
+          end
+        end
+
+        context 'user has no psid' do
+          before { user.update!(psid: nil) }
+
+          it 'does not schedule a messenger notification job' do
+            expect do
+              post :create, params: { fbid: fbid }, session: valid_session
+            end.not_to(change { worker.jobs })
+          end
+        end
       end
     end
 
@@ -128,7 +156,7 @@ RSpec.describe CommunitiesController, type: :controller do
 
         expect(subject.reload.name).to eq 'Asgard'
         expect(subject.icon).to eq graph_info['icon']
-        expect(subject.cover).to eq graph_info.dig('cover','source')
+        expect(subject.cover).to eq graph_info.dig('cover', 'source')
       end
 
       context 'user is not community admin' do
@@ -168,6 +196,33 @@ RSpec.describe CommunitiesController, type: :controller do
           end.not_to(change { subject.member_profiles })
 
           expect(subject.reload.member_profiles).to eq [user.member_profile]
+        end
+      end
+
+      describe 'notification' do
+        let(:worker) { MessengerNotificationWorker }
+
+        context 'user has psid' do
+          before { user.update!(psid: 1267) }
+
+          it 'schedules a messenger notification job for the user' do
+            expect(worker.jobs.size).to be 0
+            post :create, params: { fbid: subject.fbid }, session: valid_session
+            expect(worker.jobs.size).to be 1
+            expect(worker.jobs.first['args']).to match_array(
+              ['send_community_added', user.id, Community.first.id]
+            )
+          end
+        end
+
+        context 'user has no psid' do
+          before { user.update!(psid: nil) }
+
+          it 'does not schedule a messenger notification job' do
+            expect(worker.jobs.size).to be 0
+            post :create, params: { fbid: subject.fbid }, session: valid_session
+            expect(worker.jobs.size).to be 0
+          end
         end
       end
     end
@@ -218,13 +273,72 @@ RSpec.describe CommunitiesController, type: :controller do
           expect(community.community_type).to be nil
 
           patch :update,
-          params: {
-            id: community.id,
-            community: { community_type_id: community_type.id }
-          },
-          session: valid_session
+                params: {
+                  id: community.id,
+                  community: { community_type_id: community_type.id }
+                },
+                session: valid_session
 
           expect(community.reload.community_type).to eq community_type
+        end
+
+        describe 'handle_community_type_changed' do
+          let(:type_1) { create(:community_type) }
+          let(:type_2) { create(:community_type) }
+          let(:worker) { MessengerNotificationWorker }
+
+          before do
+            create_list :community_type_feed_category, 2, community_type: type_1
+            create_list :community_type_feed_category, 2, community_type: type_2
+            community.update!(community_type: type_1)
+
+            @profile = user.member_profile.add_community(community)
+            expect(type_1.feed_categories).not_to eq type_2.feed_categories
+            expect(@profile.feed_categories).to eq type_1.feed_categories
+            expect(worker.jobs.size).to be 0
+          end
+
+          context 'community_type was updated' do
+            before do
+              patch :update,
+                    params: {
+                      id: community.id,
+                      community: { community_type_id: type_2.id }
+                    },
+                    session: valid_session
+            end
+
+            it 'replaces member profile subscription with the new ones' do
+              expect(@profile.reload.feed_categories)
+                .to eq type_2.feed_categories
+            end
+
+            it 'schedules a notification job to inform community members' do
+              expect(worker.jobs.size).to be 1
+              expect(worker.jobs.first['args'])
+                .to match_array(['send_community_type_changed', community.id])
+            end
+          end
+
+          context 'community type was not updated' do
+            before do
+              patch :update,
+                    params: {
+                      id: community.id,
+                      community: { community_type_id: type_1.id }
+                    },
+                    session: valid_session
+            end
+
+            it 'does not replaces member profile subscription' do
+              expect(@profile.reload.feed_categories)
+                .to eq type_1.feed_categories
+            end
+
+            it 'does not schedule a notification job' do
+              expect(worker.jobs.size).to eq 0
+            end
+          end
         end
       end
 
@@ -233,11 +347,11 @@ RSpec.describe CommunitiesController, type: :controller do
           expect(community.community_type).to be nil
 
           patch :update,
-          params: {
-            id: community.id,
-            community: { community_type_id: 404 }
-          },
-          session: valid_session
+                params: {
+                  id: community.id,
+                  community: { community_type_id: 404 }
+                },
+                session: valid_session
 
           expect(community.reload.community_type).to be nil
         end
@@ -246,11 +360,11 @@ RSpec.describe CommunitiesController, type: :controller do
           expect(community.community_type).to be nil
 
           patch :update,
-          params: {
-            id: community.id,
-            community: { community_type_id: 404 }
-          },
-          session: valid_session
+                params: {
+                  id: community.id,
+                  community: { community_type_id: 404 }
+                },
+                session: valid_session
 
           expect(response).to render :edit
         end
@@ -302,6 +416,15 @@ RSpec.describe CommunitiesController, type: :controller do
             delete :destroy, params: { id: community.id }, session: valid_session
           end.to change { Community.count }.from(1).to(0)
         end
+
+        it 'schedules a messenger notification to all member profiles' do
+          worker = MessengerNotificationWorker
+          expect do
+            delete :destroy, params: { id: community.id }, session: valid_session
+          end.to change { worker.jobs.count }.from(0).to(1)
+          expect(worker.jobs.first['args'])
+            .to match_array(['send_community_removed', community.id])
+        end
       end
 
       context 'when community still has associated admin profile' do
@@ -319,6 +442,13 @@ RSpec.describe CommunitiesController, type: :controller do
           end.not_to(change { Community.count })
 
           expect(community.reload.admin_profiles).to eq [user_two.admin_profile]
+        end
+
+        it 'does not schedules a messenger notification' do
+          worker = MessengerNotificationWorker
+          expect do
+            delete :destroy, params: { id: community.id }, session: valid_session
+          end.not_to change { worker.jobs.count }
         end
       end
     end

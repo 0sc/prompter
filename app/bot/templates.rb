@@ -61,10 +61,10 @@ module Templates
   end
 
   # LIST TEMPLATE
-  def list_template(elements)
+  def list_template(elements, style = 'compact')
     payload = {
       template_type: 'list',
-      top_element_style: 'compact',
+      top_element_style: style,
       elements: elements
     }
 

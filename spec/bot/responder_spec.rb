@@ -1,8 +1,13 @@
 require 'rails_helper'
 require 'bot/template_responses'
+require 'bot/templates'
+require 'bot/utils'
 
 RSpec.describe Responder do
   it_behaves_like 'template responses'
+  it_behaves_like 'templates'
+  it_behaves_like 'utils'
+
   let(:service) { double }
   let(:bot) { Facebook::Messenger::Bot }
   let(:host) { 'https://some-host.com' }

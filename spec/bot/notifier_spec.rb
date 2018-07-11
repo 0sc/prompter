@@ -1,4 +1,6 @@
 require 'rails_helper'
+require 'bot/templates'
+require 'bot/utils'
 
 RSpec.describe Notifier do
   let(:bot) { Facebook::Messenger::Bot }
@@ -9,6 +11,9 @@ RSpec.describe Notifier do
     allow(Client).to receive(:access_token).and_return(123)
     stub_const('Utils::HOST_URL', host)
   end
+
+  it_behaves_like 'templates'
+  it_behaves_like 'utils'
 
   describe '.send_community_feed_notice' do
     it 'delivers the community_feed_notice payload' do

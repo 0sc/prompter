@@ -3,9 +3,11 @@ require 'rails_helper'
 RSpec.describe Notifier do
   let(:bot) { Facebook::Messenger::Bot }
   let(:psid) { 12_345 }
+  let(:host) { 'https://some-host.com' }
 
   before do
     allow(Client).to receive(:access_token).and_return(123)
+    stub_const('Utils::HOST_URL', host)
   end
 
   describe '.send_community_feed_notice' do
@@ -44,13 +46,13 @@ RSpec.describe Notifier do
               content_type: 'text',
               payload: 'FEEDBACK',
               title: t('community_feed.feedback.right'),
-              image_url: 'https://image_link'
+              image_url: host + '/img/right.png'
             },
             {
               content_type: 'text',
               payload: 'FEEDBACK',
               title: t('community_feed.feedback.wrong'),
-              image_url: 'https://image_link'
+              image_url: host + '/img/wrong.png'
             }
           ]
         }
@@ -82,13 +84,13 @@ RSpec.describe Notifier do
               content_type: 'text',
               payload: 'FEEDBACK',
               title: t('community_feed.feedback.right'),
-              image_url: 'https://image_link'
+              image_url: host + '/img/right.png'
             },
             {
               content_type: 'text',
               payload: 'FEEDBACK',
               title: t('community_feed.feedback.wrong'),
-              image_url: 'https://image_link'
+              image_url: host + '/img/wrong.png'
             }
           ]
         }

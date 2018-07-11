@@ -17,11 +17,13 @@ class Notifier < Client
 
   def self.send_community_feed_feedback(psid:, category:)
     feedback_msg = t('community_feed.feedback.msg', category: category)
-    img = 'https://image_link'
+
     # TODO: hookup to quick_reply
+    right = t('community_feed.feedback.right')
+    wrong = t('community_feed.feedback.wrong')
     options = [
-      quick_reply_option('FEEDBACK', t('community_feed.feedback.right'), img),
-      quick_reply_option('FEEDBACK', t('community_feed.feedback.wrong'), img)
+      quick_reply_option('FEEDBACK', right, cta_img('right')),
+      quick_reply_option('FEEDBACK', wrong, cta_img('wrong'))
     ]
 
     feedback = quick_reply_template(feedback_msg, options)

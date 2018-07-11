@@ -1,45 +1,57 @@
 class Responder < Client
-  extend CommonResponses
+  extend TemplateResponses
+
   @trans_base = 'chat.responses.'.freeze
 
   def self.send_no_subscription_cta(service)
-    payload = no_subscription_cta(service.username, service.cta_options)
+    msg = t('no_subscription.msg', username: service.username)
+    payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end
 
   def self.send_has_subscription_cta(service, num)
-    payload = subscribed_cta(service.cta_options, num)
+    msg = t('subscribed.msg', num: num)
+    payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end
 
   def self.send_account_linked_cta(service)
-    payload = account_linked_cta(service.cta_options)
+    msg = t('account_linked.msg')
+    payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end
 
   def self.send_community_not_found_cta(service)
-    payload = community_not_found_cta(service.cta_options)
+    msg = t('community_not_found.msg')
+    payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end
 
   def self.send_link_account_cta(service)
-    payload = link_account_cta(service.sender_id)
+    msg = t('link_account.msg')
+    btn = build_account_link_btn(service.sender_id)
+    payload = button_template(msg, [btn])
     respond(service.sender_id, payload)
   end
 
   def self.send_renew_token_cta(service)
-    payload = renew_token_cta(service.sender_id)
+    msg = t('renew_token.msg')
+    btn = build_account_link_btn(service.sender_id)
+    payload = button_template(msg, [btn])
     respond(service.sender_id, payload)
   end
 
   def self.send_no_community_to_subscribe_cta(service)
-    payload =
-      no_community_to_subscribe_cta(service.username, service.cta_options)
+    msg = t('no_community.msg',
+            username: service.username,
+            link: Utils::HOST_URL)
+    payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end
 
   def self.send_single_community_to_subscribe_cta(service, item)
-    payload = single_community_to_subscribe_cta(item)
+    btn = postback_btn(t('subscribe_community.cta'), item[:postback])
+    payload = button_template(item[:title], [btn])
     respond(service.sender_id, payload)
   end
 
@@ -49,16 +61,20 @@ class Responder < Client
   end
 
   def self.send_subscribe_communities_cta(service)
-    payload = subscribe_communities_cta
+    msg = t('subscribe_communities.msg')
+    btn = url_btn(
+      t('subscribe_communities.cta'), fullpath('/communities'), 'tall'
+    )
+    payload = button_template(msg, [btn])
     respond(service.sender_id, payload)
   end
 
   def self.send_subscribed_to_community_cta(service, profile)
-    payload = subscribed_to_community_cta(
-      profile.id,
-      profile.community_name,
-      profile.subscribed_feed_category_summary
-    )
+    msg = t('subscribed_to_community.msg',
+            name: profile.community_name,
+            categories: profile.subscribed_feed_category_summary)
+    btn = manage_subscription_webview_btn(profile.id)
+    payload = button_template(msg, [btn])
     respond(service.sender_id, payload)
   end
 

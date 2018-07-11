@@ -1,8 +1,8 @@
 require 'rails_helper'
-require 'bot/common_responses'
+require 'bot/template_responses'
 
 RSpec.describe Responder do
-  it_behaves_like 'common responses'
+  it_behaves_like 'template responses'
   let(:service) { double }
   let(:bot) { Facebook::Messenger::Bot }
   let(:host) { 'https://some-host.com' }
@@ -323,7 +323,7 @@ RSpec.describe Responder do
           content_type: 'text',
           payload: 'manage-communities',
           title: I18n.t('chat.responses.quick_reply.manage_communities'),
-          image_url: CommonResponses::QUICK_REPLY_IMAGES['manage-communities']
+          image_url: host + '/img/manage-communities.png'
         }]
       }
     }

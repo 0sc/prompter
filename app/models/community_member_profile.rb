@@ -29,6 +29,10 @@ class CommunityMemberProfile < ApplicationRecord
       .map(&:destroy)
   end
 
+  def unsubscribe_from_all_feed_categories
+    community_member_profile_feed_categories.map(&:destroy)
+  end
+
   def subscribed_feed_category?
     !feed_categories.empty?
   end

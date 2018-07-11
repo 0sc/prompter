@@ -117,7 +117,7 @@ RSpec.describe CommunityMemberProfile, type: :model do
     end
   end
 
-  describe '#feed_category_summary' do
+  describe '#subscribed_feed_category_summary' do
     context 'less than three feed categories' do
       let(:comm_with_1) { create(:community, :with_feed_categories, amount: 1) }
       let(:comm_with_2) { create(:community, :with_feed_categories, amount: 2) }
@@ -153,6 +153,20 @@ RSpec.describe CommunityMemberProfile, type: :model do
           expect(profile.subscribed_feed_category_summary).to eq msg
         end
       end
+    end
+  end
+
+  describe '#unsubscribe_from_all_feed_categories' do
+    before do
+      create_list(
+        :community_member_profile_feed_category, 3,
+        community_member_profile: subject
+      )
+    end
+    it 'destroy all the profiles feed_categories' do
+      expect { subject.unsubscribe_from_all_feed_categories }
+        .to change { subject.reload.feed_categories.count }.from(3).to(0)
+      expect(subject.subscribed_feed_category?).to be false
     end
   end
 

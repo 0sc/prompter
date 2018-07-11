@@ -1,48 +1,75 @@
-class Notifier
+class Notifier < Client
   include Facebook::Messenger
+  extend Utils
+
+  @trans_base = 'chat.notifications.'.freeze
 
   def self.send_community_feed_notice(psid:, name:, category:, feed:, link:)
-    # New post in category category: feed_msg
-    # Click here to respond to this
-    # Is this post appropriate for the javascript category?
+    cta = t('community_feed.notice.cta')
+    btn = url_btn(cta, link, 'full')
+    msg =
+      t('community_feed.notice.msg', category: category, name: name, feed: feed)
+    payload = button_template(msg, [btn])
+    respond(psid, payload)
+    # TODO: show typing icon
+    send_community_feed_feedback(psid: psid, category: category)
   end
 
-  def self.send_community_added_notice(psid:, name:, ref_link:)
-    # Congrats you've successfully added xyz to the sure fire engagemnt diviner ;)
-    # Now sitback and watch the magic happen
-    # Oh, but before then, could share this link with your community members. Super important
-    # href link:
+  def self.send_community_feed_feedback(psid:, category:)
+    feedback_msg = t('community_feed.feedback.msg', category: category)
+    img = 'https://image_link'
+    # TODO: hookup to quick_reply
+    options = [
+      quick_reply_option('FEEDBACK', t('community_feed.feedback.right'), img),
+      quick_reply_option('FEEDBACK', t('community_feed.feedback.wrong'), img)
+    ]
+
+    feedback = quick_reply_template(feedback_msg, options)
+    respond(psid, feedback)
+  end
+
+  def self.send_community_added_notice(psid:, name:, link:)
+    msg = t('community_added.notice', name: name, link: link)
+    payload = text_message_template(msg)
+    respond(psid, payload)
   end
 
   def self.send_community_type_changed_notice(psid:, pid:, name:, type:, info:)
-    # The type of your community,name , has been changed to type by your admin. You can now fine tune the available feeds according to categories categories
-    # cta
+    msg = t('community_type_changed.notice', type: type, name: name, info: info)
+    btn = manage_subscription_webview_btn(pid)
+    payload = button_template(msg, [btn])
+    respond(psid, payload)
   end
 
   def self.send_community_removed_notice(psid:, name:)
-    # Your xyz admin has pulled the plug on your subscription. You'll no longer receive updates on posts.
-    # Help me protest this by sending them a message ;)
-    ## cta
+    msg = t('community_removed.notice', name: name)
+    payload = text_message_template(msg)
+    respond(psid, payload)
   end
 
   def self.send_community_profile_deleted_notice(psid:, name:)
-    # You've successfully deleted your subscription to xyz. You'll no longer receive notifications of what's happening in the community
-    # cta default to add more
+    msg = t('community_profile_deleted.notice', name: name)
+    payload = text_message_template(msg)
+    respond(psid, payload)
   end
 
-  def self.send_community_profile_updated_notice(psid:, info:)
-    # You successfully update you xzy subscription to list categories.
-    # cta default to add more
+  def self.send_community_profile_updated_notice(psid:, info:, name:)
+    msg = t('community_profile_updated.notice', name: name, info: info)
+    payload = text_message_template(msg)
+    respond(psid, payload)
   end
 
   def self.send_access_token_expiring_notice(psid:, num_admin_comms:)
-    # Hey, panic emoji my access token for pulling feeds on your behalf for
-    # is about to expire. Could you follow the link below to help me renew it
+    msg = t('access_token_expiring.notice', num: num_admin_comms)
+    btn = build_account_link_btn(psid)
+    payload = button_template(msg, [btn])
+    respond(psid, payload)
   end
 
   def self.send_access_token_expired_notice(psid:, num_admin_comms:)
-    # Ahh, your access token has expired; now your community members subscribed to helping with posts will no longer be updated.
-    # But no worries, let's work together and fix it
-    # login cta
+    msg = t('access_token_expired.notice', num: num_admin_comms)
+    btn = build_account_link_btn(psid)
+    payload = button_template(msg, [btn])
+    respond(psid, payload)
   end
 end

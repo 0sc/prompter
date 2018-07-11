@@ -1,14 +1,13 @@
 shared_examples 'common responses' do
   subject { described_class }
   let(:opts) { [Chat::QuickReply::FIND_COMMUNITIES] }
-  let(:base) { CommonResponses::TRANS_BASE }
   let(:host) { 'https://some-host.com' }
 
-  before { stub_const('CommonResponses::HOST_URL', host) }
+  before { stub_const('Utils::HOST_URL', host) }
 
   describe '.no_subscription_cta' do
     it 'returns the payload for no subscription response' do
-      msg = I18n.t("#{base}.no_subscription.msg", username: 'Sam')
+      msg = t('no_subscription.msg', username: 'Sam')
       payload = expected_payload(msg)
       expect(subject.no_subscription_cta('Sam', opts)).to eq payload
     end
@@ -16,7 +15,7 @@ shared_examples 'common responses' do
 
   describe '.account_linked_cta' do
     it 'returns the payload for the account link cta' do
-      msg = I18n.t("#{base}.account_linked.msg")
+      msg = t('account_linked.msg')
       payload = expected_payload(msg)
       expect(subject.account_linked_cta(opts)).to eq payload
     end
@@ -24,7 +23,7 @@ shared_examples 'common responses' do
 
   describe '.subscribed_cta' do
     it 'returns the payload for the subscribed cta' do
-      msg = I18n.t("#{base}.subscribed.msg", num: 10)
+      msg = t('subscribed.msg', num: 10)
       payload = expected_payload(msg)
       expect(subject.subscribed_cta(opts, 10)).to eq payload
     end
@@ -32,7 +31,7 @@ shared_examples 'common responses' do
 
   describe '.no_subscription_cta' do
     it 'returns the payload for no subscription response' do
-      msg = I18n.t("#{base}.no_community.msg", username: 'Sam', link: host)
+      msg = t('no_community.msg', username: 'Sam', link: host)
       payload = expected_payload(msg)
       expect(subject.no_community_to_subscribe_cta('Sam', opts)).to eq payload
     end
@@ -40,7 +39,7 @@ shared_examples 'common responses' do
 
   describe '.community_not_found_cta' do
     it 'returns the payload for no subscription response' do
-      msg = I18n.t("#{base}.community_not_found.msg")
+      msg = t('community_not_found.msg')
       payload = expected_payload(msg)
       expect(subject.community_not_found_cta(opts)).to eq payload
     end
@@ -48,7 +47,7 @@ shared_examples 'common responses' do
 
   shared_examples 'button template' do |mtd|
     it 'returns the button template' do
-      msg = I18n.t("#{base}.#{mtd}.msg")
+      msg = t("#{mtd}.msg")
 
       payload = {
         template_type: 'button',
@@ -86,7 +85,7 @@ shared_examples 'common responses' do
       let(:btns) do
         [
           {
-            title: I18n.t("#{base}.subscribe_communities.cta"),
+            title: t('subscribe_communities.cta'),
             type: 'web_url',
             url: "#{host}/communities",
             webview_height_ratio: 'tall',
@@ -121,7 +120,7 @@ shared_examples 'common responses' do
                   image_url: item[:image],
                   buttons: [
                     {
-                      title: I18n.t("#{base}.subscribe_community.cta"),
+                      title: t('subscribe_community.cta'),
                       type: 'postback',
                       payload: item[:postback]
                     }
@@ -140,13 +139,12 @@ shared_examples 'common responses' do
     it 'returns the manage community webview button template' do
       payload = {
         template_type: 'button',
-        text: I18n.t(
-          "#{base}.subscribed_to_community.msg",
+        text: t('subscribed_to_community.msg',
           name: 'comm-name',
           categories: 'Ruby'
         ),
         buttons: [{
-          title: I18n.t("#{base}.btns.manage"),
+          title: t('btns.manage'),
           type: 'web_url',
           url: "#{host}/community_member_profiles/69/edit",
           webview_height_ratio: 'compact',
@@ -175,7 +173,7 @@ shared_examples 'common responses' do
         template_type: 'button',
         text: item[:title],
         buttons: [{
-          title: I18n.t("#{base}.subscribe_community.cta"),
+          title: t('subscribe_community.cta'),
           type: 'postback',
           payload: item[:postback]
         }]
@@ -250,7 +248,7 @@ shared_examples 'common responses' do
       {
         content_type: 'text',
         payload: o,
-        title: I18n.t("#{base}.quick_reply.#{o.underscore}"),
+        title: t("quick_reply.#{o.underscore}"),
         image_url: CommonResponses::QUICK_REPLY_IMAGES[o]
       }
     end

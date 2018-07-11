@@ -1,17 +1,6 @@
-class Responder
-  include Facebook::Messenger
+class Responder < Client
   extend CommonResponses
-
-  def self.respond(psid, payload)
-    Bot.deliver(
-      { recipient: { id: psid } }.merge(payload),
-      access_token: access_token
-    )
-  end
-
-  def self.access_token
-    Rails.application.credentials.page_access_token
-  end
+  @trans_base = 'chat.responses.'.freeze
 
   def self.send_no_subscription_cta(service)
     payload = no_subscription_cta(service.username, service.cta_options)

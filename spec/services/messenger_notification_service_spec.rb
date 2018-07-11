@@ -40,7 +40,7 @@ RSpec.describe MessengerNotificationService, type: :service do
           .with(
             psid: user.psid,
             name: community.name,
-            ref_link: community.referral_link
+            link: community.referral_link
           )
 
         subject.send_community_added(user.id, community.id)
@@ -153,7 +153,8 @@ RSpec.describe MessengerNotificationService, type: :service do
         expect(Notifier).to receive(:send_community_profile_updated_notice)
           .with(
             psid: profile.member_profile.user.psid,
-            info: profile.subscribed_feed_category_summary
+            info: profile.subscribed_feed_category_summary,
+            name: profile.community_name
           )
 
         subject.send_community_profile_updated(profile.id)

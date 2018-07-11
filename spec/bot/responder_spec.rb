@@ -4,25 +4,24 @@ require 'bot/common_responses'
 RSpec.describe Responder do
   it_behaves_like 'common responses'
   let(:service) { double }
-  let(:base) { CommonResponses::TRANS_BASE }
   let(:bot) { Facebook::Messenger::Bot }
   let(:host) { 'https://some-host.com' }
 
   before do
     allow(Responder).to receive(:access_token).and_return(123)
-    stub_const('CommonResponses::HOST_URL', host)
+    stub_const('Utils::HOST_URL', host)
   end
 
   before(:each) do
     allow(service).to receive(:sender_id).and_return(789)
-    allow(service).to receive(:cta_options).and_return(['manage-community'])
+    allow(service).to receive(:cta_options).and_return(['manage-communities'])
   end
 
   describe '.send_no_subscription_cta' do
     before(:each) { allow(service).to receive(:username).and_return('Jerry') }
 
     it 'delivers the no_subscription_cta payload' do
-      msg = I18n.t("#{base}.no_subscription.msg", username: 'Jerry')
+      msg = t('no_subscription.msg', username: 'Jerry')
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -35,7 +34,7 @@ RSpec.describe Responder do
     before(:each) { allow(service).to receive(:username).and_return('Jerry') }
 
     it 'delivers the no_subscription_cta payload' do
-      msg = I18n.t("#{base}.no_community.msg", username: 'Jerry', link: host)
+      msg = t('no_community.msg', username: 'Jerry', link: host)
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -46,7 +45,7 @@ RSpec.describe Responder do
 
   describe '.send_has_subscription_cta' do
     it 'delivers the has subscribed_cta payload' do
-      msg = I18n.t("#{base}.subscribed.msg", num: 456)
+      msg = t('subscribed.msg', num: 456)
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -57,7 +56,7 @@ RSpec.describe Responder do
 
   describe '.send_account_linked_cta' do
     it 'delivers the account_linked_cta payload' do
-      msg = I18n.t("#{base}.account_linked.msg")
+      msg = t('account_linked.msg')
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -68,7 +67,7 @@ RSpec.describe Responder do
 
   describe '.send_community_not_found_cta' do
     it 'delivers the account_linked_cta payload' do
-      msg = I18n.t("#{base}.community_not_found.msg")
+      msg = t('community_not_found.msg')
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -86,7 +85,7 @@ RSpec.describe Responder do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: I18n.t("#{base}.link_account.msg"),
+              text: t('link_account.msg'),
               buttons: [{
                 type: 'account_link',
                 url: "#{host}/users/789/account_link"
@@ -111,7 +110,7 @@ RSpec.describe Responder do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: I18n.t("#{base}.renew_token.msg"),
+              text: t('renew_token.msg'),
               buttons: [{
                 type: 'account_link',
                 url: "#{host}/users/789/account_link"
@@ -136,9 +135,9 @@ RSpec.describe Responder do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: I18n.t("#{base}.subscribe_communities.msg"),
+              text: t('subscribe_communities.msg'),
               buttons: [{
-                title: I18n.t("#{base}.subscribe_communities.cta"),
+                title: t('subscribe_communities.cta'),
                 type: 'web_url',
                 url: "#{host}/communities",
                 webview_height_ratio: 'tall',
@@ -172,7 +171,7 @@ RSpec.describe Responder do
               template_type: 'button',
               text: item[:title],
               buttons: [{
-                title: I18n.t("#{base}.subscribe_community.cta"),
+                title: t('subscribe_community.cta'),
                 type: 'postback',
                 payload: item[:postback]
               }]
@@ -211,7 +210,7 @@ RSpec.describe Responder do
                   image_url: item[:image],
                   buttons: [
                     {
-                      title: I18n.t("#{base}.subscribe_community.cta"),
+                      title: t('subscribe_community.cta'),
                       type: 'postback',
                       payload: item[:postback]
                     }
@@ -241,13 +240,13 @@ RSpec.describe Responder do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: I18n.t(
-                "#{base}.subscribed_to_community.msg",
+              text: t(
+                'subscribed_to_community.msg',
                 name: name,
                 categories: profile.subscribed_feed_category_summary
               ),
               buttons: [{
-                title: I18n.t("#{base}.btns.manage"),
+                title: t('btns.manage'),
                 type: 'web_url',
                 url: url,
                 webview_height_ratio: 'compact',
@@ -322,9 +321,9 @@ RSpec.describe Responder do
         text: msg,
         quick_replies: [{
           content_type: 'text',
-          payload: 'manage-community',
-          title: I18n.t('chat.responses.common.quick_reply.manage_community'),
-          image_url: CommonResponses::QUICK_REPLY_IMAGES['manage-community']
+          payload: 'manage-communities',
+          title: I18n.t('chat.responses.quick_reply.manage_communities'),
+          image_url: CommonResponses::QUICK_REPLY_IMAGES['manage-communities']
         }]
       }
     }
@@ -332,5 +331,10 @@ RSpec.describe Responder do
 
   def expected_payload(psid, payload)
     { recipient: { id: psid } }.merge(payload)
+  end
+
+  def t(key, **args)
+    key = 'chat.responses.' + key
+    I18n.t(key, args)
   end
 end

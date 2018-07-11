@@ -8,125 +8,92 @@
 
 
 module CommonResponses
-  TRANS_BASE = 'chat.responses.common'.freeze
-  HOST_URL = ENV.fetch('HOST_URL')
   QUICK_REPLY_IMAGES = {
-    ::Chat::QuickReply::FIND_COMMUNITIES => HOST_URL + '/img/find/png',
-    ::Chat::QuickReply::SUBSCRIBE_COMMUNITIES => HOST_URL + '/img/Subscribe/png',
-    ::Chat::QuickReply::MANAGE_COMMUNITIES => HOST_URL + '/img/manage/png'
+    # ::Chat::QuickReply::FIND_COMMUNITIES => HOST_URL + '/img/find/png',
+    # ::Chat::QuickReply::SUBSCRIBE_COMMUNITIES => HOST_URL + '/img/Subscribe/png',
+    # ::Chat::QuickReply::MANAGE_COMMUNITIES => HOST_URL + '/img/manage/png'
   }.freeze
 
+include Utils
+
   def no_subscription_cta(username, opts)
-    msg = I18n.t("#{TRANS_BASE}.no_subscription.msg", username: username)
+    msg = t('no_subscription.msg', username: username)
     default_cta(msg, opts)
   end
 
   def account_linked_cta(opts)
-    msg = I18n.t("#{TRANS_BASE}.account_linked.msg")
+    msg = t('account_linked.msg')
     default_cta(msg, opts)
   end
 
   def subscribed_cta(opts, num)
-    msg = I18n.t("#{TRANS_BASE}.subscribed.msg", num: num)
+    msg = t('subscribed.msg', num: num)
     default_cta(msg, opts)
   end
 
   def no_community_to_subscribe_cta(username, opts)
-    msg = I18n.t("#{TRANS_BASE}.no_community.msg",
-                 username: username,
-                 link: HOST_URL)
+    msg = t('no_community.msg', username: username, link: HOST_URL)
     default_cta(msg, opts)
   end
 
   def community_not_found_cta(opts)
-    msg = I18n.t("#{TRANS_BASE}.community_not_found.msg")
+    msg = t('community_not_found.msg')
     default_cta(msg, opts)
   end
 
   def link_account_cta(sender_id)
-    msg = I18n.t("#{TRANS_BASE}.link_account.msg")
-    payload = link_account_btn(msg, sender_id)
+    msg = t('link_account.msg')
+    btn = build_account_link_btn(sender_id)
 
-    { message: { attachment: { type: 'template', payload: payload } } }
+    button_template(msg, [btn])
   end
 
   def renew_token_cta(sender_id)
-    msg = I18n.t("#{TRANS_BASE}.renew_token.msg")
-    payload = link_account_btn(msg, sender_id)
+    msg = t('renew_token.msg')
+    btn = build_account_link_btn(sender_id)
 
-    { message: { attachment: { type: 'template', payload: payload } } }
+    button_template(msg, [btn])
   end
 
   def communities_to_manage_cta(items)
     elements = items.map { |item| generic_template_item_attr(item) }
-    payload = {
-      template_type: 'generic',
-      elements: elements
-    }
-    { message: { attachment: { type: 'template', payload: payload } } }
+    generic_template(elements)
   end
 
   def communities_to_subscribe_cta(items)
-    elements = items.map { |item| list_template_item_attr(item) }
-    payload = {
-      template_type: 'list',
-      top_element_style: 'compact',
-      elements: elements
-    }
-    { message: { attachment: { type: 'template', payload: payload } } }
+    elements = items.map { |item| build_list_template_item(item) }
+    list_template(elements)
   end
 
   def single_community_to_subscribe_cta(item)
-    payload = {
-      template_type: 'button',
-      text: item[:title],
-      buttons: [{
-        title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
-        type: 'postback',
-        payload: item[:postback]
-      }]
-    }
-
-    { message: { attachment: { type: 'template', payload: payload } } }
+    btn = postback_btn(t('subscribe_community.cta'), item[:postback])
+    button_template(item[:title], [btn])
   end
 
   def subscribe_communities_cta
-    payload = {
-      template_type: 'button',
-      text: I18n.t("#{TRANS_BASE}.subscribe_communities.msg"),
-      buttons: [subscribe_webview_btn]
-    }
-
-    { message: { attachment: { type: 'template', payload: payload } } }
+    msg = t('subscribe_communities.msg')
+    btn =
+      url_btn(t('subscribe_communities.cta'), fullpath('/communities'), 'tall')
+    button_template(msg, [btn])
   end
 
   def subscribed_to_community_cta(id, name, categories)
-    payload = {
-      template_type: 'button',
-      text: I18n.t("#{TRANS_BASE}.subscribed_to_community.msg",
-                   name: name, categories: categories),
-      buttons: [manage_subscription_webview_btn(id)]
-    }
-
-    { message: { attachment: { type: 'template', payload: payload } } }
+    msg = t('subscribed_to_community.msg', name: name, categories: categories)
+    btn = manage_subscription_webview_btn(id)
+    button_template(msg, [btn])
   end
 
 #====
 
   def default_cta(msg, opts)
-    options = default_cta_options(opts)
-    { message: { text: msg, quick_replies: options } }
+    options = opts.map do |opt|
+      quick_reply_option(opt, t("quick_reply.#{opt.underscore}"), cta_img(opt))
+    end
+
+    quick_reply_template(msg, options)
   end
 
-  def default_cta_options(opts)
-    opts.map do |opt|
-      {
-        content_type: 'text',
-        payload: opt,
-        title: I18n.t("#{TRANS_BASE}.quick_reply.#{opt.underscore}"),
-        image_url: QUICK_REPLY_IMAGES[opt]
-      }
-    end
+  def cta_img(key)
   end
 
   def generic_template_item_attr(item)
@@ -136,67 +103,26 @@ module CommonResponses
       image_url: item[:image],
       default_action: {
         type: 'web_url',
-        url: HOST_URL + item[:url],
+        url: fullpath(item[:url]),
         webview_height_ratio: 'tall',
         messenger_extensions: 'true',
-        fallback_url: HOST_URL + item[:url]
+        fallback_url: fullpath(item[:url])
       },
       buttons: [
         {
           type: 'web_url',
-          url: HOST_URL + item[:url],
+          url: fullpath(item[:url]),
           webview_height_ratio: 'tall',
           messenger_extensions: 'true',
-          fallback_url: HOST_URL + item[:url],
-          title: I18n.t("#{TRANS_BASE}.manage_community.cta")
+          fallback_url: fullpath(item[:url]),
+          title: t('manage_community.cta')
         }
       ]
     }
   end
 
-  def list_template_item_attr(item)
-    {
-      title: item[:title],
-      subtitle: item[:subtitle],
-      image_url: item[:image],
-      buttons: [{
-        title: I18n.t("#{TRANS_BASE}.subscribe_community.cta"),
-        type: 'postback',
-        payload: item[:postback]
-      }]
-    }
-  end
-
-  def link_account_btn(msg, sender_id)
-    url = "#{HOST_URL}/users/#{sender_id}/account_link"
-    {
-      template_type: 'button',
-      text: msg,
-      buttons: [
-        { type: 'account_link', url: url }
-      ]
-    }
-  end
-
-  def subscribe_webview_btn
-    {
-      title: I18n.t("#{TRANS_BASE}.subscribe_communities.cta"),
-      type: 'web_url',
-      url: "#{HOST_URL}/communities",
-      webview_height_ratio: 'tall',
-      messenger_extensions: 'true',
-      fallback_url: "#{HOST_URL}/communities"
-    }
-  end
-
-  def manage_subscription_webview_btn(profile_id)
-    {
-      title: I18n.t("#{TRANS_BASE}.btns.manage"),
-      type: 'web_url',
-      url: "#{HOST_URL}/community_member_profiles/#{profile_id}/edit",
-      webview_height_ratio: 'compact',
-      messenger_extensions: 'true',
-      fallback_url: "#{HOST_URL}/community_member_profiles/#{profile_id}/edit"
-    }
+  def build_list_template_item(item)
+    btn = postback_btn(t('subscribe_community.cta'), item[:postback])
+    list_template_item(item[:title], item[:subtitle], item[:image], [btn])
   end
 end

@@ -10,7 +10,7 @@ class MessengerNotificationService
     Notifier.send_community_added_notice(
       psid: user.psid,
       name: community.name,
-      ref_link: community.referral_link
+      link: community.referral_link
     )
   end
 
@@ -62,7 +62,8 @@ class MessengerNotificationService
 
     Notifier.send_community_profile_updated_notice(
       psid: profile.member_profile.user.psid,
-      info: profile.subscribed_feed_category_summary
+      info: profile.subscribed_feed_category_summary,
+      name: profile.community_name
     )
   end
 

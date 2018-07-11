@@ -35,6 +35,10 @@ class User < ApplicationRecord
     Time.zone.now > Time.zone.at(expires_at)
   end
 
+  def psid?
+    psid.present?
+  end
+
   def self.combine_accounts!(acc_one, acc_two)
     User.transaction do
       # copy over attributes

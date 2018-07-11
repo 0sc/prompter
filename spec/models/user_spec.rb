@@ -178,4 +178,28 @@ RSpec.describe User, type: :model do
       expect(User.all).to eq [acc_one]
     end
   end
+
+  describe '#token_expired?' do
+    it 'returns true if user token has expired' do
+      subject.expires_at = 2.minutes.ago.to_i
+      expect(subject.token_expired?).to be true
+    end
+
+    it 'returns false if user token is not expired' do
+      subject.expires_at = 10.minutes.from_now.to_i
+      expect(subject.token_expired?).to be false
+    end
+  end
+
+  describe '#psid?' do
+    it 'returns true if user has psid' do
+      subject.psid = '1121321'
+      expect(subject.psid?).to be true
+    end
+
+    it 'returns false if user has no psid' do
+      subject.psid = nil
+      expect(subject.psid?).to be false
+    end
+  end
 end

@@ -14,11 +14,13 @@ class CommunityMemberProfilesController < ApplicationController
   def update
     if empty_feed_category_subscription?
       @community_member_profile.destroy
+      send_notification_of_profile_deletion
+
       redirect_to curtain_community_member_profiles_path
-      # TODO: send chat msg to let user now they are unsubcribed
       # TODO: consider closing with redirect
       # https://developers.facebook.com/docs/messenger-platform/webview#close
     elsif @community_member_profile.update(community_member_profile_params)
+      send_notification_of_profile_update(@community_member_profile)
       redirect_to @community_member_profile, notice: 'Updated successfully!'
     else
       render :edit
@@ -41,6 +43,17 @@ class CommunityMemberProfilesController < ApplicationController
 
   def set_community
     @community = @community_member_profile.community
+  end
+
+  def send_notification_of_profile_update(profile)
+    MessengerNotificationWorker
+      .perform_async('send_community_profile_updated', profile.id)
+  end
+
+  def send_notification_of_profile_deletion
+    MessengerNotificationWorker.perform_async(
+      'send_community_profile_deleted', current_user.id, @community.id
+    )
   end
 
   def empty_feed_category_subscription?

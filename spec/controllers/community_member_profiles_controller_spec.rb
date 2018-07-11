@@ -73,6 +73,8 @@ RSpec.describe CommunityMemberProfilesController, type: :controller do
 
   describe 'PATCH #update' do
     include_examples 'set_community_member_profile', :patch, :update
+    let(:worker) { MessengerNotificationWorker }
+
     before { subject.subscribe_to_all_feed_categories }
 
     context 'empty feed category subscription' do
@@ -89,6 +91,15 @@ RSpec.describe CommunityMemberProfilesController, type: :controller do
           patch :update, params: params, session: valid_session
         end.to change { CommunityMemberProfile.count }.from(1).to(0)
         expect(CommunityMemberProfileFeedCategory.count).to eq 0
+      end
+
+      it 'schedules a messenger notification to the user' do
+        expect do
+          patch :update, params: params, session: valid_session
+        end.to change { worker.jobs.size }.from(0).to(1)
+        expect(worker.jobs.first['args']).to match_array(
+          ['send_community_profile_deleted', user.id, subject.community.id]
+        )
       end
 
       it 'redirects to the curtain page' do
@@ -112,6 +123,14 @@ RSpec.describe CommunityMemberProfilesController, type: :controller do
 
         expect(subject.reload.feed_categories)
           .to eq community.feed_categories.first(1)
+      end
+
+      it 'schedules a messenger notification to the user' do
+        expect do
+          patch :update, params: params, session: valid_session
+        end.to change { worker.jobs.size }.from(0).to(1)
+        expect(worker.jobs.first['args'])
+          .to match_array(['send_community_profile_updated', subject.id])
       end
 
       it 'redirects to the community_member_profile show page' do

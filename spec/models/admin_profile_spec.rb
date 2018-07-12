@@ -8,9 +8,13 @@ RSpec.describe AdminProfile, type: :model do
   it { should have_many(:community_admin_profiles) }
   it { should have_many(:communities).through(:community_admin_profiles) }
 
-  describe 'aliases' do
-    it 'aliases #admin_communities as communities' do
-      expect(subject.admin_communities).to eq subject.communities
+  describe '#community_count' do
+    it 'returns number of communities a user is subscribed to' do
+      create_list(:community, 2).each do |community|
+        subject.add_community(community)
+      end
+
+      expect(subject.community_count).to be 2
     end
   end
 

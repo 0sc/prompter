@@ -43,9 +43,9 @@ RSpec.describe Chat::PostbackService, type: :service do
         end
 
         it 'subscribes user to the community' do
-          expect(user.reload.member_communities).to eq []
+          expect(user.reload.member_profile_communities).to eq []
           subject.handle
-          expect(user.reload.member_communities).to eq [community]
+          expect(user.reload.member_profile_communities).to eq [community]
         end
       end
     end
@@ -73,9 +73,9 @@ RSpec.describe Chat::PostbackService, type: :service do
           end
 
           it 'subscribes the user to the community' do
-            expect(user.reload.member_communities).to eq []
+            expect(user.reload.member_profile_communities).to eq []
             subject.handle
-            expect(user.reload.member_communities).to eq [community]
+            expect(user.reload.member_profile_communities).to eq [community]
           end
         end
 

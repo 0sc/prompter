@@ -183,7 +183,8 @@ RSpec.describe MessengerNotificationService, type: :service do
     context 'user exists' do
       it 'triggers the send_access_token_expiring_notice' do
         expect(Notifier).to receive(:send_access_token_expiring_notice)
-          .with(psid: user.psid, num_admin_comms: user.admin_communities.count)
+          .with(psid: user.psid,
+                num_admin_comms: user.admin_profile_community_count)
 
         subject.send_access_token_expiring(user.id)
       end
@@ -208,7 +209,8 @@ RSpec.describe MessengerNotificationService, type: :service do
     context 'user exists' do
       it 'triggers the send_access_token_expired_notice' do
         expect(Notifier).to receive(:send_access_token_expired_notice)
-          .with(psid: user.psid, num_admin_comms: user.admin_communities.count)
+          .with(psid: user.psid,
+                num_admin_comms: user.admin_profile_community_count)
 
         subject.send_access_token_expired(user.id)
       end

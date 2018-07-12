@@ -4,13 +4,15 @@ class MemberProfile < ApplicationRecord
   has_many :community_member_profiles, dependent: :destroy
   has_many :communities, through: :community_member_profiles
 
-  alias member_communities communities
-
-  def subscriptions?
+  def communities?
     communities.present?
   end
 
-  def subscription_count
+  def community?(community)
+    community_member_profiles.exists?(community: community)
+  end
+
+  def community_count
     communities.count
   end
 

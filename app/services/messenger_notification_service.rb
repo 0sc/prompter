@@ -10,7 +10,7 @@ class MessengerNotificationService
     user = User.find_by(id: user_id)
     return unless user.present? && user.psid.present?
 
-    community = user.admin_communities.find_by(id: community_id)
+    community = user.admin_profile_communities.find_by(id: community_id)
     return unless community.present?
 
     Notifier.send_community_added_notice(
@@ -81,7 +81,7 @@ class MessengerNotificationService
 
     Notifier.send_access_token_expired_notice(
       psid: user.psid,
-      num_admin_comms: user.admin_communities.count
+      num_admin_comms: user.admin_profile_community_count
     )
   end
 
@@ -91,7 +91,7 @@ class MessengerNotificationService
 
     Notifier.send_access_token_expiring_notice(
       psid: user.psid,
-      num_admin_comms: user.admin_communities.count
+      num_admin_comms: user.admin_profile_community_count
     )
   end
 end

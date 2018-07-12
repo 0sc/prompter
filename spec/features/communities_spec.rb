@@ -79,7 +79,7 @@ RSpec.describe 'Communities', type: :feature do
         expect(comm.name).to eq community.name
         expect(comm.fbid).to eq community.fbid
         expect(comm.admin_profiles).to include user.admin_profile
-        expect(user.admin_communities).to include comm
+        expect(user.admin_profile_communities).to include comm
       end
     end
 
@@ -110,7 +110,7 @@ RSpec.describe 'Communities', type: :feature do
       within('tr') do
         expect { click_on('Unsubscribe') }
           .to change { Community.count }.from(1).to(0)
-        expect(user.reload.admin_communities).to be_empty
+        expect(user.reload.admin_profile_communities).to be_empty
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe 'Communities', type: :feature do
 
   scenario 'user can edit a subscribed community' do
     community = create(:community, community_type: nil)
-    user.admin_communities << community
+    user.admin_profile_communities << community
     community_type = create(:community_type)
 
     dummy_service.admin_communities = [

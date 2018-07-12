@@ -5,14 +5,14 @@ class TokenTtlWorker
     # TODO: consider sending email notifications where psid is missing
     # TODO: consider unsubscribing communities with expired tokens
     each_user_with_just_expired_token do |user|
-      num = user.admin_communities.count
+      num = user.admin_profile_community_count
       Notifier.send_access_token_expired_notice(
         psid: user.psid, num_admin_comms: num
       )
     end
 
     each_user_with_expiring_token do |user|
-      num = user.admin_communities.count
+      num = user.admin_profile_community_count
       Notifier.send_access_token_expiring_notice(
         psid: user.psid, num_admin_comms: num
       )

@@ -386,16 +386,16 @@ RSpec.describe CommunitiesController, type: :controller do
       before(:each) do
         user.admin_profile.add_community(community)
         user.member_profile.add_community(community)
-        expect(user.admin_communities).to include community
-        expect(user.member_communities).to include community
+        expect(user.admin_profile_communities).to include community
+        expect(user.member_profile_communities).to include community
       end
 
       it 'removes the community from user admin profile' do
         expect do
           delete :destroy, params: { id: community.id }, session: valid_session
-        end.to change { user.admin_profile.communities.count }.from(1).to(0)
+        end.to change { user.admin_profile_community_count }.from(1).to(0)
 
-        expect(user.reload.admin_communities).to be_empty
+        expect(user.reload.admin_profile_communities).to be_empty
         msg = "Your '#{community.name}' community subscription has been removed"
         expect(flash[:notice]).to eq msg
       end
@@ -403,9 +403,9 @@ RSpec.describe CommunitiesController, type: :controller do
       it 'removes the community from user member profile' do
         expect do
           delete :destroy, params: { id: community.id }, session: valid_session
-        end.to change { user.member_profile.communities.count }.from(1).to(0)
+        end.to change { user.member_profile_community_count }.from(1).to(0)
 
-        expect(user.reload.member_communities).to be_empty
+        expect(user.reload.member_profile_communities).to be_empty
         msg = "Your '#{community.name}' community subscription has been removed"
         expect(flash[:notice]).to eq msg
       end
@@ -448,7 +448,7 @@ RSpec.describe CommunitiesController, type: :controller do
           worker = MessengerNotificationWorker
           expect do
             delete :destroy, params: { id: community.id }, session: valid_session
-          end.not_to change { worker.jobs.count }
+          end.not_to(change { worker.jobs.count })
         end
       end
     end

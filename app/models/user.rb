@@ -7,11 +7,15 @@ class User < ApplicationRecord
   has_one :admin_profile, dependent: :destroy
   has_one :member_profile, dependent: :destroy
 
-  delegate :admin_communities, to: :admin_profile
-  delegate :member_communities,
-           :subscriptions?,
-           :subscription_count,
-           to: :member_profile
+  delegate :communities,
+           :community_count,
+           to: :admin_profile,
+           prefix: true
+  delegate :communities,
+           :communities?,
+           :community_count,
+           to: :member_profile,
+           prefix: true
 
   after_create :create_admin_profile!
   after_create :create_member_profile!

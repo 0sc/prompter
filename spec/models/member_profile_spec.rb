@@ -8,35 +8,41 @@ RSpec.describe MemberProfile, type: :model do
   it { should have_many(:community_member_profiles) }
   it { should have_many(:communities).through(:community_member_profiles) }
 
-  describe 'aliases' do
-    it 'aliases #member_communities as communities' do
-      expect(subject.member_communities).to eq subject.communities
-    end
-  end
-
-  describe '#subscriptions?' do
+  describe '#communities?' do
     context 'communities present' do
       it 'returns true' do
-        subject.communities << create(:community)
-        expect(subject.subscriptions?).to be true
+        subject.communities << community
+        expect(subject.communities?).to be true
       end
     end
 
     context 'no communities present' do
       it 'returns false' do
         subject.community_member_profiles.map(&:destroy)
-        expect(subject.subscriptions?).to be false
+        expect(subject.communities?).to be false
       end
     end
   end
 
-  describe '#subscription_count' do
+  describe '#community?' do
+    it 'returns true if the member profile has the given community' do
+      subject.communities << community
+      expect(subject.community?(community)).to be true
+    end
+
+    it 'returns false if member profile does not have the given community' do
+      subject.community_member_profiles.where(community: community).map(&:destroy)
+      expect(subject.community?(community)).to be false
+    end
+  end
+
+  describe '#community_count' do
     it 'returns number of communities a user is subscribed to' do
       create_list(:community, 2).each do |community|
         subject.add_community(community)
       end
 
-      expect(subject.subscription_count).to be 2
+      expect(subject.community_count).to be 2
     end
   end
 

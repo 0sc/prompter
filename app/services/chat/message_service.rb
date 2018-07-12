@@ -1,6 +1,6 @@
 class Chat::MessageService < ChatService
   def handle
-    if user.subscriptions?
+    if user.member_profile_communities?
       handle_has_subscription
     else
       handle_no_subscription
@@ -14,7 +14,7 @@ class Chat::MessageService < ChatService
   private
 
   def handle_has_subscription
-    num_subscribed = user.subscription_count
+    num_subscribed = user.member_profile_community_count
     Responder.send_has_subscription_cta(self, num_subscribed)
   end
 

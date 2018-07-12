@@ -31,7 +31,7 @@ RSpec.describe TokenTtlWorker, type: :worker do
     end
 
     it 'does not send notice if there are no assoc admin_communities' do
-      user_one.admin_communities.map(&:destroy!)
+      user_one.admin_profile_communities.map(&:destroy!)
       expect(Notifier).not_to receive(:send_access_token_expiring_notice)
       TokenTtlWorker.drain
     end
@@ -58,7 +58,7 @@ RSpec.describe TokenTtlWorker, type: :worker do
     end
 
     it 'does not send notice if there are no assoc admin_communities' do
-      user_one.admin_communities.map(&:destroy!)
+      user_one.admin_profile_communities.map(&:destroy!)
       expect(Notifier).not_to receive(:send_access_token_expired_notice)
       TokenTtlWorker.drain
     end

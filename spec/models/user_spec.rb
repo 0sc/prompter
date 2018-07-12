@@ -22,24 +22,29 @@ RSpec.describe User, type: :model do
   describe 'delegates' do
     subject { create(:user) }
 
-    it 'delegates #admin_communities to admin_profile' do
-      expect(subject.admin_communities)
-        .to eq subject.admin_profile.admin_communities
+    it 'delegates #admin_profile_communities to admin_profile' do
+      expect(subject.admin_profile_communities)
+        .to eq subject.admin_profile.communities
     end
 
-    it 'delegates #member_communities to admin_profile' do
-      expect(subject.member_communities)
-        .to eq subject.member_profile.member_communities
+    it 'delegates #admin_profile_community_count to admin_profile' do
+      expect(subject.admin_profile_community_count)
+        .to eq subject.admin_profile.community_count
     end
 
-    it 'delegates #subscriptions? to member_profile' do
-      expect(subject.subscriptions?)
-        .to eq subject.member_profile.subscriptions?
+    it 'delegates #member_profile_communities to member_profile' do
+      expect(subject.member_profile_communities)
+        .to eq subject.member_profile.communities
     end
 
-    it 'delegates #subscription_count to member_profile' do
-      expect(subject.subscription_count)
-        .to eq subject.member_profile.subscription_count
+    it 'delegates #member_profile_communities? to member_profile' do
+      expect(subject.member_profile_communities?)
+        .to eq subject.member_profile.communities?
+    end
+
+    it 'delegates #member_profile_community_count to member_profile' do
+      expect(subject.member_profile_community_count)
+        .to eq subject.member_profile.community_count
     end
   end
 
@@ -157,18 +162,22 @@ RSpec.describe User, type: :model do
         member_profile: acc_one.member_profile
       ).community
 
-      expect(acc_one.admin_communities).to match_array([admin_community_one])
-      expect(acc_one.member_communities).to match_array([member_community_one])
+      expect(acc_one.admin_profile_communities)
+        .to match_array([admin_community_one])
+      expect(acc_one.member_profile_communities)
+        .to match_array([member_community_one])
 
-      expect(acc_two.admin_communities).to match_array([admin_community_two])
-      expect(acc_two.member_communities).to match_array([member_community_two])
+      expect(acc_two.admin_profile_communities)
+        .to match_array([admin_community_two])
+      expect(acc_two.member_profile_communities)
+        .to match_array([member_community_two])
 
       User.combine_accounts!(acc_one, acc_two)
       acc_one.reload
 
-      expect(acc_one.admin_communities)
+      expect(acc_one.admin_profile_communities)
         .to match_array([admin_community_one, admin_community_two])
-      expect(acc_one.member_communities)
+      expect(acc_one.member_profile_communities)
         .to match_array([member_community_one, member_community_two])
     end
 

@@ -40,7 +40,7 @@ class ChatService
 
   def default_cta_options
     options = [FIND_COMMUNITIES, SUBSCRIBE_COMMUNITIES]
-    user.subscriptions? ? options << MANAGE_COMMUNITIES : options
+    user.member_profile_communities? ? options << MANAGE_COMMUNITIES : options
   end
 
   def handle_find_community
@@ -50,7 +50,7 @@ class ChatService
     service = FacebookService.new(user.fbid, user.token)
     communities = service.communities
     ids = communities.map { |community| community['id'] }
-    member_communities_id = user.member_communities.map(&:id)
+    member_communities_id = user.member_profile_communities.map(&:id)
 
     # TODO: limit number of communities fetched?
     subscribable_communities = Community.subscribable
@@ -60,7 +60,7 @@ class ChatService
     if subscribable_communities.empty?
       # no available communities to subscribe
       @cta_options = [SUBSCRIBE_COMMUNITIES]
-      @cta_options << MANAGE_COMMUNITIES if user.subscriptions?
+      @cta_options << MANAGE_COMMUNITIES if user.member_profile_communities?
       Responder.send_no_community_to_subscribe_cta(self)
       return
     end
@@ -89,7 +89,8 @@ class ChatService
   end
 
   def handle_manage_communities
-    return Responder.send_no_subscription_cta(self) unless user.subscriptions?
+    subscriptions = user.member_profile_communities?
+    return Responder.send_no_subscription_cta(self) unless subscriptions
 
     # lists users subscribed community with option
     user.member_profile.community_member_profiles.each_slice(10) do |grp|

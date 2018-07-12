@@ -6,7 +6,7 @@ class CommunitiesController < ApplicationController
     @fb_communities = @fb.admin_communities
     # create a mapping of fbid => id
     @subscribed_communities_mapping =
-      current_user.admin_communities.pluck(:fbid, :id).to_h
+      current_user.admin_profile_communities.pluck(:fbid, :id).to_h
 
     # TODO: what of case of user no longer admin of a group?
     # should we update this here to remove groups
@@ -97,7 +97,7 @@ class CommunitiesController < ApplicationController
   end
 
   def set_community
-    @community = current_user.admin_profile.communities.find_by(id: params[:id])
+    @community = current_user.admin_profile_communities.find_by(id: params[:id])
 
     unless @community.present?
       redirect_to communities_path, notice: 'Community not found'

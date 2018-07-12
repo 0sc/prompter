@@ -4,7 +4,9 @@ class AdminProfile < ApplicationRecord
   has_many :community_admin_profiles, dependent: :destroy
   has_many :communities, through: :community_admin_profiles
 
-  alias admin_communities communities
+  def community_count
+    communities.count
+  end
 
   def add_community(community)
     community_admin_profiles.find_or_create_by(community: community)

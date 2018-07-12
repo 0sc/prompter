@@ -2,7 +2,7 @@ class User < ApplicationRecord
   include MessengerProfile
 
   validates_presence_of :email, :fbid, :name, :token, :expires_at
-  validates_uniqueness_of :email, :fbid
+  validates_uniqueness_of :email, :fbid, case_sensitive: false
 
   has_one :admin_profile, dependent: :destroy
   has_one :member_profile, dependent: :destroy

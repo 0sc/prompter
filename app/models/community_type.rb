@@ -1,5 +1,5 @@
 class CommunityType < ApplicationRecord
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
 
   has_many :communities, dependent: :nullify
   has_many :community_type_feed_categories, dependent: :destroy

@@ -4,6 +4,9 @@ RSpec.describe MessengerNotificationService, type: :service do
   subject { MessengerNotificationService }
   let(:user) { create(:user) }
   let(:community) { create(:community) }
+  let(:host) { 'https://m.me/whatever' }
+
+  before { stub_const('MessengerNotificationService::ME_LINK', host) }
 
   describe '.send_community_added' do
     context 'user does not exist' do
@@ -40,7 +43,7 @@ RSpec.describe MessengerNotificationService, type: :service do
           .with(
             psid: user.psid,
             name: community.name,
-            link: community.referral_link
+            link: host + '?ref=' + community.referral_code
           )
 
         subject.send_community_added(user.id, community.id)

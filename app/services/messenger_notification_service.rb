@@ -1,4 +1,10 @@
 class MessengerNotificationService
+  ME_LINK = ENV.fetch('BOT_URL')
+
+  def self.build_referral_link(code)
+    ME_LINK + '?ref=' + code
+  end
+
   ## Community actions
   def self.send_community_added(user_id, community_id)
     user = User.find_by(id: user_id)
@@ -10,7 +16,7 @@ class MessengerNotificationService
     Notifier.send_community_added_notice(
       psid: user.psid,
       name: community.name,
-      link: community.referral_link
+      link: build_referral_link(community.referral_code)
     )
   end
 

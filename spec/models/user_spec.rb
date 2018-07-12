@@ -11,8 +11,8 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of(:token) }
   it { should validate_presence_of(:expires_at) }
 
-  it { should validate_uniqueness_of(:email) }
-  it { should validate_uniqueness_of(:fbid) }
+  it { should validate_uniqueness_of(:email).case_insensitive }
+  it { should validate_uniqueness_of(:fbid).case_insensitive }
 
   it { should have_one(:admin_profile) }
   it { should have_one(:member_profile) }

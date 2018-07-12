@@ -5,14 +5,33 @@ RSpec.describe Community, type: :model do
 
   it { should validate_presence_of(:fbid) }
   it { should validate_presence_of(:name) }
-
-  it { should validate_uniqueness_of(:fbid) }
+  it { should validate_uniqueness_of(:fbid).case_insensitive }
 
   it { should belong_to(:community_type).optional }
   it { should have_many(:community_admin_profiles).dependent(:destroy) }
   it { should have_many(:community_member_profiles).dependent(:destroy) }
   it { should have_many(:admin_profiles).through(:community_admin_profiles) }
   it { should have_many(:member_profiles).through(:community_member_profiles) }
+
+  describe '.before_validation' do
+    context 'referral_code' do
+      it 'sets a referral_code' do
+        subject.referral_code = nil
+        expect(subject.valid?).to be true
+        expect(subject.referral_code).not_to be nil
+
+        expect(subject.save).to be true
+      end
+
+      it 'overwrites any existing referral_code' do
+        subject.referral_code = 'something custom'
+        expect(subject.valid?).to be true
+        expect(subject.referral_code).not_to be 'something custom'
+
+        expect(subject.save).to be true
+      end
+    end
+  end
 
   describe 'update_from_fb_graph!' do
     it 'update the community name, cover and icon' do

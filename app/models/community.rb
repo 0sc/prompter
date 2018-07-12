@@ -1,12 +1,16 @@
 class Community < ApplicationRecord
   validates :name, presence: true
-  validates :fbid, presence: true, uniqueness: true
+  validates :fbid, presence: true, uniqueness: { case_sensitive: false }
+  validates :referral_code, presence: true, uniqueness: true
 
   belongs_to :community_type, optional: true
   has_many :community_admin_profiles, dependent: :destroy
   has_many :community_member_profiles, dependent: :destroy
   has_many :admin_profiles, through: :community_admin_profiles
   has_many :member_profiles, through: :community_member_profiles
+
+  # overwrite whatever it's set to
+  before_validation -> { self.referral_code = generate_referral_code }
 
   scope :subscribable, -> { where.not(community_type: nil) }
 
@@ -39,6 +43,9 @@ class Community < ApplicationRecord
     community_type&.name
   end
 
-  def referral_link
+  private
+
+  def generate_referral_code
+    fbid
   end
 end

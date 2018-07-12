@@ -27,8 +27,10 @@ ActiveRecord::Schema.define(version: 2018_07_06_160115) do
     t.datetime "updated_at", null: false
     t.string "fbid", null: false
     t.string "name", null: false
+    t.string "referral_code", null: false
     t.string "cover"
     t.string "icon"
+    t.string "qrcode"
     t.bigint "community_type_id"
     t.index ["community_type_id"], name: "index_communities_on_community_type_id"
     t.index ["fbid"], name: "index_communities_on_fbid"

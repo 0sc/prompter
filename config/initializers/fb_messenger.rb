@@ -27,7 +27,7 @@ class MessengerProfileSetup
   end
 
   def set_get_started
-    { get_started: { payload: 'GET_STARTED_PAYLOAD' } }
+    { get_started: { payload: Chat::PostbackService::GET_STARTED } }
   end
 
   def set_whitelist_domains

@@ -1,11 +1,5 @@
-class Chat::DefaultService < ChatService
-  include Chat::QuickReply
-
+class Chat::MessageService < ChatService
   def handle
-    quick_reply? ? handle_quick_reply : handle_msg_reply
-  end
-
-  def handle_msg_reply
     if user.subscriptions?
       handle_has_subscription
     else
@@ -26,9 +20,5 @@ class Chat::DefaultService < ChatService
 
   def handle_no_subscription
     Responder.send_no_subscription_cta(self)
-  end
-
-  def quick_reply?
-    message.messaging.dig('message').key? 'quick_reply'
   end
 end

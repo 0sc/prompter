@@ -6,6 +6,8 @@ class Chat::PostbackService < ChatService
     case action
     when SUBSCRIBE_TO_COMMUNITY
       handle_subscribe_to_community(param)
+    else
+      super(action)
     end
   end
 

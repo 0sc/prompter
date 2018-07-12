@@ -26,11 +26,12 @@ class FacebookService
     admin_communities.map { |comm| comm['id'] }
   end
 
-  def community_feeds(community_id)
-    return @community_feeds if @community_feeds
-    @community_feeds = all_results(
-      graph.get_connections(community_id, 'feeds')
-    )
+  def community_feeds(community_id, opts = {})
+    # params = { fields: %w[message id link comments] }.merge(opts)
+    params = { fields: %w[message id link] }.merge(opts)
+
+    @community_feeds =
+      all_results(graph.get_connections(community_id, 'feed', params))
   end
 
   def community_feed_comments(feed_id)

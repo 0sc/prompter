@@ -74,6 +74,7 @@ class CommunitiesController < ApplicationController
   end
 
   def send_notification_of_community_removal(community)
+    # TODO: currently not working since community is deleted before job runs new.perform
     MessengerNotificationWorker
       .perform_async('send_community_removed', community.id)
   end

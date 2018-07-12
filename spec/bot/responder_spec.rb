@@ -320,6 +320,54 @@ RSpec.describe Responder do
     end
   end
 
+  describe '.send_welcome_note' do
+    it 'delivers the welcome_note payload' do
+      payload = expected_payload(
+        service.sender_id,
+        message: { text: t('get_started.welcome') }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+      Responder.send_welcome_note(service)
+    end
+  end
+
+  describe '.send_get_started_cta' do
+    context 'when add_manage_cta is set to true' do
+      it 'defaults to false' do
+        msg = t('get_started.cta') + t('get_started.cta_manage')
+        payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
+
+        expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+        Responder.send_get_started_cta(service, true)
+      end
+    end
+
+    context 'when add_manage_cta is set to false' do
+      it 'defaults to false' do
+        msg = t('get_started.cta')
+        payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
+
+        expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+        Responder.send_get_started_cta(service, false)
+      end
+    end
+
+    context 'when add_manage_cta is not set' do
+      it 'defaults to false' do
+        msg = t('get_started.cta')
+        payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
+
+        expect(bot).to receive(:deliver).with(payload, access_token: 123)
+
+        Responder.send_get_started_cta(service)
+      end
+    end
+  end
+
   def build_quick_reply_cta(msg)
     {
       message: {

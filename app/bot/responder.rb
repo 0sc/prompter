@@ -82,4 +82,17 @@ class Responder < Client
     payload = communities_to_manage_cta(items)
     respond(service.sender_id, payload)
   end
+
+  def self.send_welcome_note(service)
+    msg = t('get_started.welcome')
+    payload = text_message_template(msg)
+    respond(service.sender_id, payload)
+  end
+
+  def self.send_get_started_cta(service, add_manage_cta = false)
+    msg = t('get_started.cta')
+    msg += t('get_started.cta_manage') if add_manage_cta
+    payload = build_default_cta(msg, service.cta_options)
+    respond(service.sender_id, payload)
+  end
 end

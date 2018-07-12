@@ -47,6 +47,13 @@ en:
         find_communities: Find a community
         manage_communities: Manage communities
         subscribe_communities: Subscribe communities
+      get_started:
+        welcome: Welcome!!!!!
+        cta: |
+          What would you like to do next?
+          Find communities - choose from any of your communities already added
+          Subscribe communities - sign up communities you manage to drive engagment with your members
+        cta_manage: Manage communities - fine tune feeds for the community you just added.
       btns:
         manage: Fine tune
     notifications:

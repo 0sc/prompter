@@ -11,9 +11,8 @@ RSpec.describe Chat::PostbackService, type: :service do
   before do
     allow_any_instance_of(User).to receive(:profile_details_from_messenger)
       .and_return(SAMPLE_MESSENGER_PROFILE)
+    allow(message).to receive(:sender).and_return('id' => 100)
   end
-
-  before { allow(message).to receive(:sender).and_return('id' => 100) }
 
   describe '#handle' do
     context 'subscribe_to_community' do

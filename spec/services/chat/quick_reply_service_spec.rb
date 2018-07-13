@@ -9,9 +9,6 @@ RSpec.describe Chat::QuickReplyService, type: :service do
   before do
     allow_any_instance_of(User).to receive(:profile_details_from_messenger)
       .and_return(SAMPLE_MESSENGER_PROFILE)
-  end
-
-  before(:each) do
     allow(message).to receive(:sender).and_return('id' => 100)
     allow(message).to receive(:messaging).and_return(quick_reply_payload)
   end

@@ -11,6 +11,7 @@ class Community < ApplicationRecord
 
   # overwrite whatever it's set to
   before_validation -> { self.referral_code = generate_referral_code }
+  after_save -> { QrcodeGeneratorWorker.perform_async(id) }, if: -> { !qrcode }
 
   scope :subscribable, -> { where.not(community_type: nil) }
 

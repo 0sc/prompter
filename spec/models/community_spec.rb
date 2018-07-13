@@ -33,6 +33,26 @@ RSpec.describe Community, type: :model do
     end
   end
 
+  describe '.after_save' do
+    context 'qrcode is empty' do
+      it 'schedules a job to generate qrcode' do
+        subject.qrcode = nil
+        expect { subject.save }
+          .to change { QrcodeGeneratorWorker.jobs.size }.from(0).to(1)
+        expect(QrcodeGeneratorWorker.jobs.first['args'])
+          .to match_array [subject.id]
+      end
+    end
+
+    context 'qrcode is not empty' do
+      it 'does not schedule a job to generate qrcode' do
+        subject.qrcode = 'something'
+        expect { subject.save }
+          .not_to(change { QrcodeGeneratorWorker.jobs.size })
+      end
+    end
+  end
+
   describe 'update_from_fb_graph!' do
     it 'update the community name, cover and icon' do
       graph = {

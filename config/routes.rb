@@ -16,8 +16,19 @@ Rails.application.routes.draw do
 
   mount Facebook::Messenger::Server, at: 'bot'
 
-  unless Rails.env.production?
-    require 'sidekiq/web'
-    mount Sidekiq::Web => '/sidekiq'
+  # https://github.com/mperham/sidekiq/wiki/Monitoring#rails-http-basic-auth-from-routes
+  require 'sidekiq/web'
+  if Rails.env.production?
+    Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+      ActiveSupport::SecurityUtils.secure_compare(
+        ::Digest::SHA256.hexdigest(username),
+        ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_USERNAME'))
+      ) &
+        ActiveSupport::SecurityUtils.secure_compare(
+          ::Digest::SHA256.hexdigest(password),
+          ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_PASSWORD'))
+        )
+    end
   end
+  mount Sidekiq::Web => '/sidekiq'
 end

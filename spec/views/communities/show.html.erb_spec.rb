@@ -52,4 +52,8 @@ RSpec.describe 'communities/show', type: :view do
   it 'displays link to go back to communities path' do
     expect(page).to have_link(text: 'Back', href: communities_path)
   end
+
+  it 'displays the message button' do
+    expect(page).to have_selector('div.fb-messengermessageus')
+  end
 end

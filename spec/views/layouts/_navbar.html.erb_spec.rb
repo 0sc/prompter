@@ -17,7 +17,7 @@ RSpec.describe 'layouts/_navbar', type: :view do
 
     it 'displays link to sign out' do
       render_partial
-      expect(page).to have_link(text: 'Sign out', href: '#')
+      expect(page).to have_link(text: 'Sign out', href: logout_users_path)
     end
   end
 

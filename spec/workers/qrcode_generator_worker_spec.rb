@@ -9,6 +9,7 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
     stub_const('HTTParty', dummy)
     stub_const('Cloudinary::Uploader', dummy)
     stub_const('QrcodeGeneratorWorker::MESSENGER_URL', base)
+    stub_const('QrcodeGeneratorWorker::ATTACHMENT_URL', base)
   end
 
   it 'returns nil if the community does not exist' do
@@ -37,10 +38,32 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
     resp_uri = 'https://m.me/temp/qrcode/link.png'
     response = { 'uri' => resp_uri }
 
-    expect(dummy).to receive(:post).with(url, payload).and_return(response)
+    expect(dummy)
+      .to receive(:post).ordered.once.with(url, payload).and_return(response)
     expect(dummy).to receive(:upload)
       .with(resp_uri, folder: QrcodeGeneratorWorker::STORAGE_FOLDER)
       .and_return('secure_url' => qrcode)
+
+    # upload to Facebook
+    att_id = 12_345
+    payload = {
+      body: {
+        message: {
+          attachment: {
+            type: 'image',
+            payload: { is_reusable: true, url: qrcode }
+          }
+        }
+      }
+    }
+    expect(dummy).to receive(:post)
+      .ordered.once.with(url, payload).and_return('attachment_id' => att_id)
+    # send notice to all admins
+    create_list(:community_admin_profile, 2, community: community).each do |ad|
+      psid = ad.admin_profile.user.psid
+      expect(Notifier).to receive(:send_qrcode_notice)
+        .ordered.once.with(attachment_id: att_id, psid: psid)
+    end
 
     expect { QrcodeGeneratorWorker.drain }
       .to change { community.reload.qrcode }.to(qrcode)

@@ -15,6 +15,12 @@ shared_examples 'templates' do
     end
   end
 
+  describe '#basic_share_btn' do
+    it 'returns the basic share_btn button structure' do
+      expect(subject.basic_share_btn).to eq(type: 'element_share')
+    end
+  end
+
   describe '#url_btn' do
     let(:expected) do
       {
@@ -166,6 +172,80 @@ shared_examples 'templates' do
       expect(subject.list_template_item(
                'Numero uno', 'ofu', 'pishu.jpg', %w[one-button-oo]
              )).to eq expected
+    end
+  end
+
+  describe 'media_template' do
+    it 'returns the structure of the media template with the given element' do
+      expected = {
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'media',
+              elements: %w[some elements]
+            }
+          }
+        }
+      }
+
+      expect(subject.media_template(%w[some elements])).to eq expected
+    end
+  end
+
+  describe 'media_template_element_item' do
+    context 'attachment_id is present' do
+      it 'returns the media element with attachment_id set' do
+        expected = {
+          'media_type': 'video',
+          'attachment_id': 546,
+          buttons: ['some-btn']
+        }
+
+        expect(subject
+          .media_template_element_item(
+            'video',
+            ['some-btn'],
+            attachment_id: 546
+          )).to eq expected
+      end
+    end
+
+    context 'url is present' do
+      it 'returns the media element with quick_reply set' do
+        link = 'fb-approved-link'
+        expected = {
+          'media_type': 'video',
+          'url': link,
+          buttons: ['some-btn']
+        }
+
+        expect(
+          subject.media_template_element_item('video', ['some-btn'], url: link)
+        ).to eq expected
+      end
+    end
+
+    # TODO: not good! consider some mini validation
+    context 'url and attachment_id are both present' do
+      it 'returns the media element with both set' do
+        link = 'fb-approved-link'
+        expected = {
+          media_type: 'video',
+          url: link,
+          attachment_id: 546,
+          buttons: ['some-btn']
+        }
+
+        expect(
+          subject.media_template_element_item(
+            'video',
+            ['some-btn'],
+            url: link,
+            attachment_id: 546
+          )
+        ).to eq expected
+      end
     end
   end
 

@@ -9,6 +9,10 @@ module Templates
     { type: 'account_link', url: url }
   end
 
+  def basic_share_btn
+    { type: 'element_share' }
+  end
+
   def url_btn(title, url, height = 'compact')
     {
       title: title,
@@ -78,6 +82,26 @@ module Templates
       image_url: image,
       buttons: btns
     }
+  end
+
+  # MEDIA TEMPLATE
+  def media_template(elts)
+    payload = {
+      template_type: 'media',
+      elements: elts
+    }
+
+    attachment_template(payload)
+  end
+
+  def media_template_element_item(type, btns, attachment_id: nil, url: nil)
+    item = {
+      media_type: type,
+      buttons: btns
+    }
+    item[:attachment_id] = attachment_id if attachment_id
+    item[:url] = url if url
+    item
   end
 
   # BASE

@@ -250,6 +250,29 @@ RSpec.describe Notifier do
     end
   end
 
+  describe '.send_qrcode_notice' do
+    it 'delivers the qrcode ready payload' do
+      payload = expected_payload(
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'media',
+              elements: [
+                media_type: 'image',
+                attachment_id: 321,
+                buttons: [{ type: 'element_share' }]
+              ]
+            }
+          }
+        }
+      )
+
+      expect(bot).to receive(:deliver).with(payload, access_token: 123)
+      Notifier.send_qrcode_notice(psid: psid, attachment_id: 321)
+    end
+  end
+
   def expected_payload(payload)
     { recipient: { id: psid } }.merge(payload)
   end

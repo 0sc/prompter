@@ -74,4 +74,12 @@ class Notifier < Client
     payload = button_template(msg, [btn])
     respond(psid, payload)
   end
+
+  def self.send_qrcode_notice(psid:, attachment_id:)
+    btn = basic_share_btn
+    item =
+      media_template_element_item('image', [btn], attachment_id: attachment_id)
+    payload = media_template([item])
+    respond(psid, payload)
+  end
 end

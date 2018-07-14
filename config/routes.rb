@@ -31,4 +31,6 @@ Rails.application.routes.draw do
     end
   end
   mount Sidekiq::Web => '/sidekiq'
+
+  match '*path', to: redirect('/'), via: :all
 end

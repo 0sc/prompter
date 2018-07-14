@@ -1,4 +1,4 @@
 Koala.configure do |config|
-  config.app_id = Rails.application.credentials.facebook_key
-  config.app_secret = Rails.application.credentials.facebook_secret
+  config.app_id = ENV.fetch('FACEBOOK_KEY')
+  config.app_secret = ENV.fetch('FACEBOOK_SECRET')
 end

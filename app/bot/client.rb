@@ -9,6 +9,6 @@ class Client
   end
 
   def self.access_token
-    Rails.application.credentials.page_access_token
+    ENV.fetch('PAGE_ACCESS_TOKEN')
   end
 end

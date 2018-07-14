@@ -4,11 +4,11 @@ class CredentialProvider < Facebook::Messenger::Configuration::Providers::Base
   end
 
   def app_secret_for(_page_id)
-    creds_source.facebook_secret
+    ENV.fetch('FACEBOOK_SECRET')
   end
 
   def access_token_for(_page_recipient)
-    creds_source.page_access_token
+    ENV.fetch('PAGE_ACCESS_TOKEN')
   end
 
   private
@@ -64,7 +64,7 @@ class MessengerProfileSetup
 end
 
 unless Rails.env.test?
-  access_token = Rails.application.credentials.page_access_token
+  access_token = ENV.fetch('PAGE_ACCESS_TOKEN')
 
   Facebook::Messenger.configure do |config|
     config.provider = CredentialProvider.new

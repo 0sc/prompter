@@ -9,6 +9,7 @@ RSpec.describe 'communities/show', type: :view do
     # https://github.com/rspec/rspec-rails/issues/215
     # https://github.com/rspec/rspec-rails/issues/1076
     def view.current_user; end
+    def view.facebook_key; end
 
     assign(:community, community)
     stub_const('ENV', 'BOT_URL' => 'm.me/meee')

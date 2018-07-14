@@ -6,6 +6,7 @@ ruby '2.4.2'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'cloudinary'
 gem 'facebook-messenger'
+gem 'figaro'
 gem 'httparty'
 gem 'koala'
 gem 'materialize-sass', '~> 1.0.0.rc2'
@@ -20,7 +21,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'wit'
 
 group :development, :test do
-  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'pry-rails'
   gem 'rspec-rails'

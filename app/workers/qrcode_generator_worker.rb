@@ -60,7 +60,7 @@ class QrcodeGeneratorWorker
   end
 
   def append_access_token(url)
-    access_token = Rails.application.credentials.page_access_token
+    access_token = ENV.fetch('PAGE_ACCESS_TOKEN')
     url + "?access_token=#{access_token}"
   end
 end

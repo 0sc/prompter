@@ -3,6 +3,7 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
   let(:community) { create(:community) }
   let(:qrcode) { 'https://some.image.url/on/cloudinary' }
   let(:base) { 'http://m.you' }
+  let(:token) { 'page-access-token' }
   let(:dummy) { double }
 
   before do
@@ -10,6 +11,7 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
     stub_const('Cloudinary::Uploader', dummy)
     stub_const('QrcodeGeneratorWorker::MESSENGER_URL', base)
     stub_const('QrcodeGeneratorWorker::ATTACHMENT_URL', base)
+    stub_const('ENV', 'PAGE_ACCESS_TOKEN' => token)
   end
 
   it 'returns nil if the community does not exist' do
@@ -67,9 +69,5 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
 
     expect { QrcodeGeneratorWorker.drain }
       .to change { community.reload.qrcode }.to(qrcode)
-  end
-
-  def token
-    Rails.application.credentials.page_access_token
   end
 end

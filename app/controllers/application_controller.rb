@@ -3,12 +3,16 @@ class ApplicationController < ActionController::Base
   before_action :allow_iframe_for_fb_domains
   before_action :authenticate_user
 
-  helper_method :current_user
+  helper_method :current_user, :facebook_key
 
   protected
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
+  end
+
+  def facebook_key
+    ENV.fetch('FACEBOOK_KEY')
   end
 
   private

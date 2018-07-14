@@ -51,6 +51,6 @@ module MessengerProfile
   end
 
   def app_access_token
-    Rails.application.credentials.page_access_token
+    ENV.fetch('PAGE_ACCESS_TOKEN')
   end
 end

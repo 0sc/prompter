@@ -14,8 +14,7 @@ class CommunitiesController < ApplicationController
   end
 
   def show
-    @app_id = Rails.application.credentials.facebook_key
-    @page_id = 1582467505162376
+    @page_id = '1582467505162376'
   end
 
   def edit; end

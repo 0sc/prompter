@@ -79,7 +79,7 @@ en:
       community_removed:
         notice: |
           Your %{name} admin on your community subscription and you'll no longer receive updates on posts you care about.
-          Help me protest this by sending a #bringBackOurZingaSubscription message
+          Help me protest this by sending a #bringBackOurPrompterSubscription message
       community_profile_deleted:
         notice: |
           You've successfully opted out of %{name} engagement network. You'll no longer receive notifications of feeds that are targeted at categories you care about :(

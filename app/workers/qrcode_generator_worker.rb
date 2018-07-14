@@ -1,7 +1,7 @@
 class QrcodeGeneratorWorker
   MESSENGER_URL = MessengerProfile::FB_BASE + '/me/messenger_codes'
   ATTACHMENT_URL = MessengerProfile::FB_BASE + '/me/message_attachments'
-  STORAGE_FOLDER = 'hermes/qrcodes'.freeze
+  STORAGE_FOLDER = 'zinga/qrcodes'.freeze
 
   include Sidekiq::Worker
 

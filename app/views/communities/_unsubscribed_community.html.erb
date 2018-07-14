@@ -1,6 +1,10 @@
-<tr>
-  <td><%= image_tag community['icon'], height: '32', width: '32' %></td>
-  <td><%= community['name'] %></td>
-  <td><%= link_to 'Subscribe', communities_path(fbid: community['id']), method: :post %></td>
-  <td></td>
-</tr>
+<li class="collection-item avatar">
+  <%= image_tag community['icon'], height: '32', width: '32', class: 'responsive-img circle' %>
+  <span class='title'><%= community['name'] %></span>
+  <p>
+    <%= link_to 'Subscribe', communities_path(fbid: community['id']), method: :post %>
+  </p>
+  <%= link_to communities_path(fbid: community['id']), method: :post, class: 'secondary-content' do %>
+  <i class="material-icons medium">add_circle</i>
+  <% end %>
+</li>

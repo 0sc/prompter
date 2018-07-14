@@ -13,10 +13,14 @@ RSpec.describe 'community_member_profiles/show', type: :view do
     assign(:community, community)
   end
 
+  it 'displays the community cover image' do
+    render
+    expect(page).to have_selector("img[src='#{community.cover}']")
+  end
+
   it 'displays the heading' do
     render
-    expect(page.find('h1'))
-      .to have_content("Subscription Profile for: #{community.name}")
+    expect(page.find('.card-title')).to have_content community.name
   end
 
   it 'displays list of categories user is subscribed to' do

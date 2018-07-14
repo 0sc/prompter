@@ -4,12 +4,23 @@ RSpec.describe 'communities/show', type: :view do
   let(:community) { create(:community) }
 
   before(:each) do
+    # HACK: definied the helper current_user on the view object
+    # rspec does not current provide any way to stub controller defined helpers
+    # https://github.com/rspec/rspec-rails/issues/215
+    # https://github.com/rspec/rspec-rails/issues/1076
+    def view.current_user; end
+
     assign(:community, community)
+    stub_const('ENV', 'BOT_URL' => 'm.me/meee')
     render
   end
 
-  it 'displays the Fbid' do
-    expect(page).to have_content(community.fbid)
+  it 'displays the nav bar' do
+    expect(page).to have_selector('nav')
+  end
+
+  it 'displays the community cover image' do
+    expect(page).to have_selector("img[src='#{community.cover}']")
   end
 
   it 'displays the community name' do
@@ -17,7 +28,20 @@ RSpec.describe 'communities/show', type: :view do
   end
 
   it 'displays the community type name' do
-    expect(page).to have_content(community.community_type_name)
+    expect(page).to have_content(community.community_type_name.titleize)
+  end
+
+  it 'displays the number of subscribed member profiles' do
+    expect(page).to have_content(community.member_profiles.count)
+  end
+
+  it 'displays link with referral_code' do
+    link = 'm.me/meee?ref=' + community.referral_code
+    expect(page).to have_content(link)
+  end
+
+  it 'displays the qrcode' do
+    expect(page).to have_selector("img[src='#{community.qrcode}']")
   end
 
   it 'displays link to edit the community details' do

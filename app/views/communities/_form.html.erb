@@ -1,27 +1,30 @@
-<%= form_with(model: community, local: true) do |form| %>
+<div class='card-panel lighten-2'>
+  <%= form_with(model: community, local: true) do |form| %>
   <% if community.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(community.errors.count, "error") %> prohibited this community from being saved:</h2>
+  <div id="error_explanation">
+    <h2><%= pluralize(community.errors.count, "error") %> prohibited this community from being saved:</h2>
 
-      <ul>
+    <ul>
       <% community.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <li><%= message %></li>
       <% end %>
-      </ul>
-    </div>
+    </ul>
+  </div>
   <% end %>
 
-  <div class="field">
+  <div class="input-field col s12 m12">
+    <%= form.collection_select :community_type_id, CommunityType.all, :id, :name, include_blank: true, class: 'browser-default' %>
     <%= form.label :community_type_id %>
-    <%= form.collection_select :community_type_id, CommunityType.all, :id, :name, include_blank: true %>
-    <% if community.subscribers? %>
-      <p>
-        <small>Warning! changing this will reset all existing subscriptions</small>
-      </p>
-    <% end %>
   </div>
 
+  <% if community.subscribers? %>
+  <p>
+    <small>Warning! changing this will reset all existing member subscriptions</small>
+  </p>
+  <% end %>
+
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: "btn waves-effect waves-light" %>
   </div>
-<% end %>
+  <% end %>
+</div>

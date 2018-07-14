@@ -15,6 +15,7 @@ class QrcodeGeneratorWorker
 
     # update community
     community.update!(qrcode: cloudinary_url)
+    # TODO: notify admin that image is ready with img
   end
 
   def generate_messenger_code(community)

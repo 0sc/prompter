@@ -1,19 +1,56 @@
-<p id="notice"><%= notice %></p>
+<%= render 'layouts/navbar' %>
+<div class='container'>
+  <p id="notice"><%= notice %></p>
+  <div class='section'>
+    <div class='row'>
+      <div class='card lighten-2'>
+        <div class='card-image'>
+          <%= image_tag @community.cover, class: 'responsive-img' %>
+        </div>
+        <div class='card-content'>
+          <p>
+            <strong>Name:</strong>
+            <%= @community.name %>
+          </p>
+          <p>
+            <strong>Community Type:</strong>
+            <%= @community.community_type_name&.titleize %>
+          </p>
+          <p>
+            <strong>Subscribed members: <%= @community.member_profiles.count %></strong>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <h2 class='header orange-text'> Get your community involved</h2>
+      <p>Share these with them</p>
+      <div class='card lighten-4'>
+        <div class='card-image'>
+          <%= image_tag @community.qrcode, class: 'responsive-img' if @community.qrcode %>
+          <span class='card-title blue-text'>QRcode</span>
+        </div>
+        <div class='card-content'>
+          <p><b><%= ref_link(@community.referral_code) %></b></p>
+          <br />
+          <p>
+            The more folks receiving currated prompt the more the meanful engagement drive.
+          </p>
+        </div>
+        <div class="card-action">
+          <%= link_to 'Edit', edit_community_path(@community) %>
+          <%= link_to 'Back', communities_path %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<p>
-  <strong>Fbid:</strong>
-  <%= @community.fbid %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @community.name %>
-</p>
-
-<p>
-  <strong>Community Type:</strong>
-  <%= @community.community_type_name %>
-</p>
-
-<%= link_to 'Edit', edit_community_path(@community) %> |
-<%= link_to 'Back', communities_path %>
+<div class="fb-send-to-messenger"
+  messenger_app_id="<%= @app_id %>"
+  page_id="<%= @page_id %>"
+  data-ref="<%= @community.referral_code %>"
+  color="white"
+  size="xlarge"
+  cta_text="SEND_ME_UPDATES">
+</div>

@@ -30,8 +30,8 @@ RSpec.describe 'Communities', type: :feature do
     visit communities_path
     expect(page.find('h1')).to have_content('Communities')
 
-    within('tbody') do
-      communities = page.all('tr')
+    within('.section ul') do
+      communities = page.all('li')
       expect(communities.count).to eq 3
 
       within(communities.first) do
@@ -40,20 +40,20 @@ RSpec.describe 'Communities', type: :feature do
         expect(page)
           .to have_link(text: 'Edit', href: edit_community_path(subbed.id))
         expect(page)
-          .to have_link(text: 'Unsubscribe', href: community_path(subbed.id))
+          .to have_link(text: 'remove_circle', href: community_path(subbed.id))
       end
 
       within(communities[1]) do
         expect(page).to have_content(subbed.name)
-        expect(page).to(
-          have_link(text: 'Subscribe', href: communities_path(fbid: unsubbed.fbid))
+        expect(page).to have_link(
+          text: 'add_circle', href: communities_path(fbid: unsubbed.fbid)
         )
       end
 
       within(communities[2]) do
         expect(page).to have_content(neww.name)
         expect(page).to(
-          have_link(text: 'Subscribe', href: communities_path(fbid: neww.fbid))
+          have_link(text: 'add_circle', href: communities_path(fbid: neww.fbid))
         )
       end
     end
@@ -62,17 +62,17 @@ RSpec.describe 'Communities', type: :feature do
   scenario 'user can subscribe a new community' do
     community = build(:community)
     dummy_service.admin_communities = [
-      community.attributes.merge('id' => community.fbid, 'cover' => {})
+      community.attributes.merge('id' => community.fbid, 'cover' => { 'source' => 'http://image.com' } )
     ]
 
     sign_in
     visit communities_path
 
-    within('tbody') do
-      expect(page.all('tr').count).to eq 1
+    within('.section ul') do
+      expect(page.all('li').count).to eq 1
 
-      within('tr') do
-        expect { click_on('Subscribe') }
+      within('li') do
+        expect { click_on('add_circle') }
           .to change { Community.count }.from(0).to(1)
 
         comm = Community.first
@@ -85,8 +85,7 @@ RSpec.describe 'Communities', type: :feature do
 
     community = Community.first
     expect(current_path).to eq edit_community_path(community.id)
-    expect(page.find('h1'))
-      .to have_content("Editing Community: #{community.name}")
+    expect(page.find('h1')).to have_content(community.name)
 
     click_button('Update Community')
     expect(current_path).to eq community_path(community.id)
@@ -104,11 +103,11 @@ RSpec.describe 'Communities', type: :feature do
     sign_in
     visit communities_path
 
-    within('tbody') do
-      expect(page.all('tr').count).to eq 1
+    within('.section ul') do
+      expect(page.all('li').count).to eq 1
 
-      within('tr') do
-        expect { click_on('Unsubscribe') }
+      within('li') do
+        expect { click_on('remove_circle') }
           .to change { Community.count }.from(1).to(0)
         expect(user.reload.admin_profile_communities).to be_empty
       end
@@ -118,12 +117,12 @@ RSpec.describe 'Communities', type: :feature do
     msg = "Your '#{community.name}' community subscription has been removed"
     expect(page.find('#notice')).to have_content(msg)
 
-    within('tbody') do
-      expect(page.all('tr').count).to eq 1
+    within('.section ul') do
+      expect(page.all('li').count).to eq 1
 
-      within('tr') do
-        expect(page).to(
-          have_link(text: 'Subscribe', href: communities_path(fbid: community.fbid))
+      within('li') do
+        expect(page).to have_link(
+          text: 'Subscribe', href: communities_path(fbid: community.fbid)
         )
       end
     end
@@ -138,11 +137,11 @@ RSpec.describe 'Communities', type: :feature do
     sign_in
     visit communities_path
 
-    within('tbody') do
-      expect(page.all('tr').count).to eq 1
+    within('.section ul') do
+      expect(page.all('li').count).to eq 1
       dummy_service.admin_communities = []
 
-      within('tr') do
+      within('li') do
         expect { click_on('Subscribe') }.not_to(change { Community.count })
       end
     end
@@ -163,14 +162,13 @@ RSpec.describe 'Communities', type: :feature do
     sign_in
     visit communities_path
 
-    within('tbody') do
-      expect(page.all('tr').count).to eq 1
-      within('tr') { click_on('Edit') }
+    within('.section ul') do
+      expect(page.all('li').count).to eq 1
+      within('li') { click_on('Edit') }
     end
 
     expect(current_path).to eq edit_community_path(community)
-    expect(page.find('h1'))
-      .to have_content("Editing Community: #{community.name}")
+    expect(page.find('h1')).to have_content community.name
 
     select community_type.name, from: 'community[community_type_id]'
     click_on 'Update Community'
@@ -178,7 +176,7 @@ RSpec.describe 'Communities', type: :feature do
     expect(community.reload.community_type).to eq community_type
     expect(current_path).to eq community_path(community)
     expect(page).to have_content 'Community was successfully updated.'
-    expect(page).to have_content community_type.name
+    expect(page).to have_content community_type.name.titleize
   end
 
   def sign_in

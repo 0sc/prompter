@@ -67,32 +67,32 @@ en:
           msg: BTW do you think this appropriate for %{category}
           right: yes
           wrong: no
-        community_added:
-          notice: |
-            Congrats!!! You've successful added %{name} to the sure fire engagemnt diviner ;)
-            Now sitback and watch the magic happen
-            Oh, but before then, could you share this link with your community members. Super import
-            %{link}
-        community_type_changed:
-          notice: |
-            Your %{name} community admin has been changed the community type to %{type}. You can now fine tune your feeds to %{info} categories.
-        community_removed:
-          notice: |
-            Your %{name} admin on your community subscription and you'll no longer receive updates on posts you care about.
-            Help me protest this by sending a #bringBackOurHermesSubscription message
-        community_profile_deleted:
-          notice: |
-            You've successfully opted out of %{name} engagement network. You'll no longer receive notifications of feeds that are targeted at categories you care about :(
-        community_profile_updated:
-          notice: |
-            Coolio, you've fine tuned your interests for activities in %{name} community to %{info}.
-            Going forward I'll hand pick posts I inform you about based on this interest.
-        access_token_expiring:
-          notice: |
-            Mayday! Mayday!! Mayday!!! Access token for pulling feeds on your behalf for communities you manage is about to expire. The will impact the about %{num} communities that depend on it.
-            Let's fix this;
-        access_token_expired:
-          notice: |
-            Ahh, your access token with us has finally expired :( I can now no longer drive engagement you've seen in the %{num} communities with us.
-            All hopes is not lost; let's work together and fix it.
-            Click to log in and I'll take it from there.
+      community_added:
+        notice: |
+          Congrats!!! You've successful added %{name} to the sure fire engagemnt diviner ;)
+          Now sitback and watch the magic happen
+          Oh, but before then, could you share this link with your community members. Super import
+          %{link}
+      community_type_changed:
+        notice: |
+          Your %{name} community admin has been changed the community type to %{type}. You can now fine tune your feeds to the following categories: %{info}.
+      community_removed:
+        notice: |
+          Your %{name} admin on your community subscription and you'll no longer receive updates on posts you care about.
+          Help me protest this by sending a #bringBackOurHermesSubscription message
+      community_profile_deleted:
+        notice: |
+          You've successfully opted out of %{name} engagement network. You'll no longer receive notifications of feeds that are targeted at categories you care about :(
+      community_profile_updated:
+        notice: |
+          Coolio, you've fine tuned your interests for activities in %{name} community to %{info}.
+          Going forward I'll hand pick posts I inform you about based on this interest.
+      access_token_expiring:
+        notice: |
+          Mayday! Mayday!! Mayday!!! Access token for pulling feeds on your behalf for communities you manage is about to expire. The will impact the about %{num} communities that depend on it.
+          Let's fix this;
+      access_token_expired:
+        notice: |
+          Ahh, your access token with us has finally expired :( I can now no longer drive engagement you've seen in the %{num} communities with us.
+          All hopes is not lost; let's work together and fix it.
+          Click to log in and I'll take it from there.

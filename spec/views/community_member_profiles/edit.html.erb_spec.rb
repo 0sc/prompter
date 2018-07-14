@@ -9,7 +9,7 @@ RSpec.describe 'community_member_profiles/edit', type: :view do
   end
 
   it 'renders the heading' do
-    expect(page).to have_content('Edit stuff')
+    expect(page).to have_content('Fine Tune your notifications')
   end
 
   it 'renders the edit community member profile form' do

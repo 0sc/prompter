@@ -22,8 +22,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
   scenario 'user can view their community member profile' do
     sign_in
     visit community_member_profile_path(profile)
-    expect(page.find('h1'))
-      .to have_content("Subscription Profile for: #{community.name}")
+    expect(page.find('.card-title')).to have_content(community.name)
     within 'ul' do
       expect(page.all('li').count).to eq 3
       page.all('li').each_with_index do |li, index|
@@ -44,7 +43,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
     click_on 'Edit'
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
-    expect(page.find('h1')).to have_content 'Edit stuff'
+    expect(page.find('h1')).to have_content 'Fine Tune your notifications'
 
     within 'form' do
       community.feed_categories.each do |feed_category|
@@ -73,7 +72,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
     click_on 'Edit'
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
-    expect(page.find('h1')).to have_content 'Edit stuff'
+    expect(page.find('h1')).to have_content 'Fine Tune your notifications'
 
     within 'form' do
       community.feed_categories.each do |feed_category|

@@ -11,4 +11,11 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe CommunitiesHelper, type: :helper do
+  describe '#ref_link' do
+    it 'returns the ref link to the bot with the given code' do
+      stub_const('ENV', 'BOT_URL' => 'm.me/meee')
+      link = 'm.me/meee?ref=secret_code'
+      expect(helper.ref_link('secret_code')).to eq link
+    end
+  end
 end

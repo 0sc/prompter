@@ -26,7 +26,6 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
     expect(QrcodeGeneratorWorker.jobs.size).to eq 1
     expect(QrcodeGeneratorWorker.jobs[0]['args']).to match_array [community.id]
 
-    community.update!(qrcode: nil)
     url = base + '?access_token=' + token
     payload = {
       body: {
@@ -44,7 +43,7 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
       .and_return('secure_url' => qrcode)
 
     expect { QrcodeGeneratorWorker.drain }
-      .to change { community.reload.qrcode }.from(nil).to(qrcode)
+      .to change { community.reload.qrcode }.to(qrcode)
   end
 
   def token

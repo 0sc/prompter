@@ -1,23 +1,19 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Communities</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Name</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @fb_communities.each do |community| %>
-      <% id = @subscribed_communities_mapping[community['id']] %>
-      <% if id %>
-        <%= render 'subscribed_community', community: community, id: id %>
-      <% else %>
-        <%= render 'unsubscribed_community', community: community %>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
+<%= render 'layouts/navbar' %>
+<div class='container'>
+  <div class='section'>
+    <p id="notice"><%= notice %></p>
+    <div class='row'>
+      <h1 class="header center orange-text">Communities</h1>
+      <ul class="collection">
+        <% @fb_communities.each do |community| %>
+            <% id = @subscribed_communities_mapping[community['id']] %>
+            <% if id %>
+              <%= render 'subscribed_community', community: community, id: id %>
+            <% else %>
+              <%= render 'unsubscribed_community', community: community %>
+            <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

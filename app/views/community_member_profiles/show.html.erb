@@ -1,12 +1,25 @@
-<h1>Subscription Profile for: <%= @community.name %></h1>
-
-You are subscribed to:
-<ul>
-  <% @community_member_profile.feed_categories.find_each do |feed_category| %>
-    <li>
-      <%= feed_category.name %>
-    </li>
-  <% end %>
-</ul>
-
-<%= link_to 'Edit', edit_community_member_profile_path(@community_member_profile) %>
+<div class='container'>
+  <div class='section'>
+    <div class='row'>
+      <div class='card lighten-2'>
+        <div class='card-image'>
+          <%= image_tag @community.cover, class: 'responsive-img' %>
+          <span class='card-title blue-text'><%= @community.name %></span>
+        </div>
+        <div class='card-content'>
+          <p>
+            You are subscribed to:
+          </p>
+          <ul class='collection'>
+            <% @community_member_profile.feed_categories.find_each do |feed_category| %>
+              <li class='collection-item'> <%= feed_category.name %> </li>
+            <% end %>
+          </ul>
+        </div>
+        <div class='card-action'>
+          <%= link_to 'Edit', edit_community_member_profile_path(@community_member_profile) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

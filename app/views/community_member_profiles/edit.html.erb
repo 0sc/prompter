@@ -1,5 +1,9 @@
-<h1>Edit stuff</h1>
-
-<%= render 'form', profile: @community_member_profile %>
-
-<%= link_to 'Back', community_member_profile_path(@community_member_profile) %>
+<div class='container'>
+  <div class='section'>
+    <div class='row'>
+      <h1 class="header center orange-text">Fine Tune your notifications</h1>
+      <%= render 'form', profile: @community_member_profile %>
+    </div>
+    <%= link_to 'Back', community_member_profile_path(@community_member_profile) %>
+  </div>
+</div>

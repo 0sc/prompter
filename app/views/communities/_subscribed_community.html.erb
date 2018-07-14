@@ -1,6 +1,10 @@
-<tr>
-  <td><%= image_tag community['icon'], height: '32', width: '32' %></td>
-  <td><%= link_to community['name'], community_path(id) %></td>
-  <td><%= link_to 'Edit', edit_community_path(id) %></td>
-  <td><%= link_to 'Unsubscribe', community_path(id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-</tr>
+<li class="collection-item avatar">
+  <%= image_tag community['icon'], height: '32', width: '32', class: 'circle responsive-img' %>
+  <span class='title'><%= link_to community['name'], community_path(id) %></span>
+  <p>
+    <%= link_to 'Edit', edit_community_path(id) %>
+  </p>
+  <%= link_to community_path(id), method: :delete, data: { confirm: 'Are you sure you want to remove this community?' }, class: 'secondary-content' do %>
+    <i class="material-icons medium">remove_circle</i>
+  <% end %>
+</li>

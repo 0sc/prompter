@@ -1,0 +1,14 @@
+<nav>
+    <div class="nav-wrapper container">
+      <%= link_to 'Home', root_path %>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li>
+          <% if current_user.present? %>
+          <%= link_to 'Sign out', '#' %>
+          <% else %>
+          <%= link_to 'Sign in', '/auth/facebook' %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </nav>

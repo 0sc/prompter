@@ -13,7 +13,10 @@ class CommunitiesController < ApplicationController
     # the user no longer have admin access to
   end
 
-  def show; end
+  def show
+    @app_id = Rails.application.credentials.facebook_key
+    @page_id = 1582467505162376
+  end
 
   def edit; end
 

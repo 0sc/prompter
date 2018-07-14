@@ -7,6 +7,10 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
   end
   before(:each) { render_partial }
 
+  it 'displays the community icon image' do
+    expect(page).to have_selector("img[src='#{community['icon']}']")
+  end
+
   it 'displays the name of the community with link view details' do
     expect(page).to have_link(
       text: community['name'],
@@ -23,7 +27,7 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
 
   it 'displays link to unsubscribe the community' do
     expect(page).to have_link(
-      text: 'Unsubscribe',
+      text: 'remove_circle',
       href: community_path(db_id)
     )
   end

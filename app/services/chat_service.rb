@@ -56,6 +56,7 @@ class ChatService
     subscribable_communities = Community.subscribable
                                         .where(fbid: ids)
                                         .where.not(id: member_communities_id)
+                                        .order(:id)
 
     if subscribable_communities.empty?
       # no available communities to subscribe

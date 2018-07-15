@@ -62,11 +62,11 @@ en:
           msg: |
             Hey there's a new %{category} post you'll be interested in %{name}.
             %{feed}
-          cta: Click to see more.
+          cta: Click to see more
         feedback:
           msg: BTW do you think this appropriate for %{category}
-          right: yes
-          wrong: no
+          right: 'yes'
+          wrong: 'no'
       community_added:
         notice: |
           Congrats!!! You've successful added %{name} to the sure fire engagemnt diviner ;)

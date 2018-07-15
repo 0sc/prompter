@@ -18,24 +18,24 @@ RSpec.describe Notifier do
   describe '.send_community_feed_notice' do
     it 'delivers the community_feed_notice payload' do
       link = 'https://why.cloaking.not/work'
-      f = 'Hey I still get detected when I am in Ninja cloaking mode. Why?'
-      n = 'My super community'
-      cat = 'ninjas'
+      feed = 'Hey I still get detected when I am in Ninja cloaking mode. Why?'
+      name = 'My super community'
+      category = 'ninjas'
       payload_one = expected_payload(
         message: {
           attachment: {
             type: 'template',
             payload: {
               template_type: 'button',
-              text: t('community_feed.notice.msg', category: cat, name: n, feed: f),
+              text: t('community_feed.notice.msg',
+                      category: category,
+                      name: name,
+                      feed: feed),
               buttons: [
                 {
                   title: t('community_feed.notice.cta'),
                   type: 'web_url',
                   url: link,
-                  webview_height_ratio: 'full',
-                  messenger_extensions: 'true',
-                  fallback_url: link
                 }
               ]
             }
@@ -45,17 +45,17 @@ RSpec.describe Notifier do
 
       payload_two = expected_payload(
         message: {
-          text: t('community_feed.feedback.msg', category: cat),
+          text: t('community_feed.feedback.msg', category: category),
           quick_replies: [
             {
               content_type: 'text',
-              payload: 'FEEDBACK',
+              payload: 'FEEDBACK-OK',
               title: t('community_feed.feedback.right'),
               image_url: host + '/img/right.png'
             },
             {
               content_type: 'text',
-              payload: 'FEEDBACK',
+              payload: 'FEEDBACK-WRONG',
               title: t('community_feed.feedback.wrong'),
               image_url: host + '/img/wrong.png'
             }
@@ -70,9 +70,9 @@ RSpec.describe Notifier do
 
       Notifier.send_community_feed_notice(
         psid: psid,
-        name: n,
-        category: cat,
-        feed: f,
+        name: name,
+        category: category,
+        feed: feed,
         link: link
       )
     end
@@ -87,13 +87,13 @@ RSpec.describe Notifier do
           quick_replies: [
             {
               content_type: 'text',
-              payload: 'FEEDBACK',
+              payload: 'FEEDBACK-OK',
               title: t('community_feed.feedback.right'),
               image_url: host + '/img/right.png'
             },
             {
               content_type: 'text',
-              payload: 'FEEDBACK',
+              payload: 'FEEDBACK-WRONG',
               title: t('community_feed.feedback.wrong'),
               image_url: host + '/img/wrong.png'
             }

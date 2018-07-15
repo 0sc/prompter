@@ -62,7 +62,7 @@ class Responder < Client
 
   def self.send_subscribe_communities_cta(service)
     msg = t('subscribe_communities.msg')
-    btn = url_btn(
+    btn = webview_btn(
       t('subscribe_communities.cta'), fullpath('/communities'), 'tall'
     )
     payload = button_template(msg, [btn])

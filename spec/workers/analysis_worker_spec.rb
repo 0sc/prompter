@@ -42,6 +42,17 @@ RSpec.describe AnalysisWorker, type: :worker do
     AnalysisWorker.drain
   end
 
+  it 'returns nil if the link is not present' do
+    AnalysisWorker.perform_async(404, msg, nil)
+
+    expect(AnalysisWorker.jobs.size).to eq 1
+    expect(AnalysisWorker.jobs.first['args']).to match_array([404, msg, nil])
+
+    expect(Notifier).not_to receive(:send_community_feed_notice)
+
+    AnalysisWorker.drain
+  end
+
   it 'triggers a message for each interested member in the community' do
     AnalysisWorker.perform_async(community_one.fbid, msg, link)
 

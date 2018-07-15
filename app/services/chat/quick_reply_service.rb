@@ -2,10 +2,10 @@ class Chat::QuickReplyService < ChatService
   def handle
     payload = quick_reply_payload
     case payload
-    when 'some-custom-thing'
-      p 'here'
-    when 'another-custom-thing'
-      p 'here'
+    when 'FEEDBACK-WRONG'
+      p 'Got quick reply wrong feed category'
+    when 'FEEDBACK-OK'
+      p 'Got quick reply right feed category'
     else
       super(payload)
     end

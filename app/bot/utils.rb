@@ -28,7 +28,7 @@ module Utils
   def manage_subscription_webview_btn(profile_id)
     title = I18n.t('chat.responses.btns.manage')
     link = fullpath("/community_member_profiles/#{profile_id}/edit")
-    url_btn(title, link)
+    webview_btn(title, link)
   end
 
   def cta_img(key)

@@ -2,6 +2,8 @@ class AnalysisWorker
   include Sidekiq::Worker
 
   def perform(community_fbid, feed_msg, feed_link)
+    return unless feed_link.present?
+
     community = Community.find_by(fbid: community_fbid)
     return unless community
     category = wit_recommended_category(feed_msg)

@@ -13,15 +13,20 @@ module Templates
     { type: 'element_share' }
   end
 
-  def url_btn(title, url, height = 'compact')
+  def url_btn(title, url)
     {
-      title: title,
       type: 'web_url',
-      url: url,
+      title: title,
+      url: url
+    }
+  end
+
+  def webview_btn(title, url, height = 'compact')
+    url_btn(title, url).merge(
       webview_height_ratio: height,
       messenger_extensions: 'true',
       fallback_url: url
-    }
+    )
   end
 
   def postback_btn(title, payload)

@@ -6,7 +6,7 @@ class Notifier < Client
 
   def self.send_community_feed_notice(psid:, name:, category:, feed:, link:)
     cta = t('community_feed.notice.cta')
-    btn = url_btn(cta, link, 'full')
+    btn = url_btn(cta, link)
     msg =
       t('community_feed.notice.msg', category: category, name: name, feed: feed)
     payload = button_template(msg, [btn])
@@ -22,8 +22,8 @@ class Notifier < Client
     right = t('community_feed.feedback.right')
     wrong = t('community_feed.feedback.wrong')
     options = [
-      quick_reply_option('FEEDBACK', right, cta_img('right')),
-      quick_reply_option('FEEDBACK', wrong, cta_img('wrong'))
+      quick_reply_option('FEEDBACK-OK', right, cta_img('right')),
+      quick_reply_option('FEEDBACK-WRONG', wrong, cta_img('wrong'))
     ]
 
     feedback = quick_reply_template(feedback_msg, options)

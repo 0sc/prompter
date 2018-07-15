@@ -22,6 +22,17 @@ shared_examples 'templates' do
   end
 
   describe '#url_btn' do
+    it 'returns the url btn structure' do
+      expected = {
+        type: 'web_url',
+        title: 'some-title',
+        url: 'http://link.com'
+      }
+      expect(subject.url_btn('some-title', 'http://link.com')).to eq expected
+    end
+  end
+
+  describe '#webview_btn' do
     let(:expected) do
       {
         title: 'abc',
@@ -35,13 +46,13 @@ shared_examples 'templates' do
 
     context 'height is given' do
       it 'returns the url btn structure with the given height' do
-        expect(subject.url_btn('abc', 'http://a.com', 'tall')).to eq expected
+        expect(subject.webview_btn('abc', 'http://a.com', 'tall')).to eq expected
       end
     end
 
     context 'height is not given' do
       it 'returns the url btn structure with height set to compact' do
-        expect(subject.url_btn('abc', 'http://a.com'))
+        expect(subject.webview_btn('abc', 'http://a.com'))
           .to eq expected.merge(webview_height_ratio: 'compact')
       end
     end

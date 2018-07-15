@@ -28,7 +28,7 @@ ActiveRecord::Base.transaction do
     'Proof of work'         => [community_types[1]],
     'Proof of stake'        => [community_types[1]],
 
-    'unclassified'          => community_types
+    'uncategorised'          => community_types
   }
 
   feed_categories.each do |name, c_types|

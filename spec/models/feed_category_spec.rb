@@ -7,7 +7,18 @@ RSpec.describe FeedCategory, type: :model do
   it { should validate_uniqueness_of(:name).case_insensitive }
 
   it { should have_many(:community_type_feed_categories).dependent(:destroy) }
+
   it do
     should have_many(:community_types).through(:community_type_feed_categories)
+  end
+
+  it do
+    should have_many(:community_member_profile_feed_categories)
+      .dependent(:destroy)
+  end
+
+  it do
+    should have_many(:community_member_profiles)
+      .through(:community_member_profile_feed_categories)
   end
 end

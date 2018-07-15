@@ -1,4 +1,5 @@
 module Templates
+  BTN_TEMPLATE_TEXT_MAX_CHARS = 640
   # TEXT MESSAGE
   def text_message_template(msg)
     { message: { text: msg } }
@@ -40,7 +41,7 @@ module Templates
   def button_template(msg, btns)
     payload = {
       template_type: 'button',
-      text: msg,
+      text: msg.truncate(BTN_TEMPLATE_TEXT_MAX_CHARS, separator: ' '),
       buttons: btns
     }
     attachment_template(payload)

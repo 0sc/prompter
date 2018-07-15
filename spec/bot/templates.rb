@@ -71,6 +71,26 @@ shared_examples 'templates' do
   end
 
   describe '#button_template' do
+    it 'truncates the text to max allowed chars' do
+      stub_const('Templates::BTN_TEMPLATE_TEXT_MAX_CHARS', 5)
+      expected = {
+        message: {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: 'with one button'.truncate(5, separator: ' '),
+              buttons: %w[some buttons]
+            }
+          }
+        }
+      }
+
+      expect(
+        subject.button_template('with one button', %w[some buttons])
+      ).to eq expected
+    end
+
     it 'returns the button template structure' do
       expected = {
         message: {

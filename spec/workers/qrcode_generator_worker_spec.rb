@@ -61,6 +61,8 @@ RSpec.describe QrcodeGeneratorWorker, type: :worker do
     expect(dummy).to receive(:post)
       .ordered.once.with(url, payload).and_return('attachment_id' => att_id)
     # send notice to all admins
+    no_psid = create(:community_admin_profile, community: community)
+    no_psid.admin_profile.user.update!(psid: nil)
     create_list(:community_admin_profile, 2, community: community).each do |ad|
       psid = ad.admin_profile.user.psid
       expect(Notifier).to receive(:send_qrcode_notice)

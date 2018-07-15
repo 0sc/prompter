@@ -53,7 +53,11 @@ class QrcodeGeneratorWorker
   end
 
   def notify_community_admins(community, attachment_id)
-    community.admin_profiles.find_each do |admin|
+    community
+      .admin_profiles
+      .includes(:user)
+      .where.not(users: { psid: nil })
+      .find_each do |admin|
       Notifier
         .send_qrcode_notice(psid: admin.user.psid, attachment_id: attachment_id)
     end

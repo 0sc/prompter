@@ -71,12 +71,15 @@ RSpec.describe MessengerNotificationService, type: :service do
         end
       end
 
-      it 'sends the community added response to all member of the community' do
+      it 'sends the community added response members of with psid' do
         create_list(:community_member_profile, 2, community: community)
           .each do |prof|
             expect(Notifier).to receive(:send_community_type_changed_notice)
               .once.ordered.with notifier_attrs.call(prof)
           end
+
+        no_psid = create(:community_member_profile, community: community)
+        no_psid.member_profile.user.update!(psid: nil)
 
         subject.send_community_type_changed(community.id)
       end

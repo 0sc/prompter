@@ -24,7 +24,11 @@ class MessengerNotificationService
     community = Community.find_by(id: community_id)
     return unless community.present?
 
-    community.community_member_profiles.each do |profile|
+    community
+      .community_member_profiles
+      .includes(member_profile: :user)
+      .where.not(users: { psid: nil })
+      .find_each do |profile|
       Notifier.send_community_type_changed_notice(
         psid: profile.member_profile.user.psid,
         pid: profile.id,

@@ -42,11 +42,24 @@ RSpec.describe AnalysisWorker, type: :worker do
     AnalysisWorker.drain
   end
 
+  # for announcements
   it 'returns nil if the link is not present' do
     AnalysisWorker.perform_async(404, msg, nil)
 
     expect(AnalysisWorker.jobs.size).to eq 1
     expect(AnalysisWorker.jobs.first['args']).to match_array([404, msg, nil])
+
+    expect(Notifier).not_to receive(:send_community_feed_notice)
+
+    AnalysisWorker.drain
+  end
+
+  # for things like shared posts and media posts
+  it 'returns nil if the feed is not present' do
+    AnalysisWorker.perform_async(404, nil, link)
+
+    expect(AnalysisWorker.jobs.size).to eq 1
+    expect(AnalysisWorker.jobs.first['args']).to match_array([404, nil, link])
 
     expect(Notifier).not_to receive(:send_community_feed_notice)
 

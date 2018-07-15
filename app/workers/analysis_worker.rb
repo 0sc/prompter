@@ -2,7 +2,7 @@ class AnalysisWorker
   include Sidekiq::Worker
 
   def perform(community_fbid, feed_msg, feed_link)
-    return unless feed_link.present?
+    return unless analysable_feed?(feed_msg, feed_link)
 
     community = Community.find_by(fbid: community_fbid)
     return unless community
@@ -20,6 +20,10 @@ class AnalysisWorker
   end
 
   private
+
+  def analysable_feed?(feed_msg, feed_link)
+    feed_msg.present? && feed_link.present?
+  end
 
   def wit_recommended_category(feed_msg)
     svc = WitService.new(feed_msg)

@@ -49,9 +49,25 @@ RSpec.describe WitService, type: :service do
   end
 
   describe '#intent' do
-    it 'returns the intent with the highest confidence' do
-      subject.analyse
-      expect(subject.intent).to eq resp.dig('entities', 'intent').first
+    context 'intents are present' do
+      it 'returns the intent with the highest confidence' do
+        subject.analyse
+        expect(subject.intent).to eq resp.dig('entities', 'intent').first
+      end
+    end
+
+    context 'no intent is present' do
+      before do
+        allow(client).to receive(:message)
+          .with(an_instance_of(String))
+          .and_return(resp.merge('entities' => {}))
+      end
+      it 'returns the default uncategorised intent' do
+        subject.analyse
+        expect(subject.intent).to eq('confidence' => 1,
+                                     'value' => 'uncategorised',
+                                     'type' => 'value')
+      end
     end
   end
 

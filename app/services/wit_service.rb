@@ -17,11 +17,18 @@ class WitService
   end
 
   def intent
+    return default_intent unless intents.present?
     @intent ||=
       intents.inject { |a, b| a['confidence'] > b['confidence'] ? a : b }
   end
 
   def intents
     @intents ||= analysis.dig('entities', 'intent')
+  end
+
+  private
+
+  def default_intent
+    { 'confidence' => 1, 'value' => 'uncategorised', 'type' => 'value' }
   end
 end

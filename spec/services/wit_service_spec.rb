@@ -23,6 +23,18 @@ RSpec.describe WitService, type: :service do
       .and_return(resp)
   end
 
+  describe '#initialize' do
+    it 'truncates the message to 280 chars' do
+      msg = <<-TXT
+      #IssaGoallllllllllllllll\n\nHello People! \nIt feels good to see how we help each other here by providing answers to questions, helping to point newbies to helpful documents and learning platforms. This is what we want this community to be - The most engaging and helpful Developer Circle in the world, Yea we are doing that already.\n\nTo everyone helping to provide guides to the newbies in the house, those who read something interesting about Tech and consider it thoughtful to share with the community, those who make interesting findings from their personal experiments and decide to share with us and to all who in one way or the other help to keep this community active and helpful, I say Kudos to you all. You make DevC Lagos thick!!!\n\nOn the flip-side, we have observed the rise of unwanted posts, particularly those marketing Web development courses, WhatsApp groups, Facebook groups. \nAs much as these courses are Tech related, we do not allow any form of marketing here. Any such posts will be deleted (kindly refer to the pinned post for details). \n\nFeel free to share your knowledge with us right here or contact Peculiar Ediomo-Abasi and @Oluebube Princess Egbuna to help with posting on the community's medium page. \nWe are not against monetizing your skills but such is not allowed here. \n\n#Peace!!!
+      TXT
+
+      svc = WitService.new(msg, client: client)
+      expect(svc.msg)
+        .to eq msg.truncate(WitService::MAX_CHARS, separator: '.', omission: '')
+    end
+  end
+
   describe '#analyse' do
     it 'returns the wit ai result for analysing the given msg' do
       expect(subject.analyse).to eq resp

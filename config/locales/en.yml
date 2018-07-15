@@ -75,7 +75,7 @@ en:
           %{link}
       community_type_changed:
         notice: |
-          Your %{name} community admin has been changed the community type to %{type}. You can now fine tune your feeds to the following categories: %{info}.
+          Your %{name} community admin has changed the community type to %{type}. You can now fine tune your feeds to the following categories: %{info}.
       community_removed:
         notice: |
           Your %{name} admin on your community subscription and you'll no longer receive updates on posts you care about.

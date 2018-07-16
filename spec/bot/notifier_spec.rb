@@ -43,7 +43,7 @@ RSpec.describe Notifier do
         }
       )
 
-      payload_two = expected_payload(
+      _payload_two = expected_payload(
         message: {
           text: t('community_feed.feedback.msg', category: category),
           quick_replies: [

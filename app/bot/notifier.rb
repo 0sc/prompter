@@ -12,7 +12,7 @@ class Notifier < Client
     payload = button_template(msg, [btn])
     respond(psid, payload)
     # TODO: show typing icon
-    send_community_feed_feedback(psid: psid, category: category)
+    # send_community_feed_feedback(psid: psid, category: category)
   end
 
   def self.send_community_feed_feedback(psid:, category:)

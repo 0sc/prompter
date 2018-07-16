@@ -66,6 +66,8 @@ GEM
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.0)
+    clockwork (2.0.3)
+      tzinfo
     cloudinary (1.8.2)
       aws_cf_signer
       rest-client
@@ -274,6 +276,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   capybara
+  clockwork
   cloudinary
   database_cleaner
   facebook-messenger

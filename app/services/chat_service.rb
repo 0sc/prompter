@@ -3,6 +3,10 @@ class ChatService
   SUBSCRIBE_COMMUNITIES = 'subscribe-communities'.freeze
   MANAGE_COMMUNITIES = 'manage-communities'.freeze
 
+  # TODO: fix the indirection
+  FINETUNE_PROMPTS = MANAGE_COMMUNITIES
+  ADD_COMMUNITIES = SUBSCRIBE_COMMUNITIES
+
   attr_reader :user, :message
 
   def initialize(message)

@@ -35,16 +35,16 @@ class MessengerProfileSetup
   end
 
   def set_greeting_text
-    {
-      greeting: [
-        { locale: 'default', text: 'Welcome {{user_full_name}}, to your new bot overlord!' },
-        { locale: 'fr_FR', text: 'Bienvenue {{user_full_name}}, dans le bot du Wagon !' }
-      ]
-    }
+    msg = <<-TXT.strip_heredoc
+      Hey {{user_first_name}}! Want an engaging community?
+      I'll prompt you to chime in on just the kind of posts you care about.
+      You interested?
+    TXT
+    { greeting: [{ locale: 'default', text: msg }] }
   end
 
   def set_persistent_menu
-    actions = %w[find_communities subscribe_communities manage_communities]
+    actions = %w[find_communities add_communities finetune_prompts]
     cta = actions.map do |action|
       {
         title: action.tr('_', ' ').titleize,

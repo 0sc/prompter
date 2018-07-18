@@ -30,8 +30,9 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
       end
     end
 
-    expect(page)
-      .to have_link('Edit', href: edit_community_member_profile_path(profile))
+    expect(page).to have_link(
+      t('show.cta.edit'), href: edit_community_member_profile_path(profile)
+    )
   end
 
   scenario 'user can edit their community member profile' do
@@ -40,10 +41,10 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
     sign_in
     visit community_member_profile_path(profile)
-    click_on 'Edit'
+    click_on t('show.cta.edit')
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
-    expect(page.find('h1')).to have_content 'Fine Tune your notifications'
+    expect(page.find('h1')).to have_content t('edit.title')
 
     within 'form' do
       community.feed_categories.each do |feed_category|
@@ -52,7 +53,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
       community.feed_categories.first(2).each { |fd| uncheck fd.name }
 
-      click_on 'Update'
+      click_on t('form.submit')
     end
 
     expect(current_path).to eq community_member_profile_path(profile)
@@ -69,10 +70,10 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
     sign_in
     visit community_member_profile_path(profile)
-    click_on 'Edit'
+    click_on t('show.cta.edit')
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
-    expect(page.find('h1')).to have_content 'Fine Tune your notifications'
+    expect(page.find('h1')).to have_content t('edit.title')
 
     within 'form' do
       community.feed_categories.each do |feed_category|
@@ -81,16 +82,20 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
       end
 
       expect do
-        click_on 'Update'
+        click_on t('form.submit')
       end.to change { CommunityMemberProfile.count }.from(1).to(0)
     end
 
     expect(current_path).to eq curtain_community_member_profiles_path
-    expect(page.find('h1')).to have_content('Nothing to see here!')
+    expect(page.find('h1')).to have_content(t('curtain.header'))
   end
 
   def sign_in
     visit root_path
     click_on('Sign in')
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[community_member_profiles])
   end
 end

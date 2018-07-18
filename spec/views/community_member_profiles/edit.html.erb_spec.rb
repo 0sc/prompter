@@ -9,7 +9,7 @@ RSpec.describe 'community_member_profiles/edit', type: :view do
   end
 
   it 'renders the heading' do
-    expect(page).to have_content('Fine Tune your notifications')
+    expect(page).to have_content(t('title'))
   end
 
   it 'renders the edit community member profile form' do
@@ -18,8 +18,12 @@ RSpec.describe 'community_member_profiles/edit', type: :view do
 
   it 'displays link to go back to communities member profile page' do
     expect(page).to have_link(
-      text: 'Back',
+      text: t('cta.back'),
       href: community_member_profile_path(subject)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[community_member_profiles edit])
   end
 end

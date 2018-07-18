@@ -25,10 +25,10 @@
     <% end %>
   </div>
   <p>
-    <small><b>Note:</b> Deselecting all categories will automatically unsubcribe you from this community</small>
+    <small><%= t('.warning_html') %></small>
   </p>
   <div class="actions">
-    <%= form.submit 'Update', id: 'update_profile', class: "btn waves-effect waves-light" %>
+    <%= form.submit t('.submit'), id: 'update_profile', class: "btn waves-effect waves-light" %>
   </div>
   <% end %>
 </div>

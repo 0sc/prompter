@@ -45,8 +45,8 @@ RSpec.describe 'community_member_profiles/_form', type: :view do
   describe 'warning' do
     it 'displays a warning on deleteting of subscription if all unchecked' do
       render_partial
-      msg = 'Deselecting all categories will automatically ' \
-            'unsubcribe you from this community'
+      msg = strip_tags(t('warning_html'))
+
       expect(page).to have_content(msg)
     end
   end
@@ -56,5 +56,9 @@ RSpec.describe 'community_member_profiles/_form', type: :view do
       partial: 'community_member_profiles/form',
       locals: { profile: subject }.merge(opts)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[community_member_profiles form])
   end
 end

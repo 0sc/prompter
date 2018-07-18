@@ -113,7 +113,7 @@ en:
   communities:
     index:
       title: Communities You Manage
-      no_admin_communities: Facebook tells us you are not admin in any community. Could you confirm with them and come back when you have a couple of communities you manage 
+      no_admin_communities: Facebook tells us you are not admin in any community. Could you confirm with them and come back when you have a couple of communities you manage
     show:
       labels:
         name: Name
@@ -143,3 +143,22 @@ en:
         confirm: Are you sure you want to remove this community?
     unsubscribed_community:
       subscribe: Subscribe
+
+  community_member_profiles:
+    edit:
+      title: Fine Tune your notifications
+      cta:
+        back: Back
+    show:
+      info: You are subscribed to
+      cta:
+        edit: Edit
+    update:
+      success: Updated successfully!
+    form:
+      warning_html: <b>Note:</b> Deselecting all categories will automatically unsubcribe you from this community
+      submit: Update
+    curtain:
+      header: Nothing to see here!!
+      home: Home
+    not_found: Community profile not found

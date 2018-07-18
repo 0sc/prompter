@@ -36,8 +36,12 @@ RSpec.describe 'community_member_profiles/show', type: :view do
   it 'displays link to edit member profile' do
     render
     expect(page).to have_link(
-      'Edit',
+      t('cta.edit'),
       href: edit_community_member_profile_path(subject)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[community_member_profiles show])
   end
 end

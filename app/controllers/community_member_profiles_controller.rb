@@ -21,7 +21,7 @@ class CommunityMemberProfilesController < ApplicationController
       # https://developers.facebook.com/docs/messenger-platform/webview#close
     elsif @community_member_profile.update(community_member_profile_params)
       send_notification_of_profile_update(@community_member_profile)
-      redirect_to @community_member_profile, notice: 'Updated successfully!'
+      redirect_to @community_member_profile, notice: t('.success')
     else
       render :edit
     end
@@ -35,9 +35,9 @@ class CommunityMemberProfilesController < ApplicationController
                                 .community_member_profiles
                                 .find_by(id: params[:id])
 
-    msg = 'Community profile not found'
     # TODO: should this redirect to curtain?
     # to reduce chance of duplicate account
+    msg = t('community_member_profiles.not_found')
     redirect_to root_path, notice: msg unless @community_member_profile
   end
 

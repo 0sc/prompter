@@ -3,17 +3,23 @@
   <div class='section'>
     <p id="notice"><%= notice %></p>
     <div class='row'>
-      <h1 class="header center orange-text">Communities</h1>
-      <ul class="collection">
-        <% @fb_communities.each do |community| %>
-            <% id = @subscribed_communities_mapping[community['id']] %>
-            <% if id %>
-              <%= render 'subscribed_community', community: community, id: id %>
-            <% else %>
-              <%= render 'unsubscribed_community', community: community %>
-            <% end %>
-        <% end %>
-      </ul>
+      <h1 class="header center orange-text"><%= t('.title') %></h1>
+      <% if @fb_communities.size.zero? %>
+        <p>
+          <%= t('.no_admin_communities') %>
+        </p>
+      <% else %>
+        <ul class="collection">
+          <% @fb_communities.each do |community| %>
+              <% id = @subscribed_communities_mapping[community['id']] %>
+              <% if id %>
+                <%= render 'subscribed_community', community: community, id: id %>
+              <% else %>
+                <%= render 'unsubscribed_community', community: community %>
+              <% end %>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
   </div>
 </div>

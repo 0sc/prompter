@@ -57,7 +57,7 @@ en:
           What would you like to do next?
           Find communities - It's likely some communities you are a member of have been signed up already. This option let's you find and add them to your curated prompts 🗝
           Add communities - Spread the magic! Sign up communities you manage to drive engagment with your members, they'll love you for it 🕸
-        cta_manage: Fine-tune prompts - Discussion in your commuity will often be in varied categories. With this option, you can give me a hint on the ones you care about. 🛠
+        cta_manage: Fine-tune prompts - Discussion in your community will often be in varied categories. With this option, you can give me a hint on the ones you care about. 🛠
       btns:
         finetune: Fine-tune
     notifications:
@@ -109,3 +109,37 @@ en:
             Ahh, your access token with us has finally expired :( I can now no longer drive the engagement you've seen in the %{count} communities with us.
             All hopes is not lost; let's work together and fix it.
             Click to log in and I'll take it from there.
+
+  communities:
+    index:
+      title: Communities You Manage
+      no_admin_communities: Facebook tells us you are not admin in any community. Could you confirm with them and come back when you have a couple of communities you manage 
+    show:
+      labels:
+        name: Name
+        community_type: Community Type
+        members_count: Subscribed members
+        qrcode: QRcode
+      share:
+        header: Get you community involved
+        subheader: Share these with them
+        info: The more folks receiving currated prompt the more the meanful engagement drive.
+      cta:
+        edit: Edit
+        back: Back
+    edit:
+      show: Show
+      back: Back
+    update:
+      success: Community was successfully updated
+    destroy:
+      success: Your '%{name}' community subscription has been removed
+    not_found: Community not found
+    form:
+      warning: Warning! changing the community type will reset the subscribed category for all members
+    subscribed_community:
+      edit: Edit
+      delete:
+        confirm: Are you sure you want to remove this community?
+    unsubscribed_community:
+      subscribe: Subscribe

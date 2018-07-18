@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :allow_iframe_for_fb_domains
   before_action :authenticate_user
 
-  helper_method :current_user, :facebook_key
+  helper_method :current_user, :facebook_key, :facebook_page_id
 
   protected
 
@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
 
   def facebook_key
     ENV.fetch('FACEBOOK_KEY')
+  end
+
+  def facebook_page_id
+    ENV.fetch('FACEBOOK_PAGE_ID')
   end
 
   private

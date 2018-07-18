@@ -13,9 +13,7 @@ class CommunitiesController < ApplicationController
     # the user no longer have admin access to
   end
 
-  def show
-    @page_id = '1582467505162376'
-  end
+  def show; end
 
   def edit; end
 
@@ -29,7 +27,7 @@ class CommunitiesController < ApplicationController
 
     redirect_to edit_community_path(community)
   rescue Koala::Facebook::ClientError
-    redirect_to communities_path, notice: 'Community not found'
+    redirect_to communities_path, notice: t('communities.not_found')
   end
 
   def update
@@ -40,7 +38,7 @@ class CommunitiesController < ApplicationController
       handle_community_type_changed(@community) if type_changed
 
       # TODO: inform other admins of the change: field_changed
-      redirect_to @community, notice: 'Community was successfully updated.'
+      redirect_to @community, notice: t('.success')
     else
       render :edit
     end
@@ -53,8 +51,7 @@ class CommunitiesController < ApplicationController
       @community.destroy
     end
 
-    msg = "Your '#{@community.name}' community subscription has been removed"
-    redirect_to communities_url, notice: msg
+    redirect_to communities_url, notice: t('.success', name: @community.name)
   end
 
   private
@@ -76,7 +73,7 @@ class CommunitiesController < ApplicationController
   end
 
   def send_notification_of_community_removal(community)
-    # TODO: currently not working since community is deleted before job runs new.perform
+    # TODO: currently not working since community is deleted before job runs
     MessengerNotificationWorker
       .perform_async('send_community_removed', community.id)
   end
@@ -102,7 +99,7 @@ class CommunitiesController < ApplicationController
     @community = current_user.admin_profile_communities.find_by(id: params[:id])
 
     unless @community.present?
-      redirect_to communities_path, notice: 'Community not found'
+      redirect_to communities_path, notice: t('communities.not_found')
     end
   end
 

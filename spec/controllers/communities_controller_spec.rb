@@ -32,7 +32,7 @@ RSpec.describe CommunitiesController, type: :controller do
         get :show, params: { id: 404 }, session: valid_session
 
         expect(response).to redirect_to communities_path
-        expect(flash[:notice]).to eq 'Community not found'
+        expect(flash[:notice]).to eq t('not_found')
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe CommunitiesController, type: :controller do
         it 'redirects to the communities path' do
           get :show, params: { id: community.id }, session: valid_session
           expect(response).to redirect_to communities_path
-          expect(flash[:notice]).to eq 'Community not found'
+          expect(flash[:notice]).to eq t('not_found')
         end
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe CommunitiesController, type: :controller do
         get :edit, params: { id: 404 }, session: valid_session
 
         expect(response).to redirect_to communities_path
-        expect(flash[:notice]).to eq 'Community not found'
+        expect(flash[:notice]).to eq t('not_found')
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe CommunitiesController, type: :controller do
         it 'redirects to the communities path' do
           get :edit, params: { id: community.id }, session: valid_session
           expect(response).to redirect_to communities_path
-          expect(flash[:notice]).to eq 'Community not found'
+          expect(flash[:notice]).to eq t('not_found')
         end
       end
     end
@@ -248,7 +248,7 @@ RSpec.describe CommunitiesController, type: :controller do
         patch :update, params: { id: 404 }, session: valid_session
 
         expect(response).to redirect_to communities_path
-        expect(flash[:notice]).to eq 'Community not found'
+        expect(flash[:notice]).to eq t('not_found')
       end
     end
 
@@ -259,7 +259,7 @@ RSpec.describe CommunitiesController, type: :controller do
         patch :update, params: { id: community.id }, session: valid_session
 
         expect(response).to redirect_to communities_path
-        expect(flash[:notice]).to eq 'Community not found'
+        expect(flash[:notice]).to eq t('not_found')
       end
     end
 
@@ -377,7 +377,7 @@ RSpec.describe CommunitiesController, type: :controller do
       it 'redirects to communities path' do
         delete :destroy, params: { id: 404 }, session: valid_session
         expect(response).to redirect_to communities_path
-        expect(flash[:notice]).to eq 'Community not found'
+        expect(flash[:notice]).to eq t('not_found')
       end
     end
 
@@ -396,8 +396,7 @@ RSpec.describe CommunitiesController, type: :controller do
         end.to change { user.admin_profile_community_count }.from(1).to(0)
 
         expect(user.reload.admin_profile_communities).to be_empty
-        msg = "Your '#{community.name}' community subscription has been removed"
-        expect(flash[:notice]).to eq msg
+        expect(flash[:notice]).to eq t('destroy.success', name: community.name)
       end
 
       it 'removes the community from user member profile' do
@@ -406,8 +405,7 @@ RSpec.describe CommunitiesController, type: :controller do
         end.to change { user.member_profile_community_count }.from(1).to(0)
 
         expect(user.reload.member_profile_communities).to be_empty
-        msg = "Your '#{community.name}' community subscription has been removed"
-        expect(flash[:notice]).to eq msg
+        expect(flash[:notice]).to eq t('destroy.success', name: community.name)
       end
 
       context 'when community has no associated admin profile' do
@@ -452,5 +450,9 @@ RSpec.describe CommunitiesController, type: :controller do
         end
       end
     end
+  end
+
+  def t(key, opts = {})
+    I18n.t(key, opts.merge(scope: :communities))
   end
 end

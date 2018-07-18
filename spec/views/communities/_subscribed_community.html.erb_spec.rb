@@ -20,7 +20,7 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
 
   it 'displays link to edit community details' do
     expect(page).to have_link(
-      text: 'Edit',
+      text: t('edit'),
       href: edit_community_path(db_id)
     )
   end
@@ -37,5 +37,9 @@ RSpec.describe 'communities/_subscribed_community', type: :view do
       partial: 'communities/subscribed_community',
       locals: { community: community, id: db_id }.merge(opts)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities subscribed_community])
   end
 end

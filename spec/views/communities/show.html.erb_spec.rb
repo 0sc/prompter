@@ -9,7 +9,10 @@ RSpec.describe 'communities/show', type: :view do
     # https://github.com/rspec/rspec-rails/issues/215
     # https://github.com/rspec/rspec-rails/issues/1076
     def view.current_user; end
+
     def view.facebook_key; end
+
+    def view.facebook_page_id; end
 
     assign(:community, community)
     stub_const('ENV', 'BOT_URL' => 'm.me/meee')
@@ -46,14 +49,19 @@ RSpec.describe 'communities/show', type: :view do
   end
 
   it 'displays link to edit the community details' do
-    expect(page).to have_link(text: 'Edit', href: edit_community_path(community))
+    expect(page)
+      .to have_link(text: t('cta.edit'), href: edit_community_path(community))
   end
 
   it 'displays link to go back to communities path' do
-    expect(page).to have_link(text: 'Back', href: communities_path)
+    expect(page).to have_link(text: t('cta.back'), href: communities_path)
   end
 
   it 'displays the message button' do
     expect(page).to have_selector('div.fb-messengermessageus')
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities show])
   end
 end

@@ -23,10 +23,14 @@ RSpec.describe 'communities/edit', type: :view do
   end
 
   it 'displays link to view community details' do
-    expect(page).to have_link(text: 'Show', href: community_path(community))
+    expect(page).to have_link(text: t('show'), href: community_path(community))
   end
 
   it 'displays link to go back to communities path' do
-    expect(page).to have_link(text: 'Back', href: communities_path)
+    expect(page).to have_link(text: t('back'), href: communities_path)
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities edit])
   end
 end

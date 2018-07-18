@@ -14,7 +14,7 @@ RSpec.describe 'communities/_unsubscribed_community', type: :view do
 
   it 'displays link to subscribe the community' do
     expect(page).to have_link(
-      text: 'Subscribe',
+      text: t('subscribe'),
       href: communities_path(fbid: community['id'])
     )
   end
@@ -24,5 +24,9 @@ RSpec.describe 'communities/_unsubscribed_community', type: :view do
       partial: 'communities/unsubscribed_community',
       locals: { community: community }.merge(opts)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities unsubscribed_community])
   end
 end

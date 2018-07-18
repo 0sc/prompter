@@ -9,47 +9,43 @@
         </div>
         <div class='card-content'>
           <p>
-            <strong>Name:</strong>
+            <strong><%= t('.labels.name') %>:</strong>
             <%= @community.name %>
           </p>
           <p>
-            <strong>Community Type:</strong>
+            <strong><%= t('.labels.community_type') %>:</strong>
             <%= @community.community_type_name&.titleize %>
           </p>
           <p>
-            <strong>Subscribed members: <%= @community.member_profiles.count %></strong>
+            <strong><%= t('.labels.members_count') %>: <%= @community.member_profiles.count %></strong>
           </p>
+        </div>
+        <div class='card-action fb-messengermessageus'
+        messenger_app_id="<%= facebook_key %>"
+        page_id="<%= facebook_page_id %>"
+        color="white"
+        size="xlarge">
         </div>
       </div>
     </div>
     <div class='row'>
-      <h2 class='header orange-text'> Get your community involved</h2>
-      <p>Share these with them</p>
+      <h2 class='header orange-text'> <%= t('.share.header') %></h2>
+      <p><%= t('.share.subheader') %></p>
       <div class='card lighten-4'>
         <div class='card-image'>
           <%= image_tag @community.qrcode, class: 'responsive-img' if @community.qrcode %>
-          <span class='card-title blue-text'>QRcode</span>
+          <span class='card-title blue-text'><%= t('.labels.qrcode') %></span>
         </div>
         <div class='card-content'>
           <p><b><%= ref_link(@community.referral_code) %></b></p>
           <br />
-          <p>
-            The more folks receiving currated prompt the more the meanful engagement drive.
-          </p>
+          <p><%= t('.share.info') %></p>
         </div>
         <div class="card-action">
-          <%= link_to 'Edit', edit_community_path(@community) %>
-          <%= link_to 'Back', communities_path %>
+          <%= link_to t('.cta.edit'), edit_community_path(@community) %>
+          <%= link_to t('.cta.back'), communities_path %>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="fb-messengermessageus"
-      messenger_app_id="<%= facebook_key %>"
-      page_id="<%= @page_id %>"
-      color="white"
-      size="standard">
-    </div>
     </div>
   </div>
 </div>

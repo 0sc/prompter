@@ -41,9 +41,7 @@ RSpec.describe 'communities/form', type: :view do
       it 'displays warning' do
         render_partial(community: community)
 
-        expect(page).to have_content(
-          'Warning! changing this will reset all existing member subscriptions'
-        )
+        expect(page).to have_content(t('warning'))
       end
     end
 
@@ -55,9 +53,7 @@ RSpec.describe 'communities/form', type: :view do
       it 'does not display any warning' do
         render_partial(community: community)
 
-        expect(page).not_to have_text(
-          'Warning! changing this will reset all existing member subscriptions'
-        )
+        expect(page).not_to have_text(t('warning'))
       end
     end
   end
@@ -67,5 +63,9 @@ RSpec.describe 'communities/form', type: :view do
       partial: 'communities/form',
       locals: { community: community }.merge(opts)
     )
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities form])
   end
 end

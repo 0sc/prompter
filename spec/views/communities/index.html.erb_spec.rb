@@ -22,13 +22,30 @@ RSpec.describe 'communities/index', type: :view do
   it 'displays the heading' do
     render
 
-    expect(page.find('h1.header')).to have_content('Communities')
+    expect(page.find('h1.header')).to have_content(t('title'))
+  end
+  context 'user has not admin communities' do
+    it 'displays a note to come back later' do
+      assign(:fb_communities, [])
+
+      render
+
+      expect(page).to have_css('h1', text: t('title'))
+      expect(page).to have_text(t('no_admin_communities'))
+      expect(page).not_to have_selector('.section.ul')
+    end
   end
 
-  it 'renders a list of communities' do
-    render
+  context 'user has admin communities' do
+    it 'renders a list of communities' do
+      render
 
-    expect(page).to have_css('h1', text: 'Communities')
-    expect(page.find('.section ul').all('li').count).to eq 2
+      expect(page).to have_css('h1', text: t('title'))
+      expect(page.find('.section ul').all('li').count).to eq 2
+    end
+  end
+
+  def t(key)
+    I18n.t(key, scope: %i[communities index])
   end
 end

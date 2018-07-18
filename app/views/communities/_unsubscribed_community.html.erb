@@ -2,7 +2,7 @@
   <%= image_tag community['icon'], height: '32', width: '32', class: 'responsive-img circle' %>
   <span class='title'><%= community['name'] %></span>
   <p>
-    <%= link_to 'Subscribe', communities_path(fbid: community['id']), method: :post %>
+    <%= link_to t('.subscribe'), communities_path(fbid: community['id']), method: :post %>
   </p>
   <%= link_to communities_path(fbid: community['id']), method: :post, class: 'secondary-content' do %>
   <i class="material-icons medium">add_circle</i>

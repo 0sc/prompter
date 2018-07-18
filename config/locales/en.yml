@@ -45,17 +45,19 @@ en:
           Use this button to further fine tune the type of posts you can help with.
       quick_reply:
         find_communities: Find a community
-        manage_communities: Manage communities
-        subscribe_communities: Subscribe communities
+        finetune_prompts: Fine-tune your prompts
+        add_communities: Add a community
       get_started:
-        welcome: Welcome!!!!!
+        welcome: |
+          Welcome!!!!!
+          Enough talking let's get right to it.
         cta: |
           What would you like to do next?
-          Find communities - choose from any of your communities already added
-          Subscribe communities - sign up communities you manage to drive engagment with your members
-        cta_manage: Manage communities - fine tune feeds for the community you just added.
+          Find communities - It's likely some communities you are a member of have been signed up already. This option let's you find and add them to your curated prompts 🗝
+          Add communities - Spread the magic! Sign up communities you manage to drive engagment with your members, they'll love you for it 🕸
+        cta_manage: Fine-tune prompts - Discussion in your commuity will often be in varied categories. With this option, you can give me a hint on the ones you care about. 🛠
       btns:
-        manage: Fine tune
+        manage: Fine-tune
     notifications:
       community_feed:
         notice:

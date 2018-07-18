@@ -38,7 +38,7 @@ class MessengerProfileSetup
     msg = <<-TXT.strip_heredoc
       Hey {{user_first_name}}! Want an engaging community?
       I'll prompt you to chime in on just the kind of posts you care about.
-      You interested?
+      Interested?
     TXT
     { greeting: [{ locale: 'default', text: msg }] }
   end

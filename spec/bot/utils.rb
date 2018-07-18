@@ -37,7 +37,7 @@ shared_examples 'utils' do
 
   describe 'build_default_cta' do
     it 'returns the quick reply template for the default options' do
-      opts = %w[find-communities manage-communities]
+      opts = %w[find-communities finetune-prompts]
       msg = 'Behold the default'
       expected = {
         message:   {
@@ -51,9 +51,9 @@ shared_examples 'utils' do
             },
             {
               content_type: 'text',
-              payload: 'manage-communities',
-              title: 'Manage communities',
-              image_url: 'https://fiddle.fie/img/manage-communities.png'
+              payload: 'finetune-prompts',
+              title: 'Fine-tune your prompts',
+              image_url: 'https://fiddle.fie/img/finetune-prompts.png'
             }
           ]
         }

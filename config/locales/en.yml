@@ -3,46 +3,48 @@ en:
     responses:
       no_subscription:
         msg: |
-          Hey %{username}, you are not subscribed to any community feed yet.
-          Click below to find your communities or subscribe any community you manage.
-        find: find community
-        subscribe: subscribe community
+          Hey %{username}, you don't have prompts setup for any community feed yet.
+          Click below to find your communities or add communities you manage.
       link_account:
         msg: |
-          To get started you'll need need to link you FB account.
-          Click below to link your account.
+          To get started you'll need need to link your FB account so we can know the communities you belong to.
+          Click below to proceed.
       renew_token:
         msg: |
-          Your access token has expired.
-          Click below to refresh it.
+          Your access token had earlier expired. You'll need to renew it to continue.
       account_linked:
         msg: |
           Awesome your account was linked successful.
           Now, let's continue.
       subscribed:
-        msg: |
-          So you've got %{num} communities subscribed.
-          Click below to manage these communities, find your communities or subscribe any community you manage.
+        msg:
+          zero: |
+            Ahh, you don't have prompts setup for an community yet.
+            Click below to find more communities or add communities you manage.
+          one: |
+            You have prompts set up for one community.
+            Click below to fine-tune the prompts from this community, find more communities or add communities you manage.
+          other: |
+            So you've got %{count} communities subscribed.
+            Click below to fine-tune prompts from these communities, find more communities or add communities you manage.
       no_community:
         msg: |
-          Ahh %{username}, looks like there are no other of your communities subscribable to consider.
-          How about you reach out to you group admins, have then set up subscriptions at this link: %{link}
-          Better still if you can use the buttons below to subscribed groups you admin.
+          Ahh %{username}, looks like no other community you are a member of has been added.
+          How about you reach out to your group admins, have them set up prompter at this link: %{link}
+          Better still if you are a group admin use the buttons below to add your group.
       subscribe_community:
         cta: subscribe
-      manage_community:
-        cta: manage
       subscribe_communities:
-        msg: Click the button below to get started adding the communities you manage
+        msg: Click the button below to get started adding communities you manage
         cta: Get started
       community_not_found:
         msg: |
-          Hmm ... this is worrisome; I couldn't find the community 🤔
-          You know what, lemme figure out what's amiss and in the meantime continue as usual.
+          Hmm ... this is worrisome; I couldn't find that community 🤔
+          You know what, lemme figure out what's amiss and in the meantime you continue as usual.
       subscribed_to_community:
         msg: |
-          Awesome! I've added %{name} to your feeds. You'll now receive notifications for posts related to: %{categories}.
-          Use this button to further fine tune the type of posts you can help with.
+          Awesome! I've added feeds in %{name} community to your prompts. You'll now receive notifications for posts related to: %{categories}.
+          Use this button to further fine tune the category of posts you are interested.
       quick_reply:
         find_communities: Find a community
         finetune_prompts: Fine-tune your prompts
@@ -57,44 +59,53 @@ en:
           Add communities - Spread the magic! Sign up communities you manage to drive engagment with your members, they'll love you for it 🕸
         cta_manage: Fine-tune prompts - Discussion in your commuity will often be in varied categories. With this option, you can give me a hint on the ones you care about. 🛠
       btns:
-        manage: Fine-tune
+        finetune: Fine-tune
     notifications:
       community_feed:
         notice:
           msg: |
-            Hey there's a new %{category} post you'll be interested in %{name}.
+            Hey there's a new "%{category}" post in %{name} that would interest you.
             %{feed}
           cta: Click to see more
         feedback:
-          msg: BTW do you think this appropriate for %{category}
+          msg: BTW do you think this is appropriate for %{category}
           right: 'yes'
           wrong: 'no'
       community_added:
         notice: |
-          Congrats!!! You've successful added %{name} to the sure fire engagemnt diviner ;)
-          Now sitback and watch the magic happen
-          Oh, but before then, could you share this link with your community members. Super import
+          Congrats!!! You've successful sign up your community, %{name} to dedicated engagement prompt ;)
+          One last thing, could you share this link with your community members.
           %{link}
+          I'll take it up from there, prompting them to engage on posts they can help with.
       community_type_changed:
         notice: |
-          Your %{name} community admin has changed the community type to %{type}. You can now fine tune your feeds to the following categories: %{info}.
+          Your %{name} community admin has changed the community type to %{type}. You can now fine-tune your prompts to the following categories: %{info}.
       community_removed:
         notice: |
-          Your %{name} admin on your community subscription and you'll no longer receive updates on posts you care about.
-          Help me protest this by sending a #bringBackOurPrompterSubscription message
+          Your %{name} admin has unsubscribed your community. As such you'll no longer receive updates on posts you care about.
+          Help me protest this by sending them a #bringBackOurPrompterSubscription message 💪
       community_profile_deleted:
         notice: |
-          You've successfully opted out of %{name} engagement network. You'll no longer receive notifications of feeds that are targeted at categories you care about :(
+          You've successfully opted out of %{name} engagement prompts. Now I can no longer notify you of the many feeds in those categories you enjoyed :(
       community_profile_updated:
         notice: |
-          Coolio, you've fine tuned your interests for activities in %{name} community to %{info}.
+          Coolio, you've fine-tuned your interests for activities in %{name} community to %{info}.
           Going forward I'll hand pick posts I inform you about based on this interest.
       access_token_expiring:
-        notice: |
-          Mayday! Mayday!! Mayday!!! Access token for pulling feeds on your behalf for communities you manage is about to expire. The will impact the about %{num} communities that depend on it.
-          Let's fix this;
+        notice:
+          one: |
+            Mayday! Mayday!! Mayday!!! Access token for pulling feeds on your behalf for communities you manage is about to expire. This will impact the community that depend on it.
+            Let's fix this
+          other: |
+            Mayday! Mayday!! Mayday!!! Access token for pulling feeds on your behalf for communities you manage is about to expire. This will impact the %{count} communities that depend on it.
+            Let's fix this
       access_token_expired:
-        notice: |
-          Ahh, your access token with us has finally expired :( I can now no longer drive engagement you've seen in the %{num} communities with us.
-          All hopes is not lost; let's work together and fix it.
-          Click to log in and I'll take it from there.
+        notice:
+          one: |
+            Ahh, your access token with us has finally expired :( I can now no longer drive the engagement you've seen in the community you subscribed.
+            All hopes is not lost; let's work together and fix it.
+            Click to log in and I'll take it from there.
+          other: |
+            Ahh, your access token with us has finally expired :( I can now no longer drive the engagement you've seen in the %{count} communities with us.
+            All hopes is not lost; let's work together and fix it.
+            Click to log in and I'll take it from there.

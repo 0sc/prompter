@@ -26,7 +26,7 @@ module Utils
   end
 
   def manage_subscription_webview_btn(profile_id)
-    title = I18n.t('chat.responses.btns.manage')
+    title = I18n.t('chat.responses.btns.finetune')
     link = fullpath("/community_member_profiles/#{profile_id}/edit")
     webview_btn(title, link)
   end

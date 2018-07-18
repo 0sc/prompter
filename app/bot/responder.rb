@@ -10,7 +10,7 @@ class Responder < Client
   end
 
   def self.send_has_subscription_cta(service, num)
-    msg = t('subscribed.msg', num: num)
+    msg = t('subscribed.msg', count: num)
     payload = build_default_cta(msg, service.cta_options)
     respond(service.sender_id, payload)
   end

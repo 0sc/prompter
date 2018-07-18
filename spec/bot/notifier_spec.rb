@@ -139,7 +139,7 @@ RSpec.describe Notifier do
               text: t('community_type_changed.notice', type: t, name: n, info: info),
               buttons: [
                 {
-                  title: I18n.t('chat.responses.btns.manage'),
+                  title: I18n.t('chat.responses.btns.finetune'),
                   type: 'web_url',
                   url: url,
                   webview_height_ratio: 'compact',
@@ -217,7 +217,7 @@ RSpec.describe Notifier do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: t('access_token_expiring.notice', num: 3),
+              text: t('access_token_expiring.notice', count: 3),
               buttons: [{ type: 'account_link', url: url }]
             }
           }
@@ -238,7 +238,7 @@ RSpec.describe Notifier do
             type: 'template',
             payload: {
               template_type: 'button',
-              text: t('access_token_expired.notice', num: 3),
+              text: t('access_token_expired.notice', count: 3),
               buttons: [{ type: 'account_link', url: url }]
             }
           }

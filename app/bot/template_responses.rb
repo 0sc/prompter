@@ -30,7 +30,7 @@ module TemplateResponses
           webview_height_ratio: 'tall',
           messenger_extensions: 'true',
           fallback_url: fullpath(item[:url]),
-          title: t('manage_community.cta')
+          title: t('btns.finetune')
         }
       ]
     }

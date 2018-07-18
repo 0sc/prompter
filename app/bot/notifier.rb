@@ -62,14 +62,14 @@ class Notifier < Client
   end
 
   def self.send_access_token_expiring_notice(psid:, num_admin_comms:)
-    msg = t('access_token_expiring.notice', num: num_admin_comms)
+    msg = t('access_token_expiring.notice', count: num_admin_comms)
     btn = build_account_link_btn(psid)
     payload = button_template(msg, [btn])
     respond(psid, payload)
   end
 
   def self.send_access_token_expired_notice(psid:, num_admin_comms:)
-    msg = t('access_token_expired.notice', num: num_admin_comms)
+    msg = t('access_token_expired.notice', count: num_admin_comms)
     btn = build_account_link_btn(psid)
     payload = button_template(msg, [btn])
     respond(psid, payload)

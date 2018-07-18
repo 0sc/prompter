@@ -13,8 +13,8 @@ shared_examples 'utils' do
   describe 't' do
     it 'returns the translation for the given key and args' do
       subject.instance_variable_set(:@trans_base, 'chat.responses.')
-      expect(subject.t('subscribed.msg', num: 3))
-        .to eq I18n.t('chat.responses.subscribed.msg', num: 3)
+      expect(subject.t('subscribed.msg', count: 3))
+        .to eq I18n.t('chat.responses.subscribed.msg', count: 3)
     end
   end
 
@@ -68,7 +68,7 @@ shared_examples 'utils' do
       expected = {
         fallback_url: 'https://fiddle.fie/community_member_profiles/76/edit',
         messenger_extensions: 'true',
-        title: 'Fine tune',
+        title: 'Fine-tune',
         type: 'web_url',
         url: 'https://fiddle.fie/community_member_profiles/76/edit',
         webview_height_ratio: 'compact'

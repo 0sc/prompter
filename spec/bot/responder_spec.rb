@@ -50,7 +50,7 @@ RSpec.describe Responder do
 
   describe '.send_has_subscription_cta' do
     it 'delivers the has subscribed_cta payload' do
-      msg = t('subscribed.msg', num: 456)
+      msg = t('subscribed.msg', count: 456)
       payload = expected_payload(service.sender_id, build_quick_reply_cta(msg))
 
       expect(bot).to receive(:deliver).with(payload, access_token: 123)
@@ -251,7 +251,7 @@ RSpec.describe Responder do
                 categories: profile.subscribed_feed_category_summary
               ),
               buttons: [{
-                title: t('btns.manage'),
+                title: t('btns.finetune'),
                 type: 'web_url',
                 url: url,
                 webview_height_ratio: 'compact',
@@ -302,7 +302,7 @@ RSpec.describe Responder do
                       type: 'web_url',
                       url: host + item[:url],
                       webview_height_ratio: 'tall',
-                      title: 'manage',
+                      title: 'Fine-tune',
                       messenger_extensions: 'true',
                       fallback_url: host + item[:url]
                     }

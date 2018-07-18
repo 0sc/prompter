@@ -73,7 +73,7 @@ shared_examples 'template responses' do
                       type: 'web_url',
                       url: host + item[:url],
                       webview_height_ratio: 'tall',
-                      title: 'manage',
+                      title: 'Fine-tune',
                       messenger_extensions: 'true',
                       fallback_url: host + item[:url]
                     }

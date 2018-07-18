@@ -14,7 +14,8 @@ class UsersController < ApplicationController
 
     if current_user.save
       session[:user_id] = current_user.id
-      redirect_to success_redirect_uri, notice: "Welcome #{current_user.name}"
+      redirect_to success_redirect_uri,
+                  notice: t('.success', name: current_user.name)
     else
       handle_oauth_failure
     end
@@ -79,8 +80,7 @@ class UsersController < ApplicationController
   end
 
   def handle_oauth_failure
-    msg = 'Error occured setting up your account!'
-    redirect_to failed_redirect_uri, notice: msg
+    redirect_to failed_redirect_uri, notice: t('users.failed')
   end
 
   def failed_redirect_uri

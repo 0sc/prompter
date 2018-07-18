@@ -162,3 +162,20 @@ en:
       header: Nothing to see here!!
       home: Home
     not_found: Community profile not found
+
+  users:
+    new:
+      header: Prompter
+      subheader_html: connect&middot;engage&middot;repeat
+      sign_in: Sign in
+    create:
+      success: Welcome %{name}
+    failed: Error occured setting up your account!
+
+  layouts:
+    application:
+      title: Prompter
+    navbar:
+      home: Home
+      sign_out: Sign out
+      sign_in: Sign in

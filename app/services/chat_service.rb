@@ -1,11 +1,7 @@
 class ChatService
   FIND_COMMUNITIES = 'find-communities'.freeze
-  SUBSCRIBE_COMMUNITIES = 'subscribe-communities'.freeze
-  MANAGE_COMMUNITIES = 'manage-communities'.freeze
-
-  # TODO: fix the indirection
-  FINETUNE_PROMPTS = MANAGE_COMMUNITIES
-  ADD_COMMUNITIES = SUBSCRIBE_COMMUNITIES
+  FINETUNE_PROMPTS = 'finetune-prompts'.freeze
+  ADD_COMMUNITIES = 'add-communities'.freeze
 
   attr_reader :user, :message
 
@@ -21,9 +17,9 @@ class ChatService
     case payload
     when FIND_COMMUNITIES
       handle_find_community
-    when SUBSCRIBE_COMMUNITIES
+    when ADD_COMMUNITIES
       handle_subscribe_communities
-    when MANAGE_COMMUNITIES
+    when FINETUNE_PROMPTS
       handle_manage_communities
     end
   end
@@ -43,8 +39,8 @@ class ChatService
   private
 
   def default_cta_options
-    options = [FIND_COMMUNITIES, SUBSCRIBE_COMMUNITIES]
-    user.member_profile_communities? ? options << MANAGE_COMMUNITIES : options
+    options = [FIND_COMMUNITIES, ADD_COMMUNITIES]
+    user.member_profile_communities? ? options << FINETUNE_PROMPTS : options
   end
 
   def handle_find_community
@@ -64,8 +60,8 @@ class ChatService
 
     if subscribable_communities.empty?
       # no available communities to subscribe
-      @cta_options = [SUBSCRIBE_COMMUNITIES]
-      @cta_options << MANAGE_COMMUNITIES if user.member_profile_communities?
+      @cta_options = [ADD_COMMUNITIES]
+      @cta_options << FINETUNE_PROMPTS if user.member_profile_communities?
       Responder.send_no_community_to_subscribe_cta(self)
       return
     end

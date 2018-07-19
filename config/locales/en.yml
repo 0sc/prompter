@@ -51,8 +51,12 @@ en:
         add_communities: Add a community
       get_started:
         welcome: |
-          Welcome!!!!!
-          Enough talking let's get right to it.
+          Welcome!!
+          I'm your new buddy, Prompter.
+          My sole purpose is to ensure you get to engage with posts in communities you've subscribed that match categories you care for.
+          How will I know? You'll tell me of course 😊
+          Care for more info? https://theprompter.herokuapp.com/about
+          Okay, let's get right to it.
         cta: |
           What would you like to do next?
           Find communities - It's likely some communities you are a member of have been signed up already. This option let's you find and add them to your curated prompts 🗝

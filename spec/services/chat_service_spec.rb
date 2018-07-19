@@ -6,8 +6,8 @@ RSpec.describe ChatService, type: :service do
   let(:message) { double }
   let(:psid) { SAMPLE_MESSENGER_PROFILE['id'] }
   let(:find_pkg) { ChatService::FIND_COMMUNITIES }
-  let(:manage_pkg) { ChatService::MANAGE_COMMUNITIES }
-  let(:subscribe_pkg) { ChatService::SUBSCRIBE_COMMUNITIES }
+  let(:manage_pkg) { ChatService::FINETUNE_PROMPTS }
+  let(:subscribe_pkg) { ChatService::ADD_COMMUNITIES }
   let(:dummy_service) { DummyFacebookService.new }
 
   subject { ChatService.new(message) }

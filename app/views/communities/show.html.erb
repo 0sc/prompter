@@ -5,7 +5,7 @@
     <div class='row'>
       <div class='card lighten-2'>
         <div class='card-image'>
-          <%= image_tag @community.cover, class: 'responsive-img' %>
+          <%= image_tag @community.cover, class: 'responsive-img' if @community.cover %>
         </div>
         <div class='card-content'>
           <p>

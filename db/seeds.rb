@@ -1,6 +1,6 @@
 ActiveRecord::Base.transaction do
   # Community Types
-  community_type_names = %i[technology crypocurrency]
+  community_type_names = %i[technology entertainment]
   community_types = community_type_names.map do |name|
     CommunityType.find_or_create_by!(name: name)
   end
@@ -21,14 +21,14 @@ ActiveRecord::Base.transaction do
     'laravel'               => [community_types[0]],
     'python'                => [community_types[0]],
 
-    'Blockchain'            => [community_types[1]],
-    'Bitcoin'               => [community_types[1]],
-    'Ethereum'              => [community_types[1]],
-    'Cardano'               => [community_types[1]],
-    'Proof of work'         => [community_types[1]],
-    'Proof of stake'        => [community_types[1]],
+    'Movies'                => [community_types[1]],
+    'Music'                 => [community_types[1]],
+    'TV Shows'              => [community_types[1]],
+    'Anime'                 => [community_types[1]],
+    'Awards'                => [community_types[1]],
+    'Celebrity'             => [community_types[1]],
 
-    'uncategorised'          => community_types
+    'uncategorised'         => community_types
   }
 
   feed_categories.each do |name, c_types|

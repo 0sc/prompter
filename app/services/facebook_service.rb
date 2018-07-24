@@ -38,6 +38,10 @@ class FacebookService
     graph.get_connections(feed_id, 'comments')
   end
 
+  def community_feed_comments_count(feed_id)
+    community_feed_comments(feed_id).count
+  end
+
   private
 
   def all_results(graph_results)

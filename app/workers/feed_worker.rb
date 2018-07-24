@@ -6,6 +6,8 @@ class FeedWorker
       # attr[user_fbid, user_token, community_fbid]
       svc = FacebookService.new(attr[0], attr[1])
       svc.community_feeds(attr[2], since: 3.hours.ago.to_i).each do |feed|
+        # don't include feeds that already have folks commenting on it
+        next if svc.community_feed_comments_count(feed['id']) > 2
         analyse_feed(attr[2], feed)
       end
     end
@@ -27,7 +29,6 @@ class FeedWorker
   end
 
   def analyse_feed(community_fbid, feed)
-    # TODO: consider only feeds that have less than 3 comment
     AnalysisWorker.perform_async(community_fbid, feed['message'], feed['link'])
   end
 end

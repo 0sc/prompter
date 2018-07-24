@@ -1,7 +1,8 @@
 class DummyFacebookService
   attr_accessor :admin_communities,
                 :admin_communities_fbids,
-                :communities
+                :communities,
+                :community_feed_comments
 
   def initialize
     @admin_communities = []
@@ -23,15 +24,20 @@ class DummyFacebookService
 
   def community_feeds(_id, opts={})
     feeds = []
-    2.times { feeds << feed.merge(opts) }
+    2.times { |i| feeds << feed(i).merge(opts) }
     feeds
   end
 
-  def feed
+  def feed(id = 'id')
     {
       'link' => 'https://link.to/the/feed',
       'msg' => 'This is the actual content of the feed 🎉',
-      'id' => 'feed_id'
+      'id' => "feed_#{id}"
     }
+  end
+
+  def community_feed_comments_count(feed_id)
+    @community_feed_comments ||= {}
+    community_feed_comments[feed_id] || 0
   end
 end

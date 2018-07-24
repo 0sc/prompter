@@ -18,24 +18,51 @@ RSpec.describe FeedWorker, type: :worker do
 
   describe 'queueing the job' do
     context 'eligible community' do
-      it 'queues a job for each feed in each eligible community' do
-        FeedWorker.perform_async
-        expect(FeedWorker.jobs.size).to eq 1
-        expect(FeedWorker.jobs.first['args']).to be_empty
+      describe 'queued feed' do
+        let(:feeds_count) { dummy_service.community_feeds(nil).count }
+        let(:exp_tally) { Hash.new }
 
-        FeedWorker.drain
-        expect(AnalysisWorker.jobs.size).to eq 4
-
-        tally = Hash.new { |hash, key| hash[key] = 0 }
-        exp_tally = {}
-        exp_tally[[community_two.fbid, msg, link]] = 2
-        exp_tally[[community_one.fbid, msg, link]] = 2
-
-        AnalysisWorker.jobs.each do |job|
-          tally[job['args']] += 1
+        before do
+          FeedWorker.perform_async
+          expect(FeedWorker.jobs.size).to eq 1
+          expect(FeedWorker.jobs.first['args']).to be_empty
         end
 
-        expect(tally).to eq exp_tally
+        it 'does not queue feed if it has more than 1 comment' do
+          dummy_service.community_feed_comments = { 'feed_1' => 3,
+                                                    'feed_2' => 2 }
+
+          FeedWorker.drain
+          expect(AnalysisWorker.jobs.size).to eq 2
+
+          tally = Hash.new { |hash, key| hash[key] = 0 }
+          exp_tally[[community_two.fbid, msg, link]] = feeds_count - 1
+          exp_tally[[community_one.fbid, msg, link]] = feeds_count - 1
+
+          AnalysisWorker.jobs.each do |job|
+            tally[job['args']] += 1
+          end
+
+          expect(tally).to eq exp_tally
+        end
+
+        it 'queues feed if it has less than comment' do
+          dummy_service.community_feed_comments = { 'feed_1' => 0,
+                                                    'feed_2' => 1 }
+
+          FeedWorker.drain
+          expect(AnalysisWorker.jobs.size).to eq 4
+
+          tally = Hash.new { |hash, key| hash[key] = 0 }
+          exp_tally[[community_two.fbid, msg, link]] = feeds_count
+          exp_tally[[community_one.fbid, msg, link]] = feeds_count
+
+          AnalysisWorker.jobs.each do |job|
+            tally[job['args']] += 1
+          end
+
+          expect(tally).to eq exp_tally
+        end
       end
     end
 

@@ -17,11 +17,11 @@ $secondary-color: color("orange", "base") !default;
 }
 
 #landing {
-  background-image:url('http://localhost:3000/img/cover.png');
+  background-image:url('/img/cover.png');
 }
 
 #curtain {
-  background-image:url('http://localhost:3000/img/curtain.png');
+  background-image:url('/img/curtain.png');
 }
 
 span.lever {

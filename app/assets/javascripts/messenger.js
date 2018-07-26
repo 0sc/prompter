@@ -24,6 +24,7 @@ window.extAsyncInit = function() {
 
   // bind to update function for manage community profile
   document.getElementById('update_profile').addEventListener('click', closeWebview)
+  document.getElementById('member_profile_back_btn').addEventListener('click', closeWebview)
 };
 
 function closeWebview(){

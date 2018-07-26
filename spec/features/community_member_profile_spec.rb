@@ -41,7 +41,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
     sign_in
     visit community_member_profile_path(profile)
-    click_on t('show.cta.edit')
+    click_link t('show.cta.edit')
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
     expect(page.find('h1')).to have_content t('edit.title')
@@ -70,7 +70,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
     sign_in
     visit community_member_profile_path(profile)
-    click_on t('show.cta.edit')
+    click_link t('show.cta.edit')
 
     expect(current_path).to eq edit_community_member_profile_path(profile)
     expect(page.find('h1')).to have_content t('edit.title')
@@ -92,7 +92,7 @@ RSpec.describe 'CommunityMemberProfile', type: :feature do
 
   def sign_in
     visit root_path
-    click_on('Sign in')
+    click_link(I18n.t('new.sign_in', scope: :users))
   end
 
   def t(key)

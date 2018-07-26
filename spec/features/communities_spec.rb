@@ -142,7 +142,7 @@ RSpec.describe 'Communities', type: :feature do
       dummy_service.admin_communities = []
 
       within('li') do
-        expect { click_on(t('unsubscribed_community.subscribe')) }
+        expect { click_link(t('unsubscribed_community.subscribe')) }
           .not_to(change { Community.count })
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe 'Communities', type: :feature do
 
     within('.section ul') do
       expect(page.all('li').count).to eq 1
-      within('li') { click_on('Edit') }
+      within('li') { click_link('Edit') }
     end
 
     expect(current_path).to eq edit_community_path(community)
@@ -182,7 +182,7 @@ RSpec.describe 'Communities', type: :feature do
 
   def sign_in
     visit root_path
-    click_on('Sign in')
+    click_link(I18n.t('new.sign_in', scope: :users))
   end
 
   def t(key, opts = {})

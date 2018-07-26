@@ -14,8 +14,7 @@ RSpec.describe 'Home page', type: :feature do
     visit root_path
     expect(page).to have_link(text: users_t('new.sign_in'),
                               href: '/auth/facebook')
-
-    expect { click_on(users_t('new.sign_in')) }
+    expect { click_link(users_t('new.sign_in')) }
       .to change { User.count }.from(0).to(1)
 
     user = User.first
@@ -34,7 +33,7 @@ RSpec.describe 'Home page', type: :feature do
     expect(page).to have_link(text: users_t('new.sign_in'),
                               href: '/auth/facebook')
 
-    expect { click_on(users_t('new.sign_in')) }.not_to(change { User.count })
+    expect { click_link(users_t('new.sign_in')) }.not_to(change { User.count })
 
     user.reload
     expect(user.fbid).to eq SAMPLE_AUTH_HASH[:uid].to_i
@@ -49,14 +48,14 @@ RSpec.describe 'Home page', type: :feature do
     visit root_path
     expect(page).to have_link(text: users_t('new.sign_in'),
                               href: '/auth/facebook')
-    click_on(users_t('new.sign_in'))
+    click_link(users_t('new.sign_in'))
 
     expect(current_path).to eq communities_path
     expect(page).to have_content(t('title', 'communities.index'))
 
     expect(page).to have_link(text: t('sign_out', 'layouts.navbar'),
                               href: logout_users_path)
-    click_on(t('sign_out', 'layouts.navbar'))
+    click_link(t('sign_out', 'layouts.navbar'))
     expect(current_path).to eq root_path
   end
 
@@ -64,7 +63,7 @@ RSpec.describe 'Home page', type: :feature do
     visit root_path
     expect(page).to have_link(text: users_t('new.sign_in'),
                               href: '/auth/facebook')
-    click_on(users_t('new.sign_in'))
+    click_link(users_t('new.sign_in'))
 
     expect(current_path).to eq communities_path
     expect(page).to have_content(t('title', 'communities.index'))
@@ -78,12 +77,12 @@ RSpec.describe 'Home page', type: :feature do
     visit root_path
     expect(page).to have_link(text: users_t('new.sign_in'),
                               href: '/auth/facebook')
-    click_on(users_t('new.sign_in'))
+    click_link(users_t('new.sign_in'))
 
     expect(current_path).to eq communities_path
     expect(page).to have_content(t('title', 'communities.index'))
 
-    click_on(t('sign_out', 'layouts.navbar'))
+    click_link(t('sign_out', 'layouts.navbar'))
     expect(current_path).to eq root_path
 
     visit communities_path

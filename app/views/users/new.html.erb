@@ -5,7 +5,9 @@
       <h5 class='header col s12 light'><%= t('.subheader_html') %></h5>
     </div>
     <div class='row center'>
-      <%= link_to t('.sign_in'), '/auth/facebook', class: 'btn-large waves-effect waves-light orange' %>
+      <button class = 'loginBtn loginBtn--facebook'>
+        <%= link_to t('.sign_in'), '/auth/facebook' %>
+      </button>
     </div>
   </div>
 </div>

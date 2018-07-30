@@ -3,7 +3,7 @@ require 'support/omniauth'
 require 'support/dummy_facebook_service'
 
 RSpec.describe 'Communities', type: :feature do
-  let!(:user) { create(:user, fbid: SAMPLE_AUTH_HASH[:uid]) }
+  let!(:user) { create(:user, email: SAMPLE_AUTH_HASH[:info][:email]) }
   let(:dummy_service) { DummyFacebookService.new }
 
   before { stub_const('FacebookService', dummy_service) }

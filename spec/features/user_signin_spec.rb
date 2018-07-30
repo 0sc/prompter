@@ -27,7 +27,7 @@ RSpec.describe 'Home page', type: :feature do
   end
 
   scenario 'user can sign in' do
-    user = create(:user, fbid: SAMPLE_AUTH_HASH[:uid])
+    user = create(:user, email: SAMPLE_AUTH_HASH[:info][:email])
 
     visit root_path
     expect(page).to have_link(text: users_t('new.sign_in'),

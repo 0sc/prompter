@@ -62,7 +62,8 @@ class UsersController < ApplicationController
   end
 
   def duplicate_account_check
-    potential_account = User.find_or_initialize_by(fbid: auth_hash[:uid])
+    potential_account =
+      User.find_or_initialize_by(email: auth_hash.dig(:info, :email))
 
     if current_user.present? && current_user != potential_account
       User.combine_accounts!(potential_account, current_user)

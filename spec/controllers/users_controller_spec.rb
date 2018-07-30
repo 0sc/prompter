@@ -36,7 +36,7 @@ RSpec.describe UsersController, type: :controller do
 
     describe 'successful create' do
       context 'user already exists with facebook profile' do
-        let!(:user) { create(:user, fbid: SAMPLE_AUTH_HASH[:uid], email: 'sc') }
+        let!(:user) { create(:user, email: SAMPLE_AUTH_HASH[:info][:email]) }
 
         it 'does not duplicate user record' do
           expect { post :create }.not_to(change { User.count })
@@ -77,7 +77,12 @@ RSpec.describe UsersController, type: :controller do
 
       context 'user already exists with different messenger and fb profiles' do
         let(:fbid) { SAMPLE_AUTH_HASH[:uid] }
-        let!(:fb_acc) { create(:user, image: nil, fbid: fbid, psid: nil) }
+        let!(:fb_acc) do
+          create(:user,
+                 image: nil,
+                 email: SAMPLE_AUTH_HASH[:info][:email],
+                 psid: nil)
+        end
         let!(:msg_acc) { create(:user) }
 
         it 'deletes the messenger profile' do
